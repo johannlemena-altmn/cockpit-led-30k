@@ -39,7 +39,13 @@ L'extraction depuis le CRM Pixel nécessite une session navigateur + l'extension
 
 ## Sprint — prochaines étapes (backlog)
 - **S0 partiel ✅** : diagnostic établi, agrégats connus (196 177 LED signées, 5 280 dossiers, 13 M€).
-- **S0 feed live ⏳** : via support Pixel (corriger la persistance du modèle d'export « Dashboard LED (Claude) » qui ne sauve pas les colonnes → export 500), **ou** un script d'agrégats-only sur l'endpoint `Fiche/Recherche?handler=GetBody_ServerSide` (opération BAT-EQ-127 = `Search.BaremeMultiple`) qui ne renvoie que des totaux (pas de PII). Nécessite secret `PIXEL_EXPORT_URL`.
+- **S0 feed live ⏳** : via support Pixel (corriger la persistance du modèle d'export « Dashboard LED (Claude) » qui ne sauve pas les colonnes → export 500), **ou** `pixel_api.py` — script stdlib-only qui interroge `Fiche/Recherche?handler=GetBody_ServerSide` (opération BAT-EQ-127 = `Search.BaremeMultiple`) et écrit `public_data.json` (agrégats, zéro PII).
+  - Variables d'env requises (fichier `.env` ou export shell) :
+    - `PIXEL_BASE_URL` : URL de base du CRM Pixel (ex: `https://votre-instance.pixel-crm.fr`)
+    - `PIXEL_SESSION_COOKIE` : valeur du header `Cookie` copiée depuis DevTools (F12 → Network) après connexion à Pixel
+    - `PIXEL_REFERER` : (optionnel) URL de la page de recherche pour le header Referer
+  - Usage : `python pixel_api.py` (live) ou `python pixel_api.py --dry-run` (inspecter les requêtes sans les envoyer).
+  - Si la réponse est non reconnue, le script affiche les clés JSON reçues + les 500 premiers chars → copier le payload exact depuis DevTools et l'ajouter dans `CANDIDATE_PAYLOADS` dans `pixel_api.py`.
 - **S1 ⏳** : brancher l'ETL (`infra/etl.py`) → Postgres → dashboards Metabase (manager + pôles) ; activer les vues avancées dans `infra/sql/views.sql`.
 - **S2 ⏳** : déployer la stack Docker (auto-hébergé) + refresh 15-30 min (`infra/refresh.sh`). Code prêt, pas encore déployé.
 - **S3 ✅** : résumé quotidien `daily_summary.py` + workflow GitHub Actions (`daily_summary.yml`, cron 07h00 Paris lun.–ven.).
