@@ -102,9 +102,30 @@ def main():
         raw.to_sql("ligne_chantier", cx, if_exists="replace", index=False)
         dossier.to_sql("dossier", cx, if_exists="replace", index=False)
         cx.execute(text("CREATE INDEX IF NOT EXISTS idx_dossier_num ON dossier(num_dossier)"))
-    print("OK -> Postgres : %d lignes, %d dossiers (%d signés, LED signées=%s)" % (
-        len(raw), len(dossier), int(dossier["signe"].sum()),
-        int(dossier.loc[dossier["signe"],"led"].sum()) if "led" in dossier else "?"))
+
+    # Appliquer les vues SQL automatiquement
+    SQL_VIEWS = os.path.join(os.path.dirname(__file__), "sql", "views.sql")
+    if os.path.exists(SQL_VIEWS):
+        with open(SQL_VIEWS, encoding="utf-8") as f:
+            sql = f.read()
+        with eng.begin() as cx:
+            for stmt in [s.strip() for s in sql.split(";") if s.strip() and not s.strip().startswith("--")]:
+                try:
+                    cx.execute(text(stmt))
+                except Exception as e:
+                    print(f"  (vue ignorée) {e}")
+        print("Vues SQL appliquées.")
+
+    nb_signes = int(dossier["signe"].sum())
+    led_signees = int(dossier.loc[dossier["signe"], "led"].sum()) if "led" in dossier else "?"
+    msg = "OK -> Postgres : %d lignes, %d dossiers (%d signés, LED signées=%s)" % (
+        len(raw), len(dossier), nb_signes, led_signees)
+    if "pose_terminee" in dossier and dossier["pose_terminee"].notna().any():
+        signes_non_deposes = dossier[dossier["signe"] & ~dossier["depose"]]
+        if len(signes_non_deposes) > 0:
+            taux = 100.0 * signes_non_deposes["pose_terminee"].sum() / len(signes_non_deposes)
+            msg += " | taux pose=%.1f%% (%d/%d)" % (taux, int(signes_non_deposes["pose_terminee"].sum()), len(signes_non_deposes))
+    print(msg)
 
 if __name__ == "__main__":
     main()
