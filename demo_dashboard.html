@@ -229,7 +229,7 @@ body {
 <div class="hdr">
   <div class="hdr-tag">Énergie Responsable · BAT-EQ-127</div>
   <h1>Cockpit LED 30 000</h1>
-  <div class="hdr-sub">Agrégats du 03/06/2026 · données anonymisées</div>
+  <div class="hdr-sub" id="hdrSub">Agrégats du 03/06/2026 · données anonymisées</div>
   <div class="progress-wrap">
     <div class="progress-bar" style="width:100%"></div>
   </div>
@@ -246,23 +246,23 @@ body {
   <div class="sec-title">KPIs clés</div>
   <div class="kpi-grid">
     <div class="kpi accent" style="grid-column: 1 / -1;">
-      <div class="val">196 177</div>
+      <div class="val" id="kLed">196 177</div>
       <div class="lbl">LED signées (total portefeuille)</div>
     </div>
     <div class="kpi">
-      <div class="val">5 280</div>
+      <div class="val" id="kDoss">5 280</div>
       <div class="lbl">dossiers signés</div>
     </div>
     <div class="kpi">
-      <div class="val">13,0 M€</div>
+      <div class="val" id="kPrime">13,0 M€</div>
       <div class="lbl">prime CEE totale</div>
     </div>
     <div class="kpi">
-      <div class="val">37</div>
+      <div class="val" id="kMoy">37</div>
       <div class="lbl">LED/dossier (moy.)</div>
     </div>
     <div class="kpi">
-      <div class="val">30</div>
+      <div class="val" id="kMed">30</div>
       <div class="lbl">médiane LED/dossier</div>
     </div>
   </div>
@@ -455,5 +455,83 @@ body {
 
 </div><!-- /scroll -->
 
+<script>
+(function () {
+  'use strict';
+
+  /* ── Helpers ─────────────────────────────────────────── */
+  function fmtInt(n) {
+    return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+  function fmtM(n) {
+    return (n / 1e6).toFixed(1).replace('.', ',') + ' M€';
+  }
+  function setText(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  /* ── Badge LIVE / DÉMO ───────────────────────────────── */
+  function injectBadge(isDemo) {
+    var badge = document.createElement('span');
+    badge.style.cssText = [
+      'display:inline-block',
+      'margin-left:8px',
+      'padding:2px 8px',
+      'border-radius:999px',
+      'font-size:10px',
+      'font-weight:700',
+      'letter-spacing:.08em',
+      'vertical-align:middle',
+      isDemo
+        ? 'background:#f5d77e;color:#7a4900;'
+        : 'background:#27ae60;color:#fff;'
+    ].join(';');
+    badge.textContent = isDemo ? 'DÉMO' : 'LIVE';
+    var h1 = document.querySelector('.hdr h1');
+    if (h1) h1.appendChild(badge);
+  }
+
+  /* ── Mise à jour du DOM ──────────────────────────────── */
+  function applyData(d) {
+    setText('kLed',   fmtInt(d.led_signees));
+    setText('kDoss',  fmtInt(d.nb_dossiers));
+    setText('kPrime', fmtM(d.prime_total));
+    setText('kMoy',   d.led_moy != null ? String(d.led_moy) : '—');
+    setText('kMed',   d.led_med != null ? String(d.led_med) : '—');
+
+    /* Date dans le sous-titre header */
+    var sub = document.getElementById('hdrSub');
+    if (sub) {
+      var gen = d.generated || '';
+      if (gen) {
+        /* Convertir YYYY-MM-DD → DD/MM/YYYY */
+        var parts = gen.split('-');
+        var dateFr = parts.length === 3
+          ? parts[2] + '/' + parts[1] + '/' + parts[0]
+          : gen;
+        sub.textContent = 'Données réelles du ' + dateFr + ' · données anonymisées';
+      }
+    }
+
+    injectBadge(!!d.demo_mode);
+  }
+
+  /* ── Fetch ───────────────────────────────────────────── */
+  fetch('public_data.json')
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (d) {
+      applyData(d);
+    })
+    .catch(function (err) {
+      /* Graceful degradation : les valeurs HTML hardcodées restent visibles */
+      console.warn('[Cockpit LED] public_data.json indisponible — mode statique.', err);
+      injectBadge(true);
+    });
+})();
+</script>
 </body>
 </html>

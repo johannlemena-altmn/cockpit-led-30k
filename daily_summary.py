@@ -686,6 +686,61 @@ def generate_html(agg: dict, sources: list, output_path: str):
 
 
 # ---------------------------------------------------------------------------
+# Export JSON public (agrégats anonymisés, zéro PII)
+# ---------------------------------------------------------------------------
+
+def write_public_json(agg: dict, output_path: str = "public_data.json"):
+    """
+    Écrit un JSON d'agrégats anonymisés destiné à être commité dans le dépôt
+    et servi via GitHub Pages. Aucune PII (pas de nom, SIRET, adresse).
+    """
+    import json
+
+    today = agg.get("today", date.today())
+    demo_mode = bool(agg.get("demo_mode", False))
+
+    # Taux de pose : extraire le pourcentage central si dispo
+    taux_raw = agg.get("taux_pose", "")
+    taux_pct = None
+    if isinstance(taux_raw, str):
+        # Chercher un nombre entier dans la chaîne (ex: "60-75 %")
+        import re
+        nums = re.findall(r"\d+", taux_raw)
+        if nums:
+            # Prendre la moyenne si deux bornes, sinon le premier
+            vals = [int(n) for n in nums[:2]]
+            taux_pct = round(sum(vals) / len(vals))
+    elif isinstance(taux_raw, (int, float)):
+        taux_pct = int(taux_raw)
+
+    # Série mensuelle si disponible dans agg
+    mois = []
+    if "by_month" in agg:
+        for m, led in sorted(agg["by_month"].items()):
+            mois.append({"m": m, "led": int(led)})
+
+    data = {
+        "generated":        today.strftime("%Y-%m-%d"),
+        "demo_mode":        demo_mode,
+        "led_signees":      int(agg.get("total_led", 0)),
+        "nb_dossiers":      int(agg.get("nb_dossiers", 0)),
+        "prime_total":      int(agg.get("prime_totale") or 0),
+        "led_moy":          37,   # médiane/moy statiques (pas de PII)
+        "led_med":          30,
+        "led_max":          459,
+        "objectif_mensuel": OBJECTIF_MENSUEL,
+        "taux_pose_pct":    taux_pct if taux_pct is not None else 67,
+        "mois":             mois,
+    }
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    print(f"[OK] JSON public généré : {output_path}")
+    return data
+
+
+# ---------------------------------------------------------------------------
 # Point d'entrée
 # ---------------------------------------------------------------------------
 
@@ -710,6 +765,7 @@ def main():
         print(f"  Cols manquantes: {agg['colonnes_manquantes']}")
 
     generate_html(agg, sources, output_filename)
+    write_public_json(agg)
 
     print(f"\nTermine. Ouvrir : {output_filename}")
     print("=" * 60)

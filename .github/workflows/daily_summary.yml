@@ -18,6 +18,9 @@ on:
         required: false
         default: ""
 
+permissions:
+  contents: write   # nécessaire pour git push public_data.json
+
 jobs:
   generate-summary:
     name: Générer le résumé quotidien
@@ -74,7 +77,20 @@ jobs:
       - name: Générer le résumé quotidien
         run: python daily_summary.py
 
-      # ── 6. Upload de l'artifact HTML ──────────────────────────────────────
+      # ── 6. Commiter public_data.json (agrégats anonymisés pour GitHub Pages) ──
+      - name: Mettre à jour public_data.json
+        run: |
+          if [ -f public_data.json ]; then
+            git config user.email "action@github.com"
+            git config user.name "GitHub Actions"
+            git add public_data.json
+            git diff --cached --quiet || git commit -m "data: public_data.json $(date +%Y-%m-%d)"
+            git push
+          else
+            echo "public_data.json absent — étape ignorée."
+          fi
+
+      # ── 7. Upload de l'artifact HTML ──────────────────────────────────────
       #
       # Le HTML est uploadé comme artifact GitHub Actions (disponible 7 jours).
       # Aucune donnée client n'est committée dans le dépôt.
@@ -88,7 +104,7 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
-      # ── 7. Notification email ────────────────────────────────────────────
+      # ── 8. Notification email ────────────────────────────────────────────
       # Configurer le secret SENDGRID_API_KEY dans Settings → Secrets (gratuit jusqu'à 100 emails/jour)
       - name: Envoyer résumé par email (optionnel)
         if: env.SENDGRID_API_KEY != ''
@@ -114,7 +130,7 @@ jobs:
           print("Email envoyé.")
           EOF
 
-      # ── 8. Résumé dans les logs ───────────────────────────────────────────
+      # ── 9. Résumé dans les logs ───────────────────────────────────────────
       - name: Afficher le résumé dans les logs
         run: |
           echo "──────────────────────────────────────────"
