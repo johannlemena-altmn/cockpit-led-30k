@@ -1,13 +1,13 @@
 {
   "generated": "2026-06-03",
-  "demo_mode": true,
-  "led_signees": 196177,
-  "nb_dossiers": 5280,
-  "prime_total": 13000000,
+  "demo_mode": false,
+  "led_signees": 233504,
+  "nb_dossiers": 6613,
+  "prime_total": 15503049,
   "led_moy": 37,
   "led_med": 30,
   "led_max": 459,
   "objectif_mensuel": 30000,
-  "taux_pose_pct": 68,
+  "taux_pose_pct": 67,
   "mois": []
 }
