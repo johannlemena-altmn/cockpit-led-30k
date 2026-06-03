@@ -12,9 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       export_url:
-        description: >
-          URL directe de l'export CSV Pixel CRM (optionnel — sinon utilise
-          le secret PIXEL_EXPORT_URL configuré dans Settings > Secrets).
+        description: "URL directe export CSV Pixel (optionnel, sinon secret PIXEL_EXPORT_URL)"
         required: false
         default: ""
 
@@ -42,35 +40,41 @@ jobs:
       - name: Installer les dépendances
         run: pip install pandas openpyxl
 
-      # ── 4. Télécharger l'export CRM ───────────────────────────────────────
+      # ── 4a. Pixel CRM via API (recommandé) ───────────────────────────────
       #
-      # À CONFIGURER :
-      #   - Aller dans Settings > Secrets and variables > Actions
-      #   - Créer un secret nommé PIXEL_EXPORT_URL avec l'URL de l'export CSV
-      #     Pixel CRM (endpoint ou lien de téléchargement direct).
+      # CONFIGURER CES 2 SECRETS dans Settings > Secrets and variables > Actions :
+      #   PIXEL_BASE_URL        = https://votre-instance.pixel-crm.fr
+      #   PIXEL_SESSION_COOKIE  = valeur du Cookie copiée depuis DevTools (F12)
+      #                           après connexion à Pixel CRM
       #
-      # L'URL peut être :
-      #   a) Une URL directe vers un CSV hébergé (ex : SharePoint, S3, serveur interne)
-      #   b) Un endpoint API qui retourne du CSV (ex : Pixel CRM /Fiche/Recherche…)
+      # Si les secrets sont présents, pixel_api.py récupère les agrégats directement
+      # et écrit public_data.json — le dashboard GitHub Pages se met à jour.
       #
-      # Si aucun secret ni input fourni, cette étape est ignorée (mode démo/test).
+      - name: Récupérer agrégats Pixel CRM (API directe)
+        if: env.PIXEL_BASE_URL != '' && env.PIXEL_SESSION_COOKIE != ''
+        env:
+          PIXEL_BASE_URL: ${{ secrets.PIXEL_BASE_URL }}
+          PIXEL_SESSION_COOKIE: ${{ secrets.PIXEL_SESSION_COOKIE }}
+        run: |
+          echo "Interrogation de l'API Pixel CRM…"
+          python pixel_api.py && echo "✅ public_data.json mis à jour depuis l'API Pixel" || echo "⚠️ API Pixel non reconnue — voir logs ci-dessus pour debug"
+
+      # ── 4b. Télécharger l'export CSV (alternative) ───────────────────────
       #
-      - name: Télécharger l'export CSV Pixel CRM
+      # Alternative si l'API Pixel n'est pas disponible :
+      # Configurer PIXEL_EXPORT_URL avec l'URL directe du CSV (SharePoint, S3, etc.)
+      #
+      - name: Télécharger l'export CSV Pixel CRM (fallback)
         env:
           PIXEL_EXPORT_URL: ${{ inputs.export_url || secrets.PIXEL_EXPORT_URL }}
         run: |
+          mkdir -p data
           if [ -z "$PIXEL_EXPORT_URL" ]; then
-            echo "⚠️  PIXEL_EXPORT_URL non configuré — passage en mode démo (data/ vide)."
-            mkdir -p data
+            echo "ℹ️  Aucun secret configuré — mode démo."
           else
-            echo "Téléchargement de l'export depuis PIXEL_EXPORT_URL…"
-            mkdir -p data
-            # À ADAPTER si l'URL nécessite une authentification :
-            #   curl -H "Authorization: Bearer $PIXEL_API_TOKEN" -L "$PIXEL_EXPORT_URL" -o data/export_crm.csv
-            curl -L "$PIXEL_EXPORT_URL" \
-              --fail --silent --show-error \
-              -o data/export_crm.csv
-            echo "Export téléchargé : $(wc -l < data/export_crm.csv) lignes"
+            echo "Téléchargement CSV depuis PIXEL_EXPORT_URL…"
+            curl -L "$PIXEL_EXPORT_URL" --fail --silent --show-error -o data/export_crm.csv
+            echo "Export : $(wc -l < data/export_crm.csv) lignes"
           fi
 
       # ── 5. Générer le résumé HTML ─────────────────────────────────────────
