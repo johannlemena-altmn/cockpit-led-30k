@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cockpit LED 30k — Énergie Responsable</title>
+<style>
+:root {
+  --navy: #1F3A5F;
+  --blue: #2E6FB7;
+  --amber: #E08600;
+  --green: #2E7D32;
+  --red: #C0392B;
+  --ink: #1c2530;
+  --muted: #5b6573;
+  --line: #dfe5ee;
+  --soft: #eef3fb;
+  --bg: #f0f4fa;
+  --card: #ffffff;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1621;
+    --card: #1a2535;
+    --ink: #e8edf5;
+    --muted: #8a9bb0;
+    --line: #2a3a50;
+    --soft: #1e2d42;
+    --navy: #4a7fc1;
+    --blue: #5a9fd4;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.45;
+  min-height: 100dvh;
+}
+
+/* HEADER */
+.hdr {
+  background: linear-gradient(145deg, #1F3A5F 0%, #2b5899 100%);
+  color: #fff;
+  padding: env(safe-area-inset-top, 12px) 16px 18px;
+  padding-top: max(env(safe-area-inset-top), 16px);
+}
+.hdr-tag { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; opacity: .75; margin-bottom: 4px; }
+.hdr h1 { font-size: 21px; font-weight: 700; line-height: 1.2; }
+.hdr-sub { font-size: 12px; opacity: .8; margin-top: 4px; }
+
+/* PROGRESS BAR */
+.progress-wrap {
+  background: rgba(255,255,255,.12);
+  border-radius: 999px;
+  height: 8px;
+  margin-top: 14px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffd24a, #ffb300);
+  transition: width .6s ease;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  opacity: .85;
+  margin-top: 5px;
+}
+
+/* SCROLL CONTAINER */
+.scroll { padding: 14px 14px calc(env(safe-area-inset-bottom) + 40px); max-width: 520px; margin: 0 auto; }
+
+/* KPI GRID */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.kpi-grid.tri { grid-template-columns: 1fr 1fr 1fr; }
+.kpi {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 14px 14px 12px;
+  border: 1px solid var(--line);
+}
+.kpi .val { font-size: 24px; font-weight: 700; color: var(--navy); line-height: 1.1; }
+.kpi .lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.kpi.accent { background: var(--navy); border-color: transparent; }
+.kpi.accent .val { color: #ffd24a; font-size: 26px; }
+.kpi.accent .lbl { color: rgba(255,255,255,.75); }
+.kpi.warn { border-left: 3px solid var(--amber); }
+.kpi.danger { border-left: 3px solid var(--red); }
+.kpi.ok { border-left: 3px solid var(--green); }
+
+/* SECTION TITLE */
+.sec-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin: 18px 0 8px;
+}
+
+/* CARD */
+.card {
+  background: var(--card);
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.card h3 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 10px; }
+
+/* FUNNEL */
+.funnel { display: flex; flex-direction: column; gap: 6px; }
+.funnel-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.funnel-bar-wrap {
+  flex: 1;
+  background: var(--soft);
+  border-radius: 6px;
+  height: 28px;
+  overflow: hidden;
+  position: relative;
+}
+.funnel-bar {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  transition: width .5s ease;
+}
+.funnel-label { font-size: 11px; color: var(--muted); width: 72px; text-align: right; flex-shrink: 0; }
+.funnel-pct { font-size: 11px; font-weight: 700; width: 38px; flex-shrink: 0; }
+
+/* ALERT BOX */
+.alert {
+  border-radius: var(--r);
+  padding: 12px 14px;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.alert.amber { background: #fff8e7; border: 1px solid #f5d77e; color: #7a4900; }
+.alert.blue  { background: #eaf3ff; border: 1px solid #b8d6f5; color: #1a3d6d; }
+.alert.green { background: #eafaf1; border: 1px solid #a8dfbe; color: #1a5232; }
+@media (prefers-color-scheme: dark) {
+  .alert.amber { background: #2a1e00; border-color: #6b4e00; color: #ffc94a; }
+  .alert.blue  { background: #0e1e35; border-color: #1d4570; color: #7fb9f0; }
+  .alert.green { background: #0c2418; border-color: #1a5232; color: #6fcf97; }
+}
+.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: -1px; }
+.alert b { display: block; font-size: 13px; margin-bottom: 2px; }
+
+/* MINI BARS */
+.mini-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+.mini-bar-lbl { font-size: 11px; color: var(--muted); width: 44px; flex-shrink: 0; }
+.mini-bar-track { flex: 1; background: var(--soft); border-radius: 4px; height: 18px; overflow: hidden; }
+.mini-bar-fill { height: 100%; border-radius: 4px; background: var(--blue); }
+.mini-bar-val { font-size: 11px; color: var(--ink); font-weight: 600; width: 50px; text-align: right; flex-shrink: 0; }
+
+/* CHECKLIST */
+.checklist { display: flex; flex-direction: column; gap: 8px; }
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+}
+.check-item .ci-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.check-item .ci-body { flex: 1; }
+.check-item .ci-title { font-weight: 600; font-size: 13px; }
+.check-item .ci-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.check-item.done { background: #eafaf1; border-color: #a8dfbe; }
+.check-item.active { background: #fff8e7; border-color: #f5d77e; }
+.check-item.todo { opacity: .7; }
+@media (prefers-color-scheme: dark) {
+  .check-item.done { background: #0c2418; border-color: #1a5232; }
+  .check-item.active { background: #2a1e00; border-color: #6b4e00; }
+}
+
+/* FOOTER */
+.foot {
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 20px;
+  padding-bottom: 6px;
+}
+
+/* NUMBER FORMATTING */
+@media (max-width: 380px) {
+  .kpi .val { font-size: 20px; }
+  .kpi.accent .val { font-size: 22px; }
+  .hdr h1 { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-tag">Énergie Responsable · BAT-EQ-127</div>
+  <h1>Cockpit LED 30 000</h1>
+  <div class="hdr-sub">Agrégats du 03/06/2026 · données anonymisées</div>
+  <div class="progress-wrap">
+    <div class="progress-bar" style="width:100%"></div>
+  </div>
+  <div class="progress-label">
+    <span>196 177 LED signées</span>
+    <span>×6,5 l'objectif mensuel ✓</span>
+  </div>
+</div>
+
+<!-- SCROLL AREA -->
+<div class="scroll">
+
+  <!-- KPIs PRINCIPAUX -->
+  <div class="sec-title">KPIs clés</div>
+  <div class="kpi-grid">
+    <div class="kpi accent" style="grid-column: 1 / -1;">
+      <div class="val">196 177</div>
+      <div class="lbl">LED signées (total portefeuille)</div>
+    </div>
+    <div class="kpi">
+      <div class="val">5 280</div>
+      <div class="lbl">dossiers signés</div>
+    </div>
+    <div class="kpi">
+      <div class="val">13,0 M€</div>
+      <div class="lbl">prime CEE totale</div>
+    </div>
+    <div class="kpi">
+      <div class="val">37</div>
+      <div class="lbl">LED/dossier (moy.)</div>
+    </div>
+    <div class="kpi">
+      <div class="val">30</div>
+      <div class="lbl">médiane LED/dossier</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid tri">
+    <div class="kpi">
+      <div class="val">30 000</div>
+      <div class="lbl">objectif / mois</div>
+    </div>
+    <div class="kpi">
+      <div class="val">1 500</div>
+      <div class="lbl">cible / jour</div>
+    </div>
+    <div class="kpi">
+      <div class="val">200 €</div>
+      <div class="lbl">prime / pers.</div>
+    </div>
+  </div>
+
+  <!-- DIAGNOSTIC -->
+  <div class="sec-title">Diagnostic — frein principal</div>
+
+  <div class="alert amber">
+    <div class="alert-icon">⚠️</div>
+    <div>
+      <b>Le stock n'est pas le problème</b>
+      196 177 LED signées = ×6,5 l'objectif. Le frein est le <strong>débit de traitement</strong> (contrôle → dépôt) et le <strong>taux de pose</strong>.
+    </div>
+  </div>
+
+  <!-- FUNNEL POSE -->
+  <div class="card">
+    <h3>Entonnoir — taux de pose actuel vs cible</h3>
+    <div class="funnel">
+      <div class="funnel-step">
+        <div class="funnel-label">Signées</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width:100%; background:#2E6FB7;">196 177</div>
+        </div>
+        <div class="funnel-pct" style="color:#2E6FB7;">100%</div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-label">Contrôlées</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width:85%; background:#5a9fd4;">~166 750</div>
+        </div>
+        <div class="funnel-pct" style="color:#5a9fd4;">~85%</div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-label">Posées</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width:67%; background:#E08600;">~131 440</div>
+        </div>
+        <div class="funnel-pct" style="color:#E08600;">~67%</div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-label">Cible pose</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width:95%; background:#2E7D32; opacity:.4;">≥95%</div>
+        </div>
+        <div class="funnel-pct" style="color:#2E7D32;">≥95%</div>
+      </div>
+    </div>
+    <div style="font-size:10.5px; color:var(--muted); margin-top:8px;">* Taux de pose estimé 60-75% · cible ≥95% pour déblocage dépôt</div>
+  </div>
+
+  <!-- RÉPARTITION DOSSIERS -->
+  <div class="sec-title">Répartition dossiers par taille</div>
+  <div class="card">
+    <h3>Distribution LED / dossier</h3>
+    <div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-lbl">1-9</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:18%; background:#5a9fd4;"></div></div>
+        <div class="mini-bar-val">~950</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-lbl">10-19</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:22%; background:#5a9fd4;"></div></div>
+        <div class="mini-bar-val">~1 160</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-lbl">20-29</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:35%; background:#2E6FB7;"></div></div>
+        <div class="mini-bar-val">~1 848</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-lbl">30-49</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:55%; background:#2E6FB7;"></div></div>
+        <div class="mini-bar-val">~2 904</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-lbl">50-99</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:30%; background:#1F3A5F;"></div></div>
+        <div class="mini-bar-val">~1 584</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mini-bar-lbl">100+</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:14%; background:#E08600;"></div></div>
+        <div class="mini-bar-val">~739</div>
+      </div>
+    </div>
+    <div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Valeurs estimées · médiane 30 · max 459 LED/dossier</div>
+  </div>
+
+  <!-- SECTEUR -->
+  <div class="card">
+    <h3>Répartition secteur</h3>
+    <div class="mini-bar-row">
+      <div class="mini-bar-lbl">Entrepôts</div>
+      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:98%; background:#2E7D32;"></div></div>
+      <div class="mini-bar-val">~98%</div>
+    </div>
+    <div class="mini-bar-row">
+      <div class="mini-bar-lbl">Autres</div>
+      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:2%; background:#5b6573;"></div></div>
+      <div class="mini-bar-val">~2%</div>
+    </div>
+    <div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Quasi 100% secteur Entrepôts · cohérent BAT-EQ-127</div>
+  </div>
+
+  <!-- BACKLOG SPRINT -->
+  <div class="sec-title">Sprint — état des actions</div>
+  <div class="checklist">
+    <div class="check-item done">
+      <div class="ci-icon">✅</div>
+      <div class="ci-body">
+        <div class="ci-title">Diagnostic & données</div>
+        <div class="ci-sub">196 177 LED signées analysées · frein identifié (pose + traitement)</div>
+      </div>
+    </div>
+    <div class="check-item done">
+      <div class="ci-icon">✅</div>
+      <div class="ci-body">
+        <div class="ci-title">Dashboards HTML générables</div>
+        <div class="ci-sub">build_dashboard_interactive.py + MVP · cockpit Excel</div>
+      </div>
+    </div>
+    <div class="check-item active">
+      <div class="ci-icon">🔄</div>
+      <div class="ci-body">
+        <div class="ci-title">S0 — Feed enrichi statut/pose</div>
+        <div class="ci-sub">Via support Pixel (export 500 colonnes) ou endpoint agrégats · en cours</div>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="ci-icon">⏳</div>
+      <div class="ci-body">
+        <div class="ci-title">S1 — ETL → Postgres → Metabase</div>
+        <div class="ci-sub">infra/etl.py prêt · brancher sur données live</div>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="ci-icon">⏳</div>
+      <div class="ci-body">
+        <div class="ci-title">S2 — Stack Docker + refresh 15 min</div>
+        <div class="ci-sub">infra/refresh.sh · déploiement auto-hébergé</div>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="ci-icon">💡</div>
+      <div class="ci-body">
+        <div class="ci-title">S3 — Résumé quotidien Claude + MCP</div>
+        <div class="ci-sub">Questions en langage naturel sur le pipeline</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMENT CONNECTER LES DONNÉES -->
+  <div class="sec-title">Connecter les données réelles</div>
+  <div class="alert blue">
+    <div class="alert-icon">📱</div>
+    <div>
+      <b>Depuis un poste de bureau</b>
+      Exporter Pixel CRM (« eq 127 pour liste ») → déposer dans <code>data/</code> → lancer <code>python build_dashboard_interactive.py</code>
+    </div>
+  </div>
+  <div class="alert green">
+    <div class="alert-icon">☁️</div>
+    <div>
+      <b>Voir sur iPhone sans CSV</b>
+      Cette page est disponible via GitHub Pages après activation dans les Settings du dépôt (<em>Pages → Source → branche main</em>).
+    </div>
+  </div>
+
+  <div class="foot">
+    Cockpit LED 30k · Énergie Responsable · données agrégées anonymisées · 03/06/2026<br>
+    Aucune donnée client (PII) dans ce fichier
+  </div>
+
+</div><!-- /scroll -->
+
+</body>
+</html>
