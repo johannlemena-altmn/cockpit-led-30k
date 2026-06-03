@@ -94,16 +94,18 @@ mlabels=[f"{lab}'{m[2:4]}" for lab,m in zip(mlabels,months)]
 
 html=f"""<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Dashboard LED — MVP</title>
 <style>
-:root{{--navy:#1F3A5F;--blue:#2E6FB7;--amber:#E08600;--green:#2E7D32;--red:#C0392B;--ink:#1c2530;--muted:#5b6573;--line:#dfe5ee;--soft:#eef3fb;--bg:#f6f8fc;}}
+:root{{--navy:#1F3A5F;--blue:#2E6FB7;--amber:#E08600;--green:#2E7D32;--red:#C0392B;--ink:#1c2530;--muted:#5b6573;--line:#dfe5ee;--soft:#eef3fb;--bg:#f0f4fa;}}
 *{{box-sizing:border-box}}body{{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);margin:0;background:var(--bg);line-height:1.5}}
-.wrap{{max-width:980px;margin:0 auto;padding:24px 26px 60px}}
+.wrap{{max-width:700px;margin:0 auto;padding:24px 26px 60px}}
 .hero{{background:linear-gradient(135deg,var(--navy),#2b5180);color:#fff;border-radius:14px;padding:20px 24px}}
 .hero .k{{font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.8}}
 .hero h1{{margin:6px 0 2px;font-size:24px}}.hero .s{{opacity:.9;font-size:12.5px}}
 .kpis{{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:16px}}
-.kpi{{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;box-shadow:0 1px 3px rgba(20,30,50,.05)}}
+.kpi{{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;box-shadow:0 1px 3px rgba(20,30,50,.05);min-width:0}}
 .kpi b{{display:block;font-size:21px;line-height:1;color:var(--navy)}}.kpi span{{font-size:10.5px;color:var(--muted)}}
 .kpi.hl{{background:var(--navy);border:none}}.kpi.hl b,.kpi.hl span{{color:#fff}}
 .kpi.hl b{{color:#ffd79a}}
@@ -118,7 +120,7 @@ h2{{font-size:14px;color:var(--navy);margin:0 0 4px}}
 ul{{margin:6px 0;padding-left:18px}}li{{margin:3px 0;font-size:13px}}
 .tag{{display:inline-block;background:var(--soft);color:var(--blue);font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;margin-right:5px}}
 .foot{{margin-top:22px;font-size:11px;color:var(--muted);text-align:center}}
-@media(max-width:760px){{.kpis{{grid-template-columns:repeat(2,1fr)}}.grid2{{grid-template-columns:1fr}}}}
+@media(max-width:600px){{.kpis{{grid-template-columns:repeat(2,1fr)}}.grid2{{grid-template-columns:1fr}}.bar{{flex-direction:column;gap:8px}}.fld select,.fld input{{font-size:16px}}.kpi b{{font-size:18px}}table{{font-size:11px}}.wrap{{padding:12px 12px 40px}}}}
 </style></head><body><div class="wrap">
 
 <div class="hero">
