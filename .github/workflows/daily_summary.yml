@@ -88,7 +88,33 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
-      # ── 7. Résumé dans les logs ───────────────────────────────────────────
+      # ── 7. Notification email ────────────────────────────────────────────
+      # Configurer le secret SENDGRID_API_KEY dans Settings → Secrets (gratuit jusqu'à 100 emails/jour)
+      - name: Envoyer résumé par email (optionnel)
+        if: env.SENDGRID_API_KEY != ''
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        run: |
+          python - <<'EOF'
+          import os, urllib.request, json, datetime
+          key = os.environ['SENDGRID_API_KEY']
+          today = datetime.date.today().strftime('%d/%m/%Y')
+          run_id = os.environ.get('GITHUB_RUN_ID', '')
+          artifact_url = f"https://github.com/johannlemena-altmn/cockpit-led-30k/actions/runs/{run_id}"
+          body = {
+            "personalizations": [{"to": [{"email": "johann.lemena@gmail.com"}]}],
+            "from": {"email": "noreply@cockpit-led.fr", "name": "Cockpit LED"},
+            "subject": f"Résumé LED du {today}",
+            "content": [{"type": "text/html", "value": f"<p>Bonjour,</p><p>Le résumé quotidien du {today} est disponible :</p><p><a href='{artifact_url}'>Voir le résumé dans GitHub Actions</a></p><p>— Cockpit LED 30k</p>"}]
+          }
+          req = urllib.request.Request('https://api.sendgrid.com/v3/mail/send',
+            data=json.dumps(body).encode(), method='POST',
+            headers={'Authorization': f'Bearer {key}', 'Content-Type': 'application/json'})
+          urllib.request.urlopen(req)
+          print("Email envoyé.")
+          EOF
+
+      # ── 8. Résumé dans les logs ───────────────────────────────────────────
       - name: Afficher le résumé dans les logs
         run: |
           echo "──────────────────────────────────────────"
