@@ -44,11 +44,14 @@ DATA=json.dumps(recs, ensure_ascii=False).replace("</","<\\/")
 gen=date.today().strftime("%d/%m/%Y")
 
 html="""<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard LED — interactif</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Dashboard LED — interactif</title>
 <style>
-:root{--navy:#1F3A5F;--blue:#2E6FB7;--amber:#E08600;--green:#2E7D32;--ink:#1c2530;--muted:#5b6573;--line:#dfe5ee;--soft:#eef3fb;--bg:#f6f8fc}
+:root{--navy:#1F3A5F;--blue:#2E6FB7;--amber:#E08600;--green:#2E7D32;--ink:#1c2530;--muted:#5b6573;--line:#dfe5ee;--soft:#eef3fb;--bg:#f0f4fa}
 *{box-sizing:border-box}body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);margin:0;background:var(--bg)}
-.wrap{max-width:1080px;margin:0 auto;padding:22px 24px 60px}
+.wrap{max-width:700px;margin:0 auto;padding:22px 24px 60px}
 .hero{background:linear-gradient(135deg,var(--navy),#2b5180);color:#fff;border-radius:13px;padding:18px 22px}
 .hero h1{margin:4px 0 2px;font-size:22px}.hero .s{opacity:.9;font-size:12px}.hero .k{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;opacity:.8}
 .bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:14px 0}
@@ -58,7 +61,7 @@ html="""<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 .btn{font:inherit;font-size:12px;padding:6px 12px;border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:7px;cursor:pointer}
 .btn.ghost{background:#fff;color:var(--blue)}
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:8px 0 4px}
-.kpi{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;min-width:0}
 .kpi b{display:block;font-size:20px;color:var(--navy)}.kpi span{font-size:10.5px;color:var(--muted)}
 .kpi.hl{background:var(--navy)}.kpi.hl b{color:#ffd79a}.kpi.hl span{color:#fff}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:13px}
@@ -69,7 +72,7 @@ th{color:var(--navy);font-size:10.5px;text-transform:uppercase}
 td.r,th.r{text-align:right}
 .note{background:#fff7ec;border:1px solid #f4d6a6;border-left:4px solid var(--amber);border-radius:10px;padding:10px 13px;font-size:12px;margin-top:13px}
 .foot{margin-top:18px;font-size:10.5px;color:var(--muted);text-align:center}
-@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:600px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.bar{flex-direction:column;gap:8px}.fld select,.fld input{font-size:16px}.kpi b{font-size:18px}table{font-size:11px}.wrap{padding:12px 12px 40px}}
 </style></head><body><div class="wrap">
 <div class="hero"><div class="k">Énergie Responsable · Opération LED (BAT-EQ-127)</div>
 <h1>Dashboard LED — interactif</h1><div class="s">Données réelles Pixel CRM (__GEN__) · filtres en direct · prototype local</div></div>

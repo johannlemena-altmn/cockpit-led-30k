@@ -134,6 +134,32 @@ def compute_aggregates(rows: list):
     }
 
     if not rows:
+        # ── MODE DÉMO ────────────────────────────────────────────────────────
+        # Aucun CSV trouvé → on retourne les agrégats connus issus du diagnostic
+        # Énergie Responsable (données réelles au 03/06/2026, sans PII).
+        agg.update({
+            "total_led":             196_177,
+            "nb_dossiers":           5_280,
+            "led_par_jour":          None,   # pas de série temporelle en démo
+            "prime_totale":          13_000_000.0,
+            "taux_pose":             "60-75 % (objectif ≥ 95 %) — données agrégées",
+            "date_premier":          None,
+            "date_dernier":          None,
+            "mois_courant_led":      0,
+            "colonnes_manquantes":   [],
+            "demo_mode":             True,
+        })
+        # Alerte démo : rappel du contexte
+        agg["alertes"].append({
+            "type":   "warn",
+            "icone":  "🟡",
+            "titre":  "Mode démo — données statiques du 03/06/2026",
+            "detail": (
+                " Aucun export CSV Pixel CRM chargé. "
+                "Déposer un export dans data/ ou configurer PIXEL_EXPORT_URL "
+                "pour afficher les données live."
+            ),
+        })
         return agg
 
     # --- Agrégation par dossier ---
@@ -533,6 +559,17 @@ def generate_html(agg: dict, sources: list, output_path: str):
             f'</div>'
         )
 
+    # --- Bandeau MODE DÉMO ---
+    demo_banner_html = ""
+    if agg.get("demo_mode"):
+        demo_banner_html = (
+            '<div style="background:#fff3cd;border-bottom:2px solid #e6b800;'
+            'color:#7a4900;padding:10px 16px;font-size:12.5px;font-weight:600;'
+            'text-align:center;position:sticky;top:0;z-index:100;">'
+            '⚠️ MODE DÉMO — données agrégées du 03/06/2026, pas de CSV live'
+            '</div>'
+        )
+
     # --- Sources ---
     if sources:
         sources_txt = ", ".join(
@@ -558,7 +595,7 @@ def generate_html(agg: dict, sources: list, output_path: str):
 <style>{CSS}</style>
 </head>
 <body>
-
+{demo_banner_html}
 <!-- HEADER -->
 <div class="hdr">
   <div class="hdr-tag">Énergie Responsable · BAT-EQ-127 · Résumé quotidien</div>
