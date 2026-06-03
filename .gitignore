@@ -1,0 +1,17 @@
+# ⚠️ DONNÉES CLIENT RÉELLES / PII — JAMAIS dans Git (SIRET, noms, adresses, tel, email)
+data/
+*.csv
+*.xlsx
+*.pdf
+
+# Dashboards rendus avec données réelles embarquées (PII)
+Dashboard_LED_interactif.html
+Dashboard_LED_MVP.html
+
+# Secrets & divers
+.env
+*.env
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/

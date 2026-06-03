@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan d'attaque — 30 000 LED · Juin</title>
+<style>
+  :root{
+    --navy:#1F3A5F; --blue:#2E6FB7; --amber:#E08600; --green:#2E7D32; --red:#C0392B;
+    --ink:#1c2530; --muted:#5b6573; --line:#dfe5ee; --soft:#eef3fb; --bg:#f6f8fc;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);
+       margin:0;background:var(--bg);line-height:1.5;font-size:13.5px;}
+  .page{max-width:880px;margin:0 auto;padding:26px 30px 60px;}
+  header.hero{background:linear-gradient(135deg,var(--navy),#2b5180);color:#fff;border-radius:14px;
+       padding:22px 26px;box-shadow:0 6px 22px rgba(31,58,95,.18);}
+  header.hero .kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.8;}
+  header.hero h1{margin:6px 0 4px;font-size:26px;line-height:1.12;}
+  header.hero .sub{opacity:.9;font-size:13px;}
+  .kpis{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+  .kpi{flex:1;min-width:150px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
+       border-radius:10px;padding:10px 12px;}
+  .kpi b{display:block;font-size:22px;line-height:1;}
+  .kpi span{font-size:11px;opacity:.85;}
+  h2{font-size:15px;color:var(--navy);margin:26px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line);
+     display:flex;align-items:center;gap:8px;}
+  h2 .n{background:var(--navy);color:#fff;width:22px;height:22px;border-radius:6px;display:inline-flex;
+        align-items:center;justify-content:center;font-size:12px;flex:0 0 auto;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0;
+        box-shadow:0 1px 3px rgba(20,30,50,.04);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .lever{border-left:4px solid var(--blue);}
+  .lever h3{margin:0 0 4px;font-size:13.5px;color:var(--blue);}
+  .lever.l2{border-color:var(--amber);} .lever.l2 h3{color:var(--amber);}
+  .lever.l3{border-color:var(--green);} .lever.l3 h3{color:var(--green);}
+  ul{margin:6px 0;padding-left:18px;} li{margin:3px 0;}
+  .role{background:var(--soft);border-radius:10px;padding:10px 12px;}
+  .role h4{margin:0 0 3px;font-size:13px;color:var(--navy);}
+  .role .tag{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+  .warn{background:#fff7ec;border:1px solid #f4d6a6;border-left:5px solid var(--amber);border-radius:10px;padding:12px 14px;}
+  .warn h2{border:none;margin:0 0 6px;color:#9a5b00;}
+  .talk{background:var(--navy);color:#fff;border-radius:12px;padding:14px 18px;}
+  .talk h3{margin:0 0 6px;font-size:13px;color:#ffd79a;text-transform:uppercase;letter-spacing:.1em;}
+  .talk ul{padding-left:18px;} .talk li{margin:5px 0;}
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;}
+  th{background:var(--soft);color:var(--navy);font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+  .chk td:first-child{font-weight:700;color:var(--navy);white-space:nowrap;}
+  .pill{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;}
+  .pill.stop{background:#fdecea;color:var(--red);} .pill.go{background:#e7f5e9;color:var(--green);}
+  .msg{background:#f4f7fc;border:1px dashed var(--blue);border-radius:8px;padding:8px 10px;font-size:11.5px;
+       color:#2a3a52;margin:6px 0;}
+  .small{font-size:11px;color:var(--muted);}
+  .foot{margin-top:24px;font-size:11px;color:var(--muted);text-align:center;}
+  @media print{
+    body{background:#fff;font-size:11.5px;}
+    .page{max-width:none;padding:0 6mm;}
+    header.hero{box-shadow:none;border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .card,.kpi,.role,.warn,.talk,th{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    h2{break-after:avoid;} .card,.role,table{break-inside:avoid;}
+    .pagebreak{break-before:page;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="kicker">Énergie Responsable · Opérations CEE / LED</div>
+    <h1>Plan d'attaque : 30 000 LED déposées en juin</h1>
+    <div class="sub">Proposition de process — préparée par Johann · à valider en 5–10 min puis déployer en équipe</div>
+    <div class="kpis">
+      <div class="kpi"><b>30 000</b><span>LED à déposer ce mois</span></div>
+      <div class="kpi"><b>1 500 / j</b><span>cadence cible (jour ouvré)</span></div>
+      <div class="kpi"><b>200 € / pers</b><span>prime si objectif atteint</span></div>
+      <div class="kpi"><b>&gt; 30 000</b><span>déjà signées en stock</span></div>
+    </div>
+  </header>
+
+  <!-- TALKING POINTS -->
+  <div class="talk" style="margin-top:16px;">
+    <h3>Le pitch en 60 secondes (pour le créneau de demain)</h3>
+    <ul>
+      <li><b>Ce n'est pas un problème de ventes</b> : on a <b>déjà plus de 30 000 LED signées</b>. C'est un problème de <b>débit de traitement</b> et de <b>complétude de pose</b>.</li>
+      <li><b>Deux fuites</b> nous coûtent l'objectif : la <b>pose qui traîne chez le client</b> (on plafonne à 60–75% au lieu de 95–100%) et le <b>contrôle/dépôt lent</b> (croisement manuel de 5 sources + reprises + attentes).</li>
+      <li><b>Trois leviers</b> : <b>VOIR</b> (un dashboard activable chaque jour) · <b>DÉBLOQUER</b> (relances pose + dépendances groupées) · <b>CADENCER</b> (mini-chaîne à 2–3 + stand-up de 15 min).</li>
+      <li><b>Ce que je demande</b> : un export du CRM (ou 20 min ensemble) pour brancher le dashboard sur les vrais chiffres, et le feu vert pour lancer.</li>
+    </ul>
+  </div>
+
+  <!-- 1. CONSTAT -->
+  <h2><span class="n">1</span> Le constat</h2>
+  <div class="card">
+    <p style="margin:0 0 6px;"><b>L'objectif est atteignable</b>, mais pas en travaillant « plus vite » sur chaque dossier — en supprimant les blocages. À ~22 jours ouvrés, 1 500/j ⇒ ~33 000 de capacité théorique : la marge existe <i>si</i> le tunnel coule.</p>
+    <div class="grid2">
+      <div>
+        <b style="color:var(--red);">Fuite n°1 — la pose</b>
+        <ul>
+          <li>Complétude réelle <b>60–75%</b> alors que l'exigence est <b>≥ 95–100%</b>.</li>
+          <li>Cause : le client met du temps à finir l'installation → le dossier reste « en attente pose ».</li>
+        </ul>
+      </div>
+      <div>
+        <b style="color:var(--amber);">Fuite n°2 — le traitement</b>
+        <ul>
+          <li>Contrôle = croiser <b>CEE · Betool · fiche XLS · Pixel CRM · audits · synthèses</b> à la main.</li>
+          <li>Reprises répétées (« à demander », « à changer », devis à resigner) et attentes externes (Pappers, justifs).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. LEVIERS -->
+  <h2><span class="n">2</span> Les 3 leviers</h2>
+  <div class="card lever">
+    <h3>① VOIR — un tableau de bord unique, activable chaque jour</h3>
+    <p style="margin:0;">Un fichier Excel alimenté par l'export Pixel/Betool. Chaque matin il répond : <b>déposé hier vs cible</b>, <b>reste à faire</b>, <b>rythme requis recalculé</b>, <b>Top 12 dossiers à traiter</b>, <b>dossiers bloqués + motif</b>, et la <b>profondeur du pipeline</b> (moyenne / médiane / min-max de LED par dossier). C'est la « photo » qui pilote la journée. <span class="small">(Méthode éprouvée chez Zeliq, ici sur nos outils internes.)</span></p>
+  </div>
+  <div class="card lever l2">
+    <h3>② DÉBLOQUER — s'attaquer aux deux fuites</h3>
+    <ul style="margin:0;">
+      <li><b>Complétude pose</b> : liste de relance quotidienne des clients &lt; 95%, avec message-type et échéance (voir §6). Objectif : faire <b>poser pour de vrai</b>, vite.</li>
+      <li><b>Dépendances groupées</b> : un créneau <b>Pappers</b> en lot, demandes de <b>justifs</b> en lot, <b>devis à resigner</b> en lot — au lieu de bloquer dossier par dossier.</li>
+    </ul>
+  </div>
+  <div class="card lever l3">
+    <h3>③ CADENCER — une mini-chaîne + un rituel</h3>
+    <p style="margin:0;">On arrête le « chacun fait un dossier de A à Z » (lent, source d'erreurs) : on <b>spécialise par poste</b> (§3) et on cale un <b>stand-up de 15 min</b> chaque matin (§4).</p>
+  </div>
+
+  <!-- 3. CHAINE -->
+  <h2><span class="n">3</span> La chaîne de production (équipe de 2–3)</h2>
+  <div class="card">
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="role">
+        <div class="tag">Poste 1</div>
+        <h4>Entrée &amp; Identité</h4>
+        <p class="small" style="margin:0;">Import export CRM · Pappers/Infogreffe · attest. agri · justifs adresses/délégation. Sort un dossier « prêt à contrôler ».</p>
+      </div>
+      <div class="role">
+        <div class="tag">Poste 2</div>
+        <h4>Contrôle &amp; Réconciliation</h4>
+        <p class="small" style="margin:0;">Le cœur du .md : croise CEE/Audit/Synthèse, LED·surfaces·parcelles, fiche DAEWOO. Applique la checklist v2 (§6).</p>
+      </div>
+      <div class="role">
+        <div class="tag">Poste 3</div>
+        <h4>Dépôt &amp; Reprises</h4>
+        <p class="small" style="margin:0;">Pousse dans l'outil · commentaires auditeurs Betool · statuts · gère les retours. Poste tournant possible.</p>
+      </div>
+    </div>
+    <p class="small" style="margin:8px 0 0;"><b>Règle anti-embouteillage (WIP)</b> : un nombre max de dossiers « en cours » par poste — on finit avant d'en ouvrir d'autres. <b>Si vous n'êtes que 2</b> : Postes 1+2 le matin, Poste 3 l'après-midi.</p>
+  </div>
+
+  <!-- 4. RITUEL -->
+  <h2><span class="n">4</span> Le rituel quotidien (15 min)</h2>
+  <div class="card">
+    <table>
+      <tr><th>Quand</th><th>Quoi</th></tr>
+      <tr><td><b>9h00</b> — stand-up</td><td>Devant le dashboard : hier (déposé vs cible), aujourd'hui (Top 12), blocages. Chacun annonce ses 3–5 dossiers cibles.</td></tr>
+      <tr><td><b>avant 10h</b></td><td>Relances pose envoyées aux clients &lt; seuil (message-type prêt).</td></tr>
+      <tr><td><b>fin de journée</b></td><td>Mise à jour des statuts dans le pipeline + saisie de la case « LED déposées du jour » → le burn-up se met à jour seul.</td></tr>
+    </table>
+  </div>
+
+  <!-- 5. CONFORMITE -->
+  <div class="warn" style="margin-top:18px;">
+    <h2 style="font-size:15px;">⚠ Conformité — le point qui nous protège (et protège la prime)</h2>
+    <p style="margin:0 0 6px;">Le <b>PNCEE contrôle la réalité et la complétude des poses</b>. Déposer un dossier qui n'est pas réellement posé, c'est s'exposer à un <b>rejet, une récupération de la prime, voire une sanction</b> — et c'est <b>l'étape de contrôle (nous) qui engage sa responsabilité</b> en validant.</p>
+    <p style="margin:0;">⇒ On ne « débloque » pas le volume en fermant les yeux sur la complétude : on le débloque en <b>faisant poser pour de vrai, plus vite</b> (système de relance). Le dashboard rend le <b>taux de pose réel visible</b> et en fait un KPI piloté, plus un angle mort. <b>Gate</b> : un dossier ne passe « Prêt à déposer » que si <b>pose ≥ seuil</b> (paramétrable, défaut 100%). C'est ça qui sécurise les 30 000 <i>et</i> la prime de l'équipe.</p>
+  </div>
+
+  <!-- 6. CHECKLIST -->
+  <h2 class="pagebreak"><span class="n">5</span> Checklist de contrôle v2 — passe unique, anti-erreur</h2>
+  <div class="card">
+    <table class="chk">
+      <tr><th>Bloc</th><th>À vérifier (rapide)</th></tr>
+      <tr><td>A · Identité<br><span class="small">~2 min</span></td>
+          <td>Pappers : SIRET, dirigeant, secteur (APE 01/02 ⇒ AGRI ⇒ <b>attest. agri</b>). Adresse(s) d'opération = siège ? sinon <b>justif à demander</b>.</td></tr>
+      <tr><td>B · CEE = la base<br><span class="small">~3 min</span></td>
+          <td>Date prévisite = date devis · début travaux <b>≥ 14 j</b> après prévisite · nb LED &amp; répartition · prime TTC/HT · reste à payer = 0 · bonne case secteur · « mis en œuvre » ≠ Clichy · étude dimensionnement (Prime Evolution) · signataire = « représenté par ».</td></tr>
+      <tr><td>C · Réconciliation<br><span class="small">~5 min</span></td>
+          <td><b>LED</b> : CEE = Audit = Synthèse. <b>Surfaces</b> : CEE = Audit = Synthèse. <b>Parcelles</b> : Pixel = Audit = Synthèse. <span class="small">(C'est la <b>synthèse</b> qui décroche le plus souvent.)</span> Tout écart ⇒ commentaire auditeur + corriger.</td></tr>
+      <tr><td>D · Fiche technique<br><span class="small">~1 min</span></td>
+          <td>DAEWOO-3.7 : durée 54 000 h · 185 lm/w · PF 0,99 · IK 9 · IRC 71 · distorsion 3,7%. Tout écart vs fiche ⇒ commentaire.</td></tr>
+      <tr><td>E · <span class="pill stop">STOP</span> Conformité</td>
+          <td>Pose réelle ≥ seuil ? · justifs reçus ? · délégation si signataire ≠ dirigeant ? <b>Un seul KO</b> ⇒ statut <b>« Bloqué » + motif</b> (pas « Prêt »). Tout OK ⇒ <span class="pill go">Prêt à déposer</span>.</td></tr>
+    </table>
+    <p class="small" style="margin:10px 0 4px;"><b>Top 5 des causes de reprise à tuer en amont</b> (tirées de tes dossiers) :</p>
+    <ol class="small" style="margin:0;">
+      <li>Parcelles manquantes / fausses dans la <b>synthèse</b>.</li>
+      <li>Mauvaise <b>répartition LED</b> (p.3 / 9 / 10).</li>
+      <li><b>Attest. agri</b> manquante (dossiers AGRI).</li>
+      <li><b>Devis Betool ≠ fichier XLS</b> ⇒ à refaire signer.</li>
+      <li><b>Date prévisite / Prime Evolution</b> pas à jour avant envoi.</li>
+    </ol>
+  </div>
+
+  <!-- 7. RELANCES + BESOINS -->
+  <h2><span class="n">6</span> Relances pose — messages prêts à envoyer</h2>
+  <div class="card">
+    <div class="msg"><b>SMS / WhatsApp J :</b> « Bonjour [Nom], pour finaliser votre dossier d'aide (prime déjà validée), il nous manque la <b>fin de pose des LED</b>. Pouvez-vous nous confirmer une date d'ici [J+5] ? Sans cela le dossier ne peut pas être déposé. Merci ! — Énergie Responsable »</div>
+    <div class="msg"><b>Relance J+5 (appel + mail) :</b> « Votre prime CEE est <b>prête</b>, il ne reste que la pose à terminer pour la débloquer. On peut vous aider à caler l'intervention cette semaine — quel jour vous arrange ? »</div>
+    <p class="small" style="margin:4px 0 0;">Suivi des relances directement dans le pipeline (colonne <i>Motif blocage = « Attente pose client »</i>).</p>
+  </div>
+
+  <h2><span class="n">7</span> Ce dont j'ai besoin pour lancer</h2>
+  <div class="card">
+    <ul style="margin:0;">
+      <li><b>Un export Pixel/Betool (CSV)</b> ou 20 min ensemble pour le sortir ⇒ je branche le dashboard sur les vrais chiffres et on a la photo du pipeline.</li>
+      <li><b>Validation</b> de la chaîne à 2–3 et du créneau stand-up de 9h.</li>
+      <li><b>Planning</b> : Semaine 1 = instrumenter (dashboard live) + lancer les relances pose ; Semaines 2–4 = tenir 1 500/j.</li>
+    </ul>
+  </div>
+
+  <div class="foot">Énergie Responsable — Plan 30 000 LED · Juin · document de travail interne</div>
+</div>
+</body>
+</html>

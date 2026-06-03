@@ -1,0 +1,42 @@
+# Cockpit LED — stack auto-hébergée (Docker)
+# Postgres = entrepôt de données | Metabase = dashboards multi-pôles
+# Démarrage : docker compose up -d   puis http://localhost:3000
+services:
+  db:
+    image: postgres:16
+    container_name: led_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PGUSER:-led}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-changeme}
+      POSTGRES_DB: ${PGDATABASE:-ledcockpit}
+    volumes:
+      - led_pgdata:/var/lib/postgresql/data
+      - ./sql/init_metabase_db.sql:/docker-entrypoint-initdb.d/init_metabase_db.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-led}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: led_metabase
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase_app
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${PGUSER:-led}
+      MB_DB_PASS: ${PGPASSWORD:-changeme}
+      MB_DB_HOST: db
+    ports:
+      - "3000:3000"
+
+volumes:
+  led_pgdata:
