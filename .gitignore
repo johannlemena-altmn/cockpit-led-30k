@@ -8,6 +8,9 @@ data/
 Dashboard_LED_interactif.html
 Dashboard_LED_MVP.html
 
+# Résumés quotidiens générés (peuvent contenir des agrégats sensibles)
+resume_quotidien_*.html
+
 # Secrets & divers
 .env
 *.env

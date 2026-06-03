@@ -1,0 +1,98 @@
+name: Résumé quotidien LED
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Déclenchement
+#   - Automatique : lun.–ven. à 07h00 Europe/Paris (= 05:00 UTC en hiver,
+#     06:00 UTC en été — on utilise 05:00 UTC pour être sûr d'arriver avant 07h)
+#   - Manuel       : workflow_dispatch (bouton "Run workflow" dans GitHub Actions)
+# ─────────────────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    - cron: "0 5 * * 1-5"   # 05:00 UTC lun.–ven. ≈ 07:00 Europe/Paris (heure d'hiver)
+  workflow_dispatch:
+    inputs:
+      export_url:
+        description: >
+          URL directe de l'export CSV Pixel CRM (optionnel — sinon utilise
+          le secret PIXEL_EXPORT_URL configuré dans Settings > Secrets).
+        required: false
+        default: ""
+
+jobs:
+  generate-summary:
+    name: Générer le résumé quotidien
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout du dépôt ──────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Python ─────────────────────────────────────────────────────────
+      - name: Configurer Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # ── 3. Dépendances ────────────────────────────────────────────────────
+      - name: Installer les dépendances
+        run: pip install pandas openpyxl
+
+      # ── 4. Télécharger l'export CRM ───────────────────────────────────────
+      #
+      # À CONFIGURER :
+      #   - Aller dans Settings > Secrets and variables > Actions
+      #   - Créer un secret nommé PIXEL_EXPORT_URL avec l'URL de l'export CSV
+      #     Pixel CRM (endpoint ou lien de téléchargement direct).
+      #
+      # L'URL peut être :
+      #   a) Une URL directe vers un CSV hébergé (ex : SharePoint, S3, serveur interne)
+      #   b) Un endpoint API qui retourne du CSV (ex : Pixel CRM /Fiche/Recherche…)
+      #
+      # Si aucun secret ni input fourni, cette étape est ignorée (mode démo/test).
+      #
+      - name: Télécharger l'export CSV Pixel CRM
+        env:
+          PIXEL_EXPORT_URL: ${{ inputs.export_url || secrets.PIXEL_EXPORT_URL }}
+        run: |
+          if [ -z "$PIXEL_EXPORT_URL" ]; then
+            echo "⚠️  PIXEL_EXPORT_URL non configuré — passage en mode démo (data/ vide)."
+            mkdir -p data
+          else
+            echo "Téléchargement de l'export depuis PIXEL_EXPORT_URL…"
+            mkdir -p data
+            # À ADAPTER si l'URL nécessite une authentification :
+            #   curl -H "Authorization: Bearer $PIXEL_API_TOKEN" -L "$PIXEL_EXPORT_URL" -o data/export_crm.csv
+            curl -L "$PIXEL_EXPORT_URL" \
+              --fail --silent --show-error \
+              -o data/export_crm.csv
+            echo "Export téléchargé : $(wc -l < data/export_crm.csv) lignes"
+          fi
+
+      # ── 5. Générer le résumé HTML ─────────────────────────────────────────
+      - name: Générer le résumé quotidien
+        run: python daily_summary.py
+
+      # ── 6. Upload de l'artifact HTML ──────────────────────────────────────
+      #
+      # Le HTML est uploadé comme artifact GitHub Actions (disponible 7 jours).
+      # Aucune donnée client n'est committée dans le dépôt.
+      # Pour consulter : onglet Actions > run > Artifacts > resume-quotidien-YYYYMMDD
+      #
+      - name: Upload du résumé HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-quotidien-${{ github.run_id }}
+          path: resume_quotidien_*.html
+          retention-days: 7
+          if-no-files-found: warn
+
+      # ── 7. Résumé dans les logs ───────────────────────────────────────────
+      - name: Afficher le résumé dans les logs
+        run: |
+          echo "──────────────────────────────────────────"
+          echo " Résumé quotidien généré avec succès"
+          echo " Artifact disponible 7 jours dans Actions"
+          echo "──────────────────────────────────────────"
+          ls -lh resume_quotidien_*.html 2>/dev/null || echo "(aucun fichier généré)"
