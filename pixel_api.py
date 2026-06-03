@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 """
 Pixel CRM — agrégats BAT-EQ-127 sans export CSV (pas de PII).
 Interroge l'endpoint de recherche pour obtenir les totaux directement.
