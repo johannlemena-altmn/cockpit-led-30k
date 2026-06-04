@@ -121,6 +121,10 @@ fi
 echo "Génération du brief + delta…"
 "$PYTHON" daily_brief.py || true
 
+# ── Snapshot historique du jour (toujours) ────────────────────────────────────
+echo "Archivage du snapshot historique…"
+"$PYTHON" snapshot.py || true
+
 # ── Vérifier que public_data.json existe ─────────────────────────────────────
 if [ ! -f "public_data.json" ]; then
   echo "[ERREUR] public_data.json non généré."
@@ -128,12 +132,13 @@ if [ ! -f "public_data.json" ]; then
 fi
 
 # ── Git : commit + push ───────────────────────────────────────────────────────
-if git diff --quiet public_data.json 2>/dev/null; then
-  echo "public_data.json inchangé — aucune mise à jour nécessaire."
+if git diff --quiet public_data.json history/ 2>/dev/null && \
+   [ -z "$(git ls-files --others --exclude-standard history/ 2>/dev/null)" ]; then
+  echo "public_data.json + historique inchangés — aucune mise à jour nécessaire."
 else
   TODAY="$(date +%Y-%m-%d)"
-  git add public_data.json
-  git commit -m "data: public_data.json $TODAY"
+  git add public_data.json history/
+  git commit -m "data: public_data.json + snapshot $TODAY"
   git push origin main
   echo ""
   echo "✅ Dashboard mis à jour : https://johannlemena-altmn.github.io/cockpit-led-30k/"

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cockpit LED · Historique</title>
+<style>
+:root{
+  --navy:#1F3A5F;--blue:#2E6FB7;--amber:#E08600;--green:#2E7D32;
+  --red:#C0392B;--ink:#1c2530;--muted:#5b6573;--line:#dfe5ee;
+  --soft:#eef3fb;--bg:#f0f4fa;--card:#fff;--r:14px;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#0e1621;--card:#1a2535;--ink:#e8edf5;--muted:#8a9bb0;
+        --line:#2a3a50;--soft:#1e2d42;--navy:#4a7fc1;--blue:#5a9fd4;}
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+     background:var(--bg);color:var(--ink);line-height:1.45;min-height:100dvh}
+.hdr{background:linear-gradient(145deg,#1F3A5F,#2b5899);color:#fff;
+     padding:max(env(safe-area-inset-top),16px) 16px 16px}
+.hdr-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.7}
+.hdr h1{font-size:20px;font-weight:700;margin-top:2px}
+.hdr-date{font-size:11px;opacity:.78;margin-top:3px}
+.hdr-nav{margin-top:10px}
+.hdr-nav a{font-size:11px;color:#ffd24a;text-decoration:none;font-weight:600}
+.scroll{padding:14px 14px calc(env(safe-area-inset-bottom)+40px);max-width:560px;margin:0 auto}
+.sec-title{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;
+           letter-spacing:.14em;margin:20px 0 10px}
+.sec-title.first{margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+      padding:14px 16px;margin-bottom:10px}
+
+/* toggle granularité */
+.gran{display:flex;gap:6px;background:var(--soft);border:1px solid var(--line);
+      border-radius:12px;padding:4px;margin-bottom:12px}
+.gran button{flex:1;border:none;background:none;font-family:inherit;font-size:12.5px;
+      font-weight:600;color:var(--muted);padding:8px;border-radius:9px;cursor:pointer}
+.gran button.active{background:var(--navy);color:#fff}
+
+/* KPI delta cards */
+.kgrid{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.kbox{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);
+      border-radius:var(--r);padding:12px 14px}
+.kbox .v{font-size:22px;font-weight:800;color:var(--navy)}
+.kbox .l{font-size:10.5px;color:var(--muted);margin-top:2px}
+.kbox .d{font-size:11.5px;font-weight:700;margin-top:5px}
+.d.pos{color:var(--green)}.d.neg{color:var(--red)}.d.zero{color:var(--muted)}
+
+/* chart bars (par période) */
+.chart{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.crow{display:flex;align-items:center;gap:9px}
+.clbl{font-size:10.5px;color:var(--muted);width:60px;text-align:right;flex-shrink:0}
+.ctrack{flex:1;background:var(--soft);border-radius:6px;height:26px;overflow:hidden;position:relative}
+.cbar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;
+      font-size:11px;font-weight:700;color:#fff;white-space:nowrap;width:0;
+      transition:width .8s cubic-bezier(.4,0,.2,1)}
+.cdelta{font-size:10.5px;font-weight:700;width:52px;flex-shrink:0;text-align:right}
+
+/* évolution pipeline (multi-stage) */
+.stage-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
+.stage-row:first-child{border-top:none}
+.stage-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.stage-name{font-size:12.5px;font-weight:600;flex:1}
+.stage-spark{display:flex;align-items:flex-end;gap:2px;height:26px}
+.spark-b{width:6px;background:var(--blue);border-radius:2px 2px 0 0;min-height:2px;opacity:.55}
+.spark-b.last{opacity:1}
+.stage-val{font-size:14px;font-weight:700;width:42px;text-align:right}
+.stage-d{font-size:11px;font-weight:700;width:46px;text-align:right}
+
+/* micro : top prios */
+.daysel{width:100%;padding:11px 12px;border-radius:11px;border:1px solid var(--line);
+        background:var(--card);color:var(--ink);font-size:14px;font-family:inherit;margin-bottom:10px}
+.psort{display:flex;gap:7px;margin-bottom:10px}
+.psort button{font-size:11.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+        background:var(--card);color:var(--muted);cursor:pointer;font-family:inherit}
+.psort button.active{background:var(--navy);color:#fff;border-color:transparent}
+.prow{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;
+      background:var(--card);border:1px solid var(--line);margin-bottom:6px}
+.prank{font-size:11px;font-weight:700;color:var(--muted);width:22px;text-align:center;flex-shrink:0}
+.pref{flex:1;font-size:13.5px;font-weight:600;font-family:ui-monospace,Menlo,monospace}
+.pref .int{font-weight:600;color:var(--amber);font-family:inherit;font-size:11.5px}
+.pchip{font-size:9.5px;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap}
+.pchip.modif_audit,.pchip.modif_a_faire{background:#fdecea;color:#a31515}
+.pchip.attente_signature{background:#fff2df;color:#9a5300}
+.pchip.attente_audit,.pchip.etude_prête{background:#eaf2fd;color:#1d5fa8}
+@media(prefers-color-scheme:dark){
+  .pchip.modif_audit,.pchip.modif_a_faire{background:#3a0f0f;color:#ff8a80}
+  .pchip.attente_signature{background:#3a2400;color:#ffc24a}
+  .pchip.attente_audit,.pchip.etude_prête{background:#0f2742;color:#7fb5e8}
+}
+.pvol{font-size:14px;font-weight:700;color:var(--navy);text-align:right;white-space:nowrap}
+.pvol-l{font-size:9px;color:var(--muted)}
+.page{font-size:11px;color:var(--muted);font-style:italic;padding:8px 4px}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:30px 10px}
+.foot{text-align:center;font-size:10.5px;color:var(--muted);margin-top:22px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-tag">Énergie Responsable · BAT-EQ-127</div>
+  <h1>📈 Historique · évolution</h1>
+  <div class="hdr-date" id="hdrRange">Chargement…</div>
+  <div class="hdr-nav"><a href="demo_dashboard.html">← Retour au cockpit du jour</a></div>
+</div>
+
+<div class="scroll">
+  <div class="gran" id="gran">
+    <button data-g="day" class="active">Jour</button>
+    <button data-g="week">Semaine</button>
+    <button data-g="month">Mois</button>
+  </div>
+
+  <!-- MACRO : KPI + deltas -->
+  <div class="sec-title first">Vue macro · ce qui a changé</div>
+  <div class="kgrid" id="kpiGrid"></div>
+
+  <!-- LED déposées / taux pose dans le temps -->
+  <div class="sec-title">LED déposées (taux de pose) par période</div>
+  <div class="card"><div class="chart" id="poseChart"></div>
+    <div class="page" id="poseNote"></div></div>
+
+  <!-- Évolution pipeline par statut -->
+  <div class="sec-title">Évolution du pipeline par statut</div>
+  <div class="card" id="stageCard"></div>
+
+  <!-- MICRO : top prios du jour -->
+  <div class="sec-title">Vue micro · top prios d'une journée</div>
+  <select class="daysel" id="daySel"></select>
+  <div class="psort" id="pSort">
+    <button data-s="prio" class="active">Priorité</button>
+    <button data-s="vol">Volume</button>
+    <button data-s="age">Ancienneté</button>
+  </div>
+  <div id="prioList"></div>
+
+  <div class="foot" id="foot">Cockpit LED 30k · historique anonymisé (zéro PII)</div>
+</div>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+var fi=function(n){return (n==null?0:n).toLocaleString('fr-FR')};
+var STAGE_COLORS={modif_audit:'#C0392B',modif_a_faire:'#C0392B',attente_signature:'#E08600',
+  attente_audit:'#2E6FB7',etude_prête:'#5a9fd4',attente_doc:'#2E6FB7',en_cours:'#7f8fa6',depose:'#27ae60'};
+var STAGE_NAMES={modif_audit:'🔴 Modif audit',modif_a_faire:'🔴 Modif (étude)',
+  attente_signature:'📞 Signature',attente_audit:'📋 Audit',etude_prête:'✅ Étude prête',
+  en_cours:'Installation',depose:'Déposé'};
+var STATE={days:[],gran:'day',sort:'prio'};
+
+/* ── périodes (jour / semaine ISO / mois) ── */
+function isoWeek(d){var t=new Date(d);t.setHours(0,0,0,0);
+  t.setDate(t.getDate()+3-((t.getDay()+6)%7));
+  var w1=new Date(t.getFullYear(),0,4);
+  return t.getFullYear()+'-S'+String(1+Math.round(((t-w1)/86400000-3+((w1.getDay()+6)%7))/7)).padStart(2,'0');}
+function periodKey(dateStr,g){
+  if(g==='day') return dateStr;
+  var d=new Date(dateStr+'T00:00:00');
+  if(g==='week') return isoWeek(d);
+  return dateStr.slice(0,7); // YYYY-MM
+}
+function periodLabel(key,g){
+  if(g==='day'){var p=key.split('-');return p[2]+'/'+p[1];}
+  if(g==='week') return key.replace('-S','·S');
+  var m=['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc'];
+  var pp=key.split('-');return m[+pp[1]-1]+' '+pp[0].slice(2);
+}
+/* regroupe : pour des métriques de STOCK, on prend la DERNIÈRE valeur de la période */
+function buildPeriods(g){
+  var buckets={};
+  STATE.days.forEach(function(day){
+    var k=periodKey(day.date,g);
+    buckets[k]=day; // les jours sont triés croissants → garde le dernier
+  });
+  return Object.keys(buckets).sort().map(function(k){
+    return {key:k,label:periodLabel(k,g),day:buckets[k]};
+  });
+}
+
+/* ── delta helper ── */
+function deltaHtml(cur,prev,suffix,invert){
+  if(prev==null) return '<span class="d zero">—</span>';
+  var dv=cur-prev;
+  var good = invert? dv<0 : dv>0;
+  var cls = dv===0?'zero':(good?'pos':'neg');
+  var sign = dv>0?'+':'';
+  return '<span class="d '+cls+'">'+sign+fi(dv)+(suffix||'')+'</span>';
+}
+
+/* ── KPI macro ── */
+function renderKpis(periods){
+  var last=periods[periods.length-1], prev=periods[periods.length-2];
+  var L=last?last.day:null, P=prev?prev.day:null;
+  if(!L){return;}
+  var cards=[
+    {l:'LED signées (cumul)',v:fi(L.led_signees),d:deltaHtml(L.led_signees,P&&P.led_signees,'',false)},
+    {l:'Taux de pose',v:L.taux_pose+'%',d:deltaHtml(L.taux_pose,P&&P.taux_pose,'pt',false)},
+    {l:'LED en pipeline actif',v:fi(L.led_actif),d:deltaHtml(L.led_actif,P&&P.led_actif,'',true)},
+    {l:'Confirmées CEE',v:fi(L.confirmes_led),d:deltaHtml(L.confirmes_led,P&&P.confirmes_led,'',false)},
+  ];
+  $('kpiGrid').innerHTML=cards.map(function(c){
+    return '<div class="kbox"><div class="v">'+c.v+'</div><div class="l">'+c.l+'</div>'+c.d+'</div>';
+  }).join('');
+}
+
+/* ── chart taux de pose / led déposées ── */
+function renderPoseChart(periods){
+  var rows=periods.slice(-8);
+  var max=Math.max.apply(null,rows.map(function(r){return r.day.taux_pose||0}).concat([95]));
+  var html='';
+  rows.forEach(function(r,i){
+    var v=r.day.taux_pose||0, prev=i>0?rows[i-1].day.taux_pose:null;
+    var c=v>=95?'#27ae60':v>=80?'#E08600':'#C0392B';
+    html+='<div class="crow"><div class="clbl">'+r.label+'</div>'
+      +'<div class="ctrack"><div class="cbar" style="background:'+c+'" data-w="'+Math.round(v/max*100)+'">'+v+'%</div></div>'
+      +'<div class="cdelta '+(prev==null?'':(v>=prev?'d pos':'d neg'))+'">'
+      +(prev==null?'':((v-prev>=0?'+':'')+(v-prev)+'pt'))+'</div></div>';
+  });
+  $('poseChart').innerHTML=html;
+  $('poseNote').textContent='Cible ≥95 % · '+rows.length+' période(s) · stock à la fin de chaque période';
+  setTimeout(function(){document.querySelectorAll('#poseChart .cbar').forEach(function(b){
+    b.style.width=Math.max(b.getAttribute('data-w'),6)+'%';});},80);
+}
+
+/* ── évolution pipeline par statut (sparkline + delta) ── */
+function renderStages(periods){
+  var stages=['modif_audit','attente_signature','attente_audit','modif_a_faire','etude_prête'];
+  var rows=periods.slice(-10);
+  // ne garde que les stages présents dans la donnée
+  var present=stages.filter(function(s){
+    return rows.some(function(r){return (r.day.pipeline&&r.day.pipeline[s]!=null)||(r.day.audit&&r.day.audit[s]!=null)});
+  });
+  if(!present.length){$('stageCard').innerHTML='<div class="empty">Pas encore de données pipeline.</div>';return;}
+  var html='';
+  present.forEach(function(s){
+    var series=rows.map(function(r){
+      return (r.day.pipeline&&r.day.pipeline[s]!=null)?r.day.pipeline[s]
+            :(r.day.audit&&r.day.audit[s]!=null)?r.day.audit[s]:0;});
+    var max=Math.max.apply(null,series.concat([1]));
+    var cur=series[series.length-1], prev=series.length>1?series[series.length-2]:null;
+    var spark=series.map(function(v,i){
+      return '<div class="spark-b'+(i===series.length-1?' last':'')+'" style="height:'
+        +Math.max(Math.round(v/max*24),2)+'px;background:'+(STAGE_COLORS[s]||'#2E6FB7')+'"></div>';}).join('');
+    var dd=prev==null?'':( (cur-prev>0?'+':'')+(cur-prev) );
+    var ddcls=prev==null?'zero':(cur-prev===0?'zero':(cur-prev>0?'neg':'pos')); // hausse stock = mauvais
+    html+='<div class="stage-row">'
+      +'<div class="stage-dot" style="background:'+(STAGE_COLORS[s]||'#2E6FB7')+'"></div>'
+      +'<div class="stage-name">'+(STAGE_NAMES[s]||s)+'</div>'
+      +'<div class="stage-spark">'+spark+'</div>'
+      +'<div class="stage-val">'+fi(cur)+'</div>'
+      +'<div class="stage-d d '+ddcls+'">'+dd+'</div>'
+      +'</div>';
+  });
+  $('stageCard').innerHTML=html;
+}
+
+/* ── micro : top prios d'un jour ── */
+function fillDaySelector(){
+  var sel=$('daySel');
+  var dates=STATE.days.map(function(d){return d.date}).slice().reverse();
+  sel.innerHTML=dates.map(function(d){
+    var p=d.split('-');return '<option value="'+d+'">'+p[2]+'/'+p[1]+'/'+p[0]+'</option>';}).join('');
+  sel.onchange=function(){loadDayPrios(sel.value)};
+  if(dates.length) loadDayPrios(dates[0]);
+}
+function loadDayPrios(dateStr){
+  fetch('history/'+dateStr+'.json?v='+Date.now())
+    .then(function(r){if(!r.ok)throw 0;return r.json()})
+    .then(function(s){STATE.curDay=s;renderPrios()})
+    .catch(function(){$('prioList').innerHTML='<div class="empty">Snapshot indisponible pour ce jour.</div>';});
+}
+function renderPrios(){
+  var s=STATE.curDay; if(!s){return;}
+  var list=(s.top_prios||[]).slice();
+  if(STATE.sort==='vol') list.sort(function(a,b){return (b.led||b.cellules||0)-(a.led||a.cellules||0)});
+  else if(STATE.sort==='age') list.sort(function(a,b){return (b.age_days||0)-(a.age_days||0)});
+  else list.sort(function(a,b){return (b.prio||0)-(a.prio||0)||((b.led||b.cellules||0)-(a.led||a.cellules||0))});
+  list=list.slice(0,20);
+  if(!list.length){$('prioList').innerHTML='<div class="empty">Aucune prio ce jour.</div>';return;}
+  $('prioList').innerHTML=list.map(function(p,i){
+    var vol=p.led?fi(p.led):fi(p.cellules||0);
+    var vlbl=p.led?'LED':'cellules';
+    var refHtml=p.internal?'<span class="int">'+p.ref+'</span>':p.ref;
+    var stageShort=(STAGE_NAMES[p.stage]||p.stage).replace(/^[^\sA-Za-z]+\s/,'');
+    return '<div class="prow"><div class="prank">'+(i+1)+'</div>'
+      +'<div class="pref">'+refHtml+'</div>'
+      +'<span class="pchip '+p.stage+'">'+stageShort+'</span>'
+      +'<div><div class="pvol">'+vol+'</div><div class="pvol-l">'+vlbl
+      +(p.age_days!=null?' · '+p.age_days+'j':'')+'</div></div></div>';
+  }).join('');
+}
+
+/* ── render all ── */
+function renderAll(){
+  var periods=buildPeriods(STATE.gran);
+  renderKpis(periods); renderPoseChart(periods); renderStages(periods);
+}
+
+/* ── controls ── */
+$('gran').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b)return;
+  STATE.gran=b.getAttribute('data-g');
+  document.querySelectorAll('#gran button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderAll();
+});
+$('pSort').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b)return;
+  STATE.sort=b.getAttribute('data-s');
+  document.querySelectorAll('#pSort button').forEach(function(x){x.classList.toggle('active',x===b)});
+  renderPrios();
+});
+
+/* ── boot ── */
+fetch('history/timeseries.json?v='+Date.now())
+  .then(function(r){if(!r.ok)throw 0;return r.json()})
+  .then(function(ts){
+    STATE.days=(ts.days||[]).sort(function(a,b){return a.date<b.date?-1:1});
+    if(!STATE.days.length){$('hdrRange').textContent='Aucun historique encore';return;}
+    var f=STATE.days[0].date, l=STATE.days[STATE.days.length-1].date;
+    $('hdrRange').textContent=STATE.days.length+' jour(s) archivé(s) · '+f+' → '+l;
+    renderAll(); fillDaySelector();
+  })
+  .catch(function(){
+    $('hdrRange').textContent='Historique indisponible';
+    $('kpiGrid').innerHTML='<div class="empty">history/timeseries.json introuvable.<br>'
+      +'Lance <b>python snapshot.py</b> puis pousse sur main.</div>';
+  });
+})();
+</script>
+</body>
+</html>

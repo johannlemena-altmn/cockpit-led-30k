@@ -23,7 +23,11 @@ Aider **Énergie Responsable** (intermédiaire CEE) à atteindre **30 000 LED d�
 - `daily_summary.py` : génère un résumé HTML mobile (KPIs + alertes + recommandation) ; exécuté automatiquement par GitHub Actions.
 - `Note_Plan_30k_LED.html` : note de process (diagnostic, leviers, chaîne, conformité, checklist v2).
 - `infra/` : stack auto-hébergée Postgres + Metabase (gratuit/OSS) — alternatives Superset/Grafana dans `infra/ALTERNATIVES.md`.
+- `snapshot.py` : archive un instantané quotidien léger (~8 Ko, **zéro PII**) depuis `public_data.json` → `history/YYYY-MM-DD.json` (agrégats par statut + **top 30 prios** du jour, réfs Waresito/LE-XXXX, installs internes = `#N · interne`). Régénère aussi `history/timeseries.json` (série compacte 1 ligne/jour pour les graphes) + `history/index.json`. Garde-fou PII intégré. Lancé auto en fin de `update_dashboard.sh` **et** par le workflow `snapshot.yml`.
+- `history_dashboard.html` : page dédiée évolution **jour / semaine / mois** — vue macro (KPIs + deltas, taux de pose par période, évolution pipeline par statut avec sparklines) + vue micro (top 20 prios d'une journée sélectionnable). Lit `history/*.json`. Lien depuis `demo_dashboard.html`.
+- `history/` : dossier versionné des snapshots (commité, anonymisé). Accumulation naturelle (~1,8 Mo/an).
 - `.github/workflows/pages.yml` : déploie GitHub Pages (nécessite 1 config manuelle : Settings → Pages → Source → GitHub Actions).
+- `.github/workflows/snapshot.yml` : archive l'historique à chaque push modifiant `public_data.json` + filet de sécurité quotidien 20h00 Paris. Commit auto de `history/`.
 - `.github/workflows/daily_summary.yml` : cron lun.–ven. 07h00 Paris, upload artifact 7 jours.
 
 ## Sources de données (3 systèmes, vues complémentaires)
