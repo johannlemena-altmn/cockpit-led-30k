@@ -83,6 +83,10 @@ if [ -n "$BETOOL_ARG" ]; then
   "$PYTHON" betool_summary.py "$BETOOL_ARG"
 fi
 
+# ── Brief quotidien + delta J-1 (toujours) ────────────────────────────────────
+echo "Génération du brief + delta…"
+"$PYTHON" daily_brief.py || true
+
 # ── Vérifier que public_data.json existe ─────────────────────────────────────
 if [ ! -f "public_data.json" ]; then
   echo "[ERREUR] public_data.json non généré."

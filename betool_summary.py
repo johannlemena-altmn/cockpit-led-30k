@@ -85,6 +85,36 @@ def load_betool(path: str) -> list[dict]:
     return [dict(zip(headers, row)) for row in rows[1:]]
 
 
+def inspect_betool(path: str):
+    """Affiche les colonnes + une ligne d'exemple pour vérifier le mapping."""
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    ws = wb.active
+    rows = list(ws.iter_rows(values_only=True))
+    headers = [str(h) if h is not None else "" for h in rows[0]]
+    print(f"\n{'='*60}\nINSPECTION : {path}\n{'='*60}")
+    print(f"{len(rows)-1} lignes · {len(headers)} colonnes\n")
+    print("COLONNES détectées :")
+    for i, h in enumerate(headers, 1):
+        print(f"  {i:>3}. {h}")
+    # Vérifier les colonnes clés
+    print("\nCOLONNES CLÉS (utilisées par le script) :")
+    checks = {
+        "Statut (→ étape)":        ["Statut"],
+        "LED (→ nb LED)":          ["Nombre de points lumineux ?"],
+        "N° dossier (→ ref)":      ["Numéro de dossier", "Numero de dossier", "N° dossier",
+                                    "Référence", "Reference", "Ref", "ID", "Id", "Code dossier"],
+        "Date MAJ (→ âge)":        ["Last updateTime"],
+    }
+    for label, candidates in checks.items():
+        found = next((c for c in candidates if c in headers), None)
+        mark = f"✅ '{found}'" if found else "❌ MANQUANTE — ajouter le nom exact dans betool_summary.py"
+        print(f"  {label:<22} {mark}")
+    if rows and len(rows) > 1:
+        print("\nEXEMPLE (1re ligne de données) :")
+        for h, v in list(zip(headers, rows[1]))[:12]:
+            print(f"  {h:<35} = {v}")
+
+
 # ---------------------------------------------------------------------------
 # Calcul pipeline
 # ---------------------------------------------------------------------------
@@ -282,6 +312,11 @@ def update_public_json(pipeline: dict, output_path: str = "public_data.json"):
     data["quickwins"]         = compute_quickwins(
         {**pipeline, "dossiers_pipeline": data["dossiers_pipeline"]}
     )
+    # Provenance : si les dossiers ont de vrais n° → source réelle BETOOL
+    has_refs = any(
+        d.get("ref") for lst in data["dossiers_pipeline"].values() for d in lst
+    )
+    data["dossiers_source"] = "betool" if has_refs else "demo"
     snap_path = save_snapshot(data, output_path)
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -306,12 +341,19 @@ def main():
     if not args:
         print("Usage: python betool_summary.py <fichier.xlsx> [--output public_data.json]",
               file=sys.stderr)
+        print("       python betool_summary.py --inspect <fichier.xlsx>  (vérifier les colonnes)",
+              file=sys.stderr)
         sys.exit(1)
 
     xlsx_path = args[0]
     if not os.path.isfile(xlsx_path):
         print(f"[ERREUR] Fichier introuvable : {xlsx_path}", file=sys.stderr)
         sys.exit(1)
+
+    # Mode inspection : afficher les colonnes et sortir
+    if "--inspect" in sys.argv:
+        inspect_betool(xlsx_path)
+        return
 
     print(f"Lecture BETOOL : {xlsx_path}")
     records  = load_betool(xlsx_path)

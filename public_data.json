@@ -3036,5 +3036,6 @@
     "objectif_jour": 750,
     "taux_pose_pct": 72,
     "pipeline_bilan": "premier_run"
-  }
+  },
+  "dossiers_source": "demo"
 }

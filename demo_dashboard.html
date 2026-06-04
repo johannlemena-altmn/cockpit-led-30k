@@ -159,6 +159,36 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 /* ── FOOTER ──────────────────────────────── */
 .foot{text-align:center;font-size:10.5px;color:var(--muted);margin-top:24px;padding-bottom:6px}
 
+/* ── SIMULATEUR ──────────────────────── */
+.sim-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;margin-bottom:10px}
+.sim-obj{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.sim-obj-led{font-size:26px;font-weight:800;color:var(--navy);transition:color .3s}
+.sim-obj-led.reached{color:var(--green)}
+.sim-obj-lbl{font-size:11px;color:var(--muted)}
+.sim-track{height:16px;background:var(--soft);border-radius:999px;overflow:hidden;
+  margin:6px 0;position:relative;border:1px solid var(--line)}
+.sim-fill{height:100%;border-radius:999px;width:0;
+  background:linear-gradient(90deg,#E08600,#27ae60);transition:width .4s ease}
+.sim-target-line{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.4;left:100%}
+.sim-pct{text-align:center;font-size:12px;font-weight:600;margin-bottom:14px}
+.sim-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.sim-row-info{flex:1;min-width:0}
+.sim-row-name{font-size:12.5px;font-weight:600}
+.sim-row-sub{font-size:10.5px;color:var(--muted)}
+.sim-stepper{display:flex;align-items:center;gap:0;flex-shrink:0}
+.sim-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--soft);color:var(--ink);font-size:17px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;line-height:1;user-select:none}
+.sim-btn:active{background:var(--blue);color:#fff}
+.sim-val{width:42px;text-align:center;font-size:14px;font-weight:700}
+.sim-led{font-size:11px;font-weight:600;color:var(--green);width:60px;text-align:right;flex-shrink:0}
+.sim-actions{display:flex;gap:8px;margin-top:12px}
+.sim-max,.sim-reset{flex:1;padding:9px;border-radius:10px;border:none;cursor:pointer;
+  font-family:inherit;font-size:12px;font-weight:600}
+.sim-max{background:var(--green);color:#fff}
+.sim-reset{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+
 /* ── BRIEF BUTTON ────────────────────── */
 .brief-btn{width:100%;border:none;border-radius:14px;cursor:pointer;font-family:inherit;
   padding:13px 16px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;
@@ -292,6 +322,23 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 
   <!-- Delta J-1 -->
   <div id="deltaWrap" style="display:none"></div>
+
+  <!-- 🎯 SIMULATEUR OBJECTIF ──────────────── -->
+  <div class="sec-title" id="simTitle" style="display:none">🎯 Simulateur — atteins ton objectif</div>
+  <div class="sim-card" id="simCard" style="display:none">
+    <div class="sim-obj">
+      <div><span class="sim-obj-led" id="simLed">0</span>
+           <span class="sim-obj-lbl"> / <span id="simObjTarget">30 000</span> LED</span></div>
+      <div class="sim-obj-lbl" id="simStatus"></div>
+    </div>
+    <div class="sim-track"><div class="sim-fill" id="simFill"></div></div>
+    <div class="sim-pct" id="simPct">Sélectionne ce que tu vas traiter aujourd'hui</div>
+    <div id="simRows"></div>
+    <div class="sim-actions">
+      <button class="sim-max"   id="simMax">⚡ Tout traiter</button>
+      <button class="sim-reset" id="simReset">↺ Réinitialiser</button>
+    </div>
+  </div>
 
   <!-- ②  KPIs ─────────────────────────────── -->
   <div class="sec-title">Portefeuille</div>
@@ -436,6 +483,14 @@ function applyData(d){
   if(Object.keys(STATE.dossiers).length) show('searchWrap');
   if(d.quickwins && d.quickwins.length) show('briefBtn');
 
+  /* note honnête si n° dossiers de démo */
+  if(d.dossiers_source==='demo' && Object.keys(STATE.dossiers).length){
+    var sr=el('searchResults');
+    if(sr) sr.innerHTML='<div style="font-size:10.5px;color:var(--muted);'
+      +'padding:6px 8px;background:var(--soft);border-radius:8px;border:1px dashed var(--line)">'
+      +'ℹ️ N° de dossiers de démonstration. Les vrais n° apparaîtront au prochain export BETOOL.</div>';
+  }
+
   /* header */
   if(gen) txt('hdrDate','Données du '+dateFr(gen)+' · ×'+ratio+' l\'obj. mensuel');
   txt('hdrLed', fi(d.led_signees||0)+' LED signées');
@@ -459,6 +514,9 @@ function applyData(d){
 
   /* quickwins */
   if(qw.length) renderQW(qw, d.brief, d.delta);
+
+  /* simulateur objectif */
+  if(qw.length) initSim(d);
 
   /* funnel + pipeline */
   if(p.etapes) { renderFunnel(p, d.led_signees); renderPipeline(p); }
@@ -740,6 +798,96 @@ function toast(msg){
   var t=el('toast'); t.textContent=msg; t.classList.add('show');
   clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show')},1800);
 }
+
+/* ── SIMULATEUR OBJECTIF ─────────────── */
+var SIM={ target:30000, stages:[], counts:{} };
+var SIM_META={
+  modif_audit:       {flag:'🔴', name:'Modifs corrigées',     sub:'envoyées à Total Energies'},
+  attente_signature: {flag:'📞', name:'Signatures obtenues',  sub:'clients rappelés'},
+  attente_audit:     {flag:'📋', name:'Audits validés',       sub:'contrôlés + envoyés'},
+};
+
+function initSim(d){
+  var qw=d.quickwins||[];
+  if(!qw.length) return;
+  SIM.target=d.objectif_mensuel||30000;
+  SIM.stages=qw.map(function(q){
+    return { id:q.stage_id, n:q.n, led:q.led,
+             ledPer: q.n>0 ? q.led/q.n : 0 };
+  });
+  SIM.counts={}; SIM.stages.forEach(function(s){SIM.counts[s.id]=0});
+  show('simTitle'); show('simCard');
+  txt('simObjTarget', fi(SIM.target));
+  renderSimRows();
+  updateSim();
+}
+
+function renderSimRows(){
+  var html=SIM.stages.map(function(s){
+    var m=SIM_META[s.id]||{flag:'•',name:s.id,sub:''};
+    return '<div class="sim-row" data-stage="'+s.id+'">'
+      +'<div class="sim-row-info">'
+      +'<div class="sim-row-name">'+m.flag+' '+m.name+'</div>'
+      +'<div class="sim-row-sub">'+m.sub+' · max '+s.n+'</div>'
+      +'</div>'
+      +'<div class="sim-stepper">'
+      +'<button class="sim-btn" data-act="minus" data-stage="'+s.id+'">−</button>'
+      +'<span class="sim-val" id="simv-'+s.id+'">0</span>'
+      +'<button class="sim-btn" data-act="plus" data-stage="'+s.id+'">+</button>'
+      +'</div>'
+      +'<div class="sim-led" id="siml-'+s.id+'">0</div>'
+      +'</div>';
+  }).join('');
+  var rows=el('simRows'); rows.innerHTML=html;
+  rows.querySelectorAll('.sim-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      stepSim(b.getAttribute('data-stage'), b.getAttribute('data-act'));
+    });
+  });
+}
+
+function stepSim(stage, act){
+  var s=SIM.stages.filter(function(x){return x.id===stage})[0]; if(!s) return;
+  var cur=SIM.counts[stage]||0;
+  var step=stage==='attente_audit'||stage==='attente_signature'?10:1;
+  cur += (act==='plus'?step:-step);
+  cur = Math.max(0, Math.min(cur, s.n));
+  SIM.counts[stage]=cur;
+  updateSim();
+}
+
+function updateSim(){
+  var total=0;
+  SIM.stages.forEach(function(s){
+    var c=SIM.counts[s.id]||0;
+    var led=Math.round(c*s.ledPer);
+    total+=led;
+    txt('simv-'+s.id, c);
+    txt('siml-'+s.id, '+'+fi(led));
+  });
+  var pct=Math.min(Math.round(total/SIM.target*100),100);
+  var reached=total>=SIM.target;
+  txt('simLed', fi(total));
+  el('simLed').className='sim-obj-led'+(reached?' reached':'');
+  el('simFill').style.width=pct+'%';
+  if(total===0){
+    txt('simPct','Sélectionne ce que tu vas traiter aujourd\'hui');
+    txt('simStatus','');
+  } else if(reached){
+    txt('simPct','🎉 Objectif mensuel atteint !');
+    txt('simStatus','100%');
+  } else {
+    txt('simPct',pct+'% de l\'objectif · reste '+fi(SIM.target-total)+' LED');
+    txt('simStatus',pct+'%');
+  }
+}
+
+el('simMax').addEventListener('click',function(){
+  SIM.stages.forEach(function(s){SIM.counts[s.id]=s.n}); updateSim();
+});
+el('simReset').addEventListener('click',function(){
+  SIM.stages.forEach(function(s){SIM.counts[s.id]=0}); updateSim();
+});
 
 /* ── BRIEF DU JOUR (texte copiable) ──── */
 function buildBrief(){
