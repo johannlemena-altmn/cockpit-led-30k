@@ -8,7 +8,7 @@ Usage :
     python betool_summary.py data/betool.xlsx --output public_data.json
 """
 from __future__ import annotations
-import json, os, sys
+import json, os, re, sys
 from collections import defaultdict
 from datetime import date, datetime
 
@@ -102,7 +102,8 @@ def inspect_betool(path: str):
         "Statut (→ étape)":        ["Statut"],
         "LED (→ nb LED)":          ["Nombre de points lumineux ?"],
         "N° dossier (→ ref)":      ["Numéro de dossier", "Numero de dossier", "N° dossier",
-                                    "Référence", "Reference", "Ref", "ID", "Id", "Code dossier"],
+                                    "Référence", "Reference", "Ref", "ID", "Id", "Code dossier",
+                                    "Numéro de commande Waresito", "Numero de commande Waresito"],
         "Date MAJ (→ âge)":        ["Last updateTime"],
     }
     for label, candidates in checks.items():
@@ -141,12 +142,23 @@ def compute_pipeline(records: list[dict]) -> dict:
         except (ValueError, TypeError):
             led = 0
 
-        # Numéro de dossier (critère de recherche équipe — non-PII)
+        # Référence de recherche équipe — non-PII (jamais nom client / SIRET).
+        # L'export BETOOL n'a pas de "numéro de dossier" : on utilise le
+        # numéro de commande Waresito (entier, cherchable dans l'outil).
+        # SÉCURITÉ : certaines cellules Waresito contiennent du texte libre
+        # (initiales, notes type "récup marchandise"). On n'extrait QUE le
+        # premier nombre propre ; tout texte est jeté pour éviter toute fuite.
         ref = ""
         for key in ("Numéro de dossier", "Numero de dossier", "N° dossier",
-                    "Référence", "Reference", "Ref", "ID", "Id", "Code dossier"):
-            if rec.get(key):
-                ref = str(rec[key]).strip()
+                    "Référence", "Reference", "Ref", "ID", "Id", "Code dossier",
+                    "Numéro de commande Waresito", "Numero de commande Waresito"):
+            if rec.get(key) not in (None, ""):
+                raw = rec[key]
+                if isinstance(raw, float) and raw.is_integer():
+                    ref = str(int(raw))
+                else:
+                    m = re.search(r"\d{3,}", str(raw))  # premier nombre ≥3 chiffres
+                    ref = m.group(0) if m else ""
                 break
 
         # Âge depuis dernière mise à jour
