@@ -159,6 +159,73 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 /* ── FOOTER ──────────────────────────────── */
 .foot{text-align:center;font-size:10.5px;color:var(--muted);margin-top:24px;padding-bottom:6px}
 
+/* ── SEARCH BAR ──────────────────────── */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-input{width:100%;padding:12px 40px 12px 38px;border-radius:12px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  font-size:14px;font-family:inherit;outline:none;transition:border .2s,box-shadow .2s}
+.search-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,111,183,.15)}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:15px;opacity:.5;pointer-events:none}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;border:none;background:var(--soft);
+  color:var(--muted);font-size:14px;cursor:pointer;display:none;align-items:center;
+  justify-content:center;line-height:1}
+.search-results{margin-bottom:12px}
+
+/* QW card clickable affordance */
+.qw-urgent,.qw-relance,.qw-action{cursor:pointer;transition:transform .15s,box-shadow .15s}
+.qw-urgent:active,.qw-relance:active,.qw-action:active{transform:scale(.985)}
+.qw-tap{font-size:10.5px;opacity:.7;margin-top:8px;display:flex;align-items:center;gap:4px}
+
+/* ── DRAWER ──────────────────────────── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--bg);
+  border-radius:18px 18px 0 0;max-height:88dvh;display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  max-width:520px;margin:0 auto}
+.drawer.open{transform:translateY(0)}
+.drawer-grip{width:38px;height:4px;border-radius:2px;background:var(--line);
+  margin:8px auto 4px}
+.drawer-head{padding:6px 16px 12px;border-bottom:1px solid var(--line)}
+.drawer-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.drawer-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.drawer-tools{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line);
+  flex-wrap:wrap;align-items:center}
+.sort-btn{font-size:11.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);color:var(--muted);cursor:pointer;font-family:inherit}
+.sort-btn.active{background:var(--navy);color:#fff;border-color:transparent}
+.copy-btn{margin-left:auto;font-size:11.5px;padding:7px 14px;border-radius:999px;
+  border:none;background:var(--green);color:#fff;cursor:pointer;font-weight:600;
+  font-family:inherit;display:flex;align-items:center;gap:5px}
+.copy-btn:active{opacity:.8}
+.drawer-list{overflow-y:auto;padding:8px 12px calc(env(safe-area-inset-bottom)+16px);flex:1}
+
+/* Dossier row */
+.dos-row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
+  background:var(--card);border:1px solid var(--line);margin-bottom:6px}
+.dos-rank{font-size:11px;font-weight:700;color:var(--muted);width:24px;text-align:center;flex-shrink:0}
+.dos-ref{flex:1;font-size:13.5px;font-weight:600;font-family:ui-monospace,Menlo,monospace;
+  letter-spacing:.02em}
+.dos-led{font-size:15px;font-weight:700;color:var(--navy);text-align:right}
+.dos-led-lbl{font-size:9px;color:var(--muted)}
+.dos-age{font-size:10.5px;padding:3px 8px;border-radius:999px;background:var(--soft);
+  color:var(--muted);flex-shrink:0;min-width:42px;text-align:center}
+.dos-age.old{background:#fdecea;color:#7a1a1a;font-weight:600}
+.dos-copy{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--card);color:var(--muted);cursor:pointer;flex-shrink:0;font-size:13px}
+.dos-copy:active{background:var(--soft)}
+@media(prefers-color-scheme:dark){.dos-age.old{background:#2a0a0a;color:#ff8a80}}
+
+/* ── TOAST ───────────────────────────── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;
+  font-size:13px;font-weight:600;z-index:60;opacity:0;transition:opacity .25s,transform .25s;
+  pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 /* responsive */
 @media(max-width:370px){.qw-led-big{font-size:22px}.hdr h1{font-size:17px}}
 </style>
@@ -193,9 +260,18 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 <!-- SCROLL -->
 <div class="scroll">
 
+  <!-- 🔍 RECHERCHE DOSSIER ─────────────────── -->
+  <div class="search-wrap" id="searchWrap" style="display:none">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput"
+           placeholder="Rechercher un n° de dossier…" autocomplete="off">
+    <button class="search-clear" id="searchClear">✕</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+
   <!-- ①  ACTIONS DU JOUR ──────────────────── -->
   <div class="sec-title first" id="qwTitle" style="display:none">
-    ⚡ Actions du jour
+    ⚡ Actions du jour <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:.6">· touchez une carte pour voir les dossiers</span>
   </div>
   <div id="qwWrap"></div>
 
@@ -272,6 +348,25 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 
 </div><!-- /scroll -->
 
+<!-- DRAWER (liste dossiers) -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-grip"></div>
+  <div class="drawer-head">
+    <div class="drawer-title" id="drawerTitle">—</div>
+    <div class="drawer-sub" id="drawerSub">—</div>
+  </div>
+  <div class="drawer-tools">
+    <button class="sort-btn active" id="sortLed" data-sort="led">Plus de LED</button>
+    <button class="sort-btn" id="sortAge" data-sort="age">Plus anciens</button>
+    <button class="copy-btn" id="copyList">📋 Copier la liste</button>
+  </div>
+  <div class="drawer-list" id="drawerList"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
 (function(){
 'use strict';
@@ -306,14 +401,24 @@ function animBar(el_id, pct, delay){
   }, delay||0);
 }
 
+/* ── global store ────────────────────── */
+var STATE = { data:null, dossiers:{}, qwMeta:{} };
+
 /* ── apply all data ──────────────────── */
 function applyData(d){
+  STATE.data = d;
+  STATE.dossiers = d.dossiers_pipeline || {};
+  (d.quickwins||[]).forEach(function(q){ STATE.qwMeta[q.stage_id]=q; });
+
   var p  = d.pipeline || {};
   var qw = d.quickwins || [];
   var tp = d.taux_pose_pct || 0;
   var obj= d.objectif_mensuel || 30000;
   var gen= d.generated || '';
   var ratio=(d.led_signees/obj).toFixed(1).replace('.',',');
+
+  /* search visible dès qu'on a des dossiers */
+  if(Object.keys(STATE.dossiers).length) show('searchWrap');
 
   /* header */
   if(gen) txt('hdrDate','Données du '+dateFr(gen)+' · ×'+ratio+' l\'obj. mensuel');
@@ -369,7 +474,8 @@ function renderQW(qw, brief, delta){
     var old=q.blocage_old>0?q.blocage_old+' bloqués >7j':'';
     var pulse=q.urgence==='urgent'
       ?'<span class="pulse-ring"></span>':q.urgence==='relance'?'📞 ':'';
-    html+='<div class="'+u.cls+'">'
+    var hasDoss=STATE.dossiers[q.stage_id] && STATE.dossiers[q.stage_id].length;
+    html+='<div class="'+u.cls+'" data-stage="'+q.stage_id+'">'
       +'<div class="qw-rank">'+u.flag+' #'+q.rank+' '+u.lbl+'</div>'
       +'<div class="qw-main">'
       +'<div>'
@@ -384,7 +490,9 @@ function renderQW(qw, brief, delta){
       +'<span class="qw-chip">⏱ '+q.effort+'</span>'
       +(top5?'<span class="qw-chip top5">'+top5+'</span>':'')
       +(old?'<span class="qw-chip old">⚠ '+old+'</span>':'')
-      +'</div></div>';
+      +'</div>'
+      +(hasDoss?'<div class="qw-tap">👆 Voir les '+q.n+' dossiers à traiter</div>':'')
+      +'</div>';
   });
 
   /* objectif du jour */
@@ -395,6 +503,13 @@ function renderQW(qw, brief, delta){
   }
 
   wrap.innerHTML=html;
+
+  /* clic carte → drawer dossiers */
+  wrap.querySelectorAll('[data-stage]').forEach(function(card){
+    card.addEventListener('click', function(){
+      openDrawer(card.getAttribute('data-stage'));
+    });
+  });
 
   /* delta J-1 */
   if(delta && (delta.deposees_delta||delta.action_n_delta)){
@@ -513,6 +628,147 @@ function renderPipeline(p){
   });
   animBar('depBar', pctDep, 700);
 }
+
+/* ── DRAWER (liste dossiers) ─────────── */
+var DRAWER = { stage:null, sort:'led' };
+var STAGE_LABELS = {
+  modif_audit:       {t:'🔴 Modif audit', sub:'Corriger + envoyer à Total Energies'},
+  attente_signature: {t:'📞 Attente signature', sub:'Rappeler les clients pour signer'},
+  attente_audit:     {t:'📋 Attente audit', sub:'Contrôler audits + envoyer au client'},
+};
+
+function sortedDossiers(stage){
+  var list=(STATE.dossiers[stage]||[]).slice();
+  if(DRAWER.sort==='age')
+    list.sort(function(a,b){return (b.age_days||0)-(a.age_days||0)});
+  else
+    list.sort(function(a,b){return (b.led||0)-(a.led||0)});
+  return list;
+}
+
+function renderDrawerList(){
+  var list=sortedDossiers(DRAWER.stage);
+  var html=list.map(function(d,i){
+    var old=(d.age_days||0)>7;
+    var ref=d.ref||('#'+(i+1));
+    return '<div class="dos-row">'
+      +'<div class="dos-rank">'+(i+1)+'</div>'
+      +'<div class="dos-ref">'+ref+'</div>'
+      +'<div class="dos-age'+(old?' old':'')+'">'+(d.age_days!=null?d.age_days+'j':'—')+'</div>'
+      +'<div><div class="dos-led">'+fi(d.led)+'</div><div class="dos-led-lbl">LED</div></div>'
+      +'<button class="dos-copy" data-ref="'+ref+'">⧉</button>'
+      +'</div>';
+  }).join('');
+  var dl=el('drawerList'); dl.innerHTML=html;
+  dl.querySelectorAll('.dos-copy').forEach(function(b){
+    b.addEventListener('click',function(e){
+      e.stopPropagation();
+      copyText(b.getAttribute('data-ref'), 'N° copié : '+b.getAttribute('data-ref'));
+    });
+  });
+}
+
+function openDrawer(stage){
+  if(!STATE.dossiers[stage] || !STATE.dossiers[stage].length) return;
+  DRAWER.stage=stage; DRAWER.sort='led';
+  var meta=STAGE_LABELS[stage]||{t:stage,sub:''};
+  var q=STATE.qwMeta[stage]||{};
+  txt('drawerTitle', meta.t);
+  txt('drawerSub', (q.n||STATE.dossiers[stage].length)+' dossiers · '+fi(q.led||0)+' LED · '+meta.sub);
+  el('sortLed').classList.add('active'); el('sortAge').classList.remove('active');
+  renderDrawerList();
+  el('drawerOverlay').classList.add('open');
+  el('drawer').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  el('drawerOverlay').classList.remove('open');
+  el('drawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+el('drawerOverlay').addEventListener('click', closeDrawer);
+el('sortLed').addEventListener('click', function(){
+  DRAWER.sort='led'; el('sortLed').classList.add('active'); el('sortAge').classList.remove('active'); renderDrawerList();
+});
+el('sortAge').addEventListener('click', function(){
+  DRAWER.sort='age'; el('sortAge').classList.add('active'); el('sortLed').classList.remove('active'); renderDrawerList();
+});
+el('copyList').addEventListener('click', function(){
+  var list=sortedDossiers(DRAWER.stage);
+  var meta=STAGE_LABELS[DRAWER.stage]||{t:DRAWER.stage};
+  var q=STATE.qwMeta[DRAWER.stage]||{};
+  var lines=[meta.t+' — '+list.length+' dossiers · '+fi(q.led||0)+' LED', ''];
+  list.forEach(function(d,i){
+    lines.push((i+1)+'. '+(d.ref||'#'+(i+1))+'  ·  '+fi(d.led)+' LED'
+      +(d.age_days!=null?'  ·  '+d.age_days+'j':''));
+  });
+  lines.push(''); lines.push('→ '+(q.action||''));
+  copyText(lines.join('\n'), '✅ Liste copiée ('+list.length+' dossiers)');
+});
+
+/* ── COPY + TOAST ────────────────────── */
+function copyText(text, msg){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){toast(msg)},function(){fallbackCopy(text,msg)});
+  } else fallbackCopy(text,msg);
+}
+function fallbackCopy(text,msg){
+  var ta=document.createElement('textarea'); ta.value=text;
+  ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');toast(msg)}catch(e){toast('Copie impossible')}
+  document.body.removeChild(ta);
+}
+var toastTimer;
+function toast(msg){
+  var t=el('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show')},1800);
+}
+
+/* ── SEARCH ──────────────────────────── */
+function allDossiers(){
+  var out=[];
+  Object.keys(STATE.dossiers).forEach(function(stage){
+    (STATE.dossiers[stage]||[]).forEach(function(d){
+      out.push({stage:stage, ref:d.ref||'', led:d.led, age_days:d.age_days});
+    });
+  });
+  return out;
+}
+function runSearch(q){
+  var res=el('searchResults');
+  q=(q||'').trim().toLowerCase();
+  el('searchClear').style.display = q ? 'flex' : 'none';
+  if(!q){ res.innerHTML=''; return; }
+  var matches=allDossiers().filter(function(d){
+    return d.ref.toLowerCase().indexOf(q)!==-1;
+  }).sort(function(a,b){return b.led-a.led}).slice(0,30);
+  if(!matches.length){
+    res.innerHTML='<div style="font-size:12px;color:var(--muted);padding:10px 4px">'
+      +'Aucun dossier trouvé pour « '+q+' »</div>'; return;
+  }
+  var html='<div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;'
+    +'letter-spacing:.1em;margin:2px 0 8px">'+matches.length+' résultat(s)</div>';
+  html+=matches.map(function(d){
+    var meta=STAGE_LABELS[d.stage]||{t:d.stage};
+    var old=(d.age_days||0)>7;
+    return '<div class="dos-row">'
+      +'<div class="dos-ref">'+d.ref+'</div>'
+      +'<div class="qw-chip" style="font-size:10px">'+meta.t+'</div>'
+      +'<div class="dos-age'+(old?' old':'')+'">'+(d.age_days!=null?d.age_days+'j':'—')+'</div>'
+      +'<div><div class="dos-led">'+fi(d.led)+'</div><div class="dos-led-lbl">LED</div></div>'
+      +'<button class="dos-copy" data-ref="'+d.ref+'">⧉</button>'
+      +'</div>';
+  }).join('');
+  res.innerHTML=html;
+  res.querySelectorAll('.dos-copy').forEach(function(b){
+    b.addEventListener('click',function(){copyText(b.getAttribute('data-ref'),'N° copié : '+b.getAttribute('data-ref'))});
+  });
+}
+el('searchInput').addEventListener('input', function(){runSearch(this.value)});
+el('searchClear').addEventListener('click', function(){
+  el('searchInput').value=''; runSearch(''); el('searchInput').focus();
+});
 
 /* ── FETCH ───────────────────────────── */
 fetch('public_data.json?v='+Date.now())

@@ -111,6 +111,14 @@ def compute_pipeline(records: list[dict]) -> dict:
         except (ValueError, TypeError):
             led = 0
 
+        # Numéro de dossier (critère de recherche équipe — non-PII)
+        ref = ""
+        for key in ("Numéro de dossier", "Numero de dossier", "N° dossier",
+                    "Référence", "Reference", "Ref", "ID", "Id", "Code dossier"):
+            if rec.get(key):
+                ref = str(rec[key]).strip()
+                break
+
         # Âge depuis dernière mise à jour
         upd = rec.get("Last updateTime")
         age = None
@@ -125,7 +133,7 @@ def compute_pipeline(records: list[dict]) -> dict:
         acc[stage_id]["led"] += led
         if age is not None:
             acc[stage_id]["ages"].append(age)
-        acc[stage_id]["dossiers"].append({"led": led, "age_days": age})
+        acc[stage_id]["dossiers"].append({"ref": ref, "led": led, "age_days": age})
 
     # Construction de la réponse
     etapes = []
