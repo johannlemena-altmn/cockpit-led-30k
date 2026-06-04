@@ -159,6 +159,15 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 /* ── FOOTER ──────────────────────────────── */
 .foot{text-align:center;font-size:10.5px;color:var(--muted);margin-top:24px;padding-bottom:6px}
 
+/* ── BRIEF BUTTON ────────────────────── */
+.brief-btn{width:100%;border:none;border-radius:14px;cursor:pointer;font-family:inherit;
+  padding:13px 16px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;
+  gap:2px;background:linear-gradient(135deg,#1F3A5F 0%,#2E6FB7 100%);color:#fff;
+  box-shadow:0 4px 14px rgba(46,111,183,.35);transition:transform .15s}
+.brief-btn:active{transform:scale(.98)}
+.brief-btn>span:first-child{font-size:15px;font-weight:700}
+.brief-btn-sub{font-size:10.5px;opacity:.75}
+
 /* ── SEARCH BAR ──────────────────────── */
 .search-wrap{position:relative;margin-bottom:12px}
 .search-input{width:100%;padding:12px 40px 12px 38px;border-radius:12px;
@@ -259,6 +268,12 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 
 <!-- SCROLL -->
 <div class="scroll">
+
+  <!-- 📋 BRIEF DU JOUR (copiable) ───────────── -->
+  <button class="brief-btn" id="briefBtn" style="display:none">
+    <span>📋 Copier le brief du jour</span>
+    <span class="brief-btn-sub">pour WhatsApp / Slack / standup</span>
+  </button>
 
   <!-- 🔍 RECHERCHE DOSSIER ─────────────────── -->
   <div class="search-wrap" id="searchWrap" style="display:none">
@@ -417,8 +432,9 @@ function applyData(d){
   var gen= d.generated || '';
   var ratio=(d.led_signees/obj).toFixed(1).replace('.',',');
 
-  /* search visible dès qu'on a des dossiers */
+  /* search + brief visibles dès qu'on a des données */
   if(Object.keys(STATE.dossiers).length) show('searchWrap');
+  if(d.quickwins && d.quickwins.length) show('briefBtn');
 
   /* header */
   if(gen) txt('hdrDate','Données du '+dateFr(gen)+' · ×'+ratio+' l\'obj. mensuel');
@@ -724,6 +740,42 @@ function toast(msg){
   var t=el('toast'); t.textContent=msg; t.classList.add('show');
   clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show')},1800);
 }
+
+/* ── BRIEF DU JOUR (texte copiable) ──── */
+function buildBrief(){
+  var d=STATE.data; if(!d) return '';
+  var p=d.pipeline||{}, qw=d.quickwins||[], br=d.brief||{}, dl=d.delta;
+  var dep=(p.etapes||[]).filter(function(e){return e.id==='depose'})[0]||{};
+  var L=[];
+  L.push('🟡 BRIEF LED 30k — '+(d.generated?dateFr(d.generated):''));
+  L.push('━━━━━━━━━━━━━━━━━━━━');
+  L.push('📊 Pipeline : '+(p.total_actif||0)+' dossiers actifs · '+fi(p.led_actif||0)+' LED');
+  L.push('✅ Déposé : '+fi(dep.n||0)+' dossiers · '+fi(dep.led||0)+' LED ('+(p.pct_depose||0)+'%)');
+  L.push('🎯 Taux de pose : '+(d.taux_pose_pct||0)+'% (cible ≥95%, écart '+(95-(d.taux_pose_pct||0))+'pt)');
+  if(dl && (dl.deposees_delta||dl.action_n_delta)){
+    var dd=dl.deposees_delta;
+    L.push('📈 Δ vs '+dl.date_ref+' : '+(dd>0?'+':'')+fi(dd)+' LED déposées');
+  }
+  L.push('');
+  L.push('⚡ ACTIONS DU JOUR :');
+  qw.forEach(function(q){
+    var f={urgent:'🔴',relance:'📞',action:'📋'}[q.urgence]||'•';
+    L.push(f+' '+q.n+' '+q.stage_id+' → '+fi(q.led)+' LED ('+q.effort+')');
+    L.push('   '+q.action);
+  });
+  if(br.objectif_jour){
+    L.push('');
+    L.push('🎯 Objectif du jour : ~'+fi(br.objectif_jour)+' LED à faire progresser');
+  }
+  var impact=qw.filter(function(q){return q.urgence==='urgent'})
+               .reduce(function(s,q){return s+q.led},0);
+  if(impact){ L.push('💡 Impact immédiat si modifs traitées : +'+fi(impact)+' LED'); }
+  return L.join('\n');
+}
+el('briefBtn').addEventListener('click', function(){
+  var txt=buildBrief();
+  if(txt) copyText(txt,'✅ Brief copié — prêt à coller');
+});
 
 /* ── SEARCH ──────────────────────────── */
 function allDossiers(){
