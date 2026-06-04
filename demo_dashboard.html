@@ -367,6 +367,10 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
     </div>
   </div>
 
+  <!-- ②bis  CONFIRMÉS CEE (LISTE EQ 127) ────── -->
+  <div class="sec-title" id="confTitle" style="display:none">Confirmés CEE · suivi central</div>
+  <div id="confWrap" style="display:none"></div>
+
   <!-- ③  FUNNEL ────────────────────────────── -->
   <div class="sec-title" id="funnelTitle" style="display:none">Pipeline — entonnoir réel</div>
   <div style="background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:none" id="funnelCard">
@@ -520,6 +524,45 @@ function applyData(d){
 
   /* funnel + pipeline */
   if(p.etapes) { renderFunnel(p, d.led_signees); renderPipeline(p); }
+
+  /* confirmés CEE + autres secteurs */
+  if(d.confirmes) renderConfirmes(d.confirmes, d.autres_secteurs);
+}
+
+/* ── CONFIRMÉS CEE (LISTE EQ 127) ─────── */
+function renderConfirmes(c, autres){
+  show('confTitle');
+  var wrap=el('confWrap'); if(!wrap) return; wrap.style.display='';
+  var sect=c.secteurs||{};
+  var entrepots=sect.entrepots||0, autresS=(sect.autres||0)+(sect.non_renseigne||0);
+  var html='<div style="background:var(--card);border:1px solid var(--line);'
+    +'border-radius:var(--r);padding:14px 16px;margin-bottom:10px;animation:slide-in .3s ease forwards">'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'
+    +'<div><div style="font-size:22px;font-weight:800;color:var(--ink)">'+fi(c.led)+'</div>'
+    +'<div style="font-size:11px;color:var(--muted)">LED confirmées au CEE · '+fi(c.n)+' opérations</div></div>'
+    +'<div style="text-align:right"><div style="font-size:16px;font-weight:700;color:var(--green)">'+fm(c.prime)+'</div>'
+    +'<div style="font-size:10.5px;color:var(--muted)">prime engagée</div></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11px">'
+    +'<span class="qw-chip">🏭 Entrepôts : '+fi(entrepots)+'</span>'
+    +'<span class="qw-chip">📦 Autres : '+fi(autresS)+'</span>'
+    +'<span class="qw-chip top5">🔖 Réf ERS : '+c.ers_coverage_pct+'% cherchables</span>'
+    +'<span class="qw-chip">⌀ '+c.led_moy+' LED/op</span>'
+    +'</div>';
+
+  /* alerte autres secteurs (photos manquantes) */
+  if(autres && autres.en_attente_photos){
+    html+='<div style="margin-top:12px;padding:11px 13px;background:var(--soft);'
+      +'border-left:4px solid var(--amber,#f59e0b);border-radius:10px">'
+      +'<div style="font-size:12.5px;font-weight:700;color:var(--ink)">📸 Autres secteurs — '
+      +fi(autres.en_attente_photos)+' dossiers sans photos</div>'
+      +'<div style="font-size:11px;color:var(--muted);margin-top:3px">'
+      +fi(autres.n)+' dossiers · '+fi(autres.led)+' LED · seulement '+autres.photos_pct
+      +'% de photos reçues → relancer pour débloquer la valorisation</div>'
+      +'</div>';
+  }
+  html+='</div>';
+  wrap.innerHTML=html;
 }
 
 /* ── QUICKWINS ───────────────────────── */

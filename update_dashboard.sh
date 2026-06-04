@@ -6,7 +6,9 @@
 #   ./update_dashboard.sh                          → via pixel_api.py (API Pixel directe)
 #   ./update_dashboard.sh data/mon.csv             → via export CSV Pixel
 #   ./update_dashboard.sh --betool data/betool.xlsx → pipeline BETOOL seulement
-#   ./update_dashboard.sh data/mon.csv --betool data/betool.xlsx → les deux
+#   ./update_dashboard.sh --confirme "data/LISTE EQ 127 CONFIRME.csv" → confirmés CEE
+#   ./update_dashboard.sh --confirme liste.csv --ary "data/TABLEAU ARY.csv" → + autres secteurs
+#   ./update_dashboard.sh --betool b.xlsx --confirme liste.csv --ary ary.csv → tout
 #
 # Prérequis : fichier .env dans ce dossier avec :
 #   PIXEL_BASE_URL=https://crm.pixel-crm.fr
@@ -41,12 +43,17 @@ fi
 # ── Arguments ────────────────────────────────────────────────────────────────
 CSV_ARG=""
 BETOOL_ARG=""
+CONFIRME_ARG=""
+ARY_ARG=""
 ARGS=("$@")
 i=0
 while [ $i -lt ${#ARGS[@]} ]; do
   if [ "${ARGS[$i]}" = "--betool" ]; then
-    i=$((i+1))
-    BETOOL_ARG="${ARGS[$i]:-}"
+    i=$((i+1)); BETOOL_ARG="${ARGS[$i]:-}"
+  elif [ "${ARGS[$i]}" = "--confirme" ]; then
+    i=$((i+1)); CONFIRME_ARG="${ARGS[$i]:-}"
+  elif [ "${ARGS[$i]}" = "--ary" ]; then
+    i=$((i+1)); ARY_ARG="${ARGS[$i]:-}"
   elif [ -z "$CSV_ARG" ] && [ "${ARGS[$i]:0:1}" != "-" ]; then
     CSV_ARG="${ARGS[$i]}"
   fi
@@ -61,10 +68,9 @@ if [ -n "$CSV_ARG" ]; then
   mkdir -p data
   cp "$CSV_ARG" data/export_crm.csv
   "$PYTHON" daily_summary.py
-elif [ -n "$BETOOL_ARG" ]; then
-  # Mode BETOOL seul : pas de source CSV ni d'API Pixel → on saute cette étape.
-  # (Le pipeline BETOOL ci-dessous suffit à régénérer public_data.json.)
-  echo "Mode BETOOL seul — pas d'appel à l'API Pixel."
+elif [ -n "$BETOOL_ARG" ] || [ -n "$CONFIRME_ARG" ]; then
+  # Mode fichiers locaux (BETOOL / LISTE CONFIRME) : pas d'API Pixel.
+  echo "Mode fichiers locaux — pas d'appel à l'API Pixel."
 elif [ -n "${PIXEL_BASE_URL:-}" ] && [ -n "${PIXEL_SESSION_COOKIE:-}" ]; then
   # Mode API Pixel (doit être lancé depuis ton PC, pas GitHub Actions)
   echo "Mode API Pixel CRM…"
@@ -85,6 +91,20 @@ if [ -n "$BETOOL_ARG" ]; then
   fi
   echo "Pipeline BETOOL : $BETOOL_ARG"
   "$PYTHON" betool_summary.py "$BETOOL_ARG"
+fi
+
+# ── LISTE CONFIRME CEE (optionnel) ────────────────────────────────────────────
+if [ -n "$CONFIRME_ARG" ]; then
+  if [ ! -f "$CONFIRME_ARG" ]; then
+    echo "[ERREUR] Fichier LISTE CONFIRME introuvable : $CONFIRME_ARG"
+    exit 1
+  fi
+  echo "Confirmés CEE : $CONFIRME_ARG"
+  if [ -n "$ARY_ARG" ]; then
+    "$PYTHON" confirme_summary.py "$CONFIRME_ARG" --ary "$ARY_ARG"
+  else
+    "$PYTHON" confirme_summary.py "$CONFIRME_ARG"
+  fi
 fi
 
 # ── Brief quotidien + delta J-1 (toujours) ────────────────────────────────────

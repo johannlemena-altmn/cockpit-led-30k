@@ -3037,5 +3037,42 @@
     "taux_pose_pct": 72,
     "pipeline_bilan": "premier_run"
   },
-  "dossiers_source": "betool"
+  "dossiers_source": "betool",
+  "confirmes": {
+    "generated": "2026-06-04",
+    "n": 5440,
+    "led": 158583,
+    "prime": 11399872,
+    "led_moy": 29.2,
+    "ers_coverage_pct": 100,
+    "secteurs": {
+      "entrepots": 5387,
+      "autres": 50,
+      "non_renseigne": 3
+    },
+    "ers_sample": [
+      "ERS-2025-1102-1",
+      "ERS-2025-1102-2",
+      "ERS-2025-1102-3",
+      "ERS-2025-1102-4",
+      "ERS-2025-1102-5",
+      "ERS-2025-1102-6",
+      "ERS-2025-1102-7",
+      "ERS-2025-1105"
+    ]
+  },
+  "autres_secteurs": {
+    "generated": "2026-06-04",
+    "n": 1040,
+    "led": 7714,
+    "photos_recues": 104,
+    "photos_pct": 10,
+    "en_attente_photos": 936,
+    "motifs": {
+      "non_renseigne": 928,
+      "elevage_animaux": 91,
+      "batiment_ouvert": 19,
+      "autre_motif": 2
+    }
+  }
 }

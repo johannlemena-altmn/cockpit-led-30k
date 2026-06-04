@@ -17,12 +17,28 @@ Aider **Énergie Responsable** (intermédiaire CEE) à atteindre **30 000 LED d�
 ## Structure
 - `build_dashboard_interactive.py` / `build_dashboard_mvp.py` : génèrent les dashboards depuis `data/*.csv`.
 - `build_xlsx.py` : cockpit Excel (seeds anonymisés).
+- `betool_summary.py` : lit l'export BETOOL « ENERGIE RESPONSABLE » (CRM, ~16 400 lignes) → pipeline opérationnel (Installation→Audit→Signature→Modif→Déposé) + quickwins. Réf dossier = n° Waresito (non-PII).
+- `confirme_summary.py` : lit la **LISTE EQ 127 « CONFIRME »** (fichier dépôt CEE officiel, ~5 440 ops) → bloc `confirmes` (vue centrale : LED confirmées, prime, réfs `ERS-YYYY-XXXX` cherchables, secteurs). Option `--ary` pour le **TABLEAU ARY** (autres secteurs, alerte photos manquantes). **Agrégats anonymisés uniquement** + garde-fou PII intégré.
 - `demo_dashboard.html` : dashboard mobile-first (agrégats anonymisés, zéro PII) — **commité**, visible publiquement.
 - `daily_summary.py` : génère un résumé HTML mobile (KPIs + alertes + recommandation) ; exécuté automatiquement par GitHub Actions.
 - `Note_Plan_30k_LED.html` : note de process (diagnostic, leviers, chaîne, conformité, checklist v2).
 - `infra/` : stack auto-hébergée Postgres + Metabase (gratuit/OSS) — alternatives Superset/Grafana dans `infra/ALTERNATIVES.md`.
 - `.github/workflows/pages.yml` : déploie GitHub Pages (nécessite 1 config manuelle : Settings → Pages → Source → GitHub Actions).
 - `.github/workflows/daily_summary.yml` : cron lun.–ven. 07h00 Paris, upload artifact 7 jours.
+
+## Sources de données (3 systèmes, vues complémentaires)
+La chaîne s'appuie sur 3 sources distinctes — bien les distinguer :
+
+1. **BETOOL CRM — board « ENERGIE RESPONSABLE »** (`application.betool.fr/board/energie-responsable/led`, ~16 400 lignes).
+   Base de traitement remplie par les commerciaux puis complétée jusqu'à « Déposé ».
+   Export `.xlsx` → `betool_summary.py` → bloc `pipeline` (étapes opérationnelles + quickwins).
+2. **LISTE EQ 127 « CONFIRME »** (CSV format dépôt CEE/EMMY, ~5 440 ops). **Vue centrale de suivi.**
+   Col 0 = ID interne, **col 5 = réf `ERS-YYYY-XXXX-N`** (identifiant cherchable, non nominatif), col 36 = nb LED, col 7 = prime.
+   → `confirme_summary.py` → bloc `confirmes` (158k LED confirmées, ~11,4 M€, couverture ERS ~100 %).
+   - **TABLEAU ARY** (`--ary`) : ~1 040 dossiers « Autres secteurs » (animaux, bâtiment ouvert, <15 ans). Alerte = ~90 % sans photos → bloc `autres_secteurs`.
+3. **BETOOL auditeur — board « PRIME EVOLUTION »** (`application.betool.fr/board/prime-evolution/led`, ~2 760 lignes). ⏳ pas encore branché.
+   Statuts audit : `Étude prête` (~2 400, prêtes à valider/corriger), `Modification à faire` (~190 = vrais blocages audit), `Étude en cours`, `Étude à réaliser`. Clé = ticket `LE-XXXX`.
+   **Pour l'intégrer** : exporter ce board en `.xlsx`/CSV (colonnes : `Clé ticket`, `Status LED`, `Jetons`/nb LED, `Last updateTime`), puis créer `auditeur_summary.py` (calque de `betool_summary.py` ; mapper `Status LED`→étapes audit, réf = `LE-XXXX`). Cible : un bloc `audit_pipeline` avec les ~190 « Modification à faire » comme quickwin prioritaire en amont du CRM.
 
 ## Régénérer un dashboard (quand un nouvel export CRM est dispo)
 1. Mettre l'export Pixel (« eq 127 pour liste ») dans `data/` (ou me l'uploader dans la session).
