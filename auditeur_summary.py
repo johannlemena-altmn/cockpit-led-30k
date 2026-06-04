@@ -89,7 +89,10 @@ for _s in AUDIT_STAGES:
 
 # Candidats colonnes (BETOOL peut varier l'orthographe)
 _REF_COLS   = ("Clé ticket", "Cle ticket", "Référence", "Reference", "Ticket", "ID")
-_LED_COLS   = ("Jetons", "Nb LED", "Nombre LED", "LED", "Quantite LED", "Quantité LED")
+# NB : dans l'export auditeur, "Jetons" = emoji (♾️/🪙), PAS un nombre de LED.
+# Le nb de LED n'existe pas dans cette source → on agrège les dossiers + cellules.
+_LED_COLS   = ("Nb LED", "Nombre LED", "Quantite LED", "Quantité LED")
+_CELL_COLS  = ("Cellules", "Nombre de cellules", "Nb cellules")
 _STATUT_COL = ("Status LED", "Statut LED", "Status", "Statut")
 _DATE_COLS  = ("Last updateTime", "Dernière mise à jour", "Date mise à jour",
                "lastUpdateTime", "UpdateTime")
@@ -203,20 +206,22 @@ def compute_audit_pipeline(path: str) -> dict:
 
     ref_col    = _first(_REF_COLS, h_idx)
     led_col    = _first(_LED_COLS, h_idx)
+    cell_col   = _first(_CELL_COLS, h_idx)
     statut_col = _first(_STATUT_COL, h_idx)
     date_col   = _first(_DATE_COLS, h_idx)
 
     print(f"  Colonnes détectées → ref={ref_col!r} led={led_col!r} "
-          f"statut={statut_col!r} date={date_col!r}")
+          f"cellules={cell_col!r} statut={statut_col!r} date={date_col!r}")
 
     if statut_col is None:
         print("[AVERTISSEMENT] Colonne 'Status LED' absente — tous les dossiers → 'non_reconnu'.",
               file=sys.stderr)
 
-    # Compteurs par stage
-    by_stage: dict[str, dict] = {s["id"]: {"n": 0, "led": 0, "refs": [], "dossiers": []}
+    # Compteurs par stage. NB : pas de nb LED dans cette source → on suit les
+    # dossiers (n) et, à défaut, les cellules (zones) comme proxy de volume.
+    by_stage: dict[str, dict] = {s["id"]: {"n": 0, "led": 0, "cellules": 0, "refs": [], "dossiers": []}
                                   for s in AUDIT_STAGES}
-    by_stage["non_reconnu"] = {"n": 0, "led": 0, "refs": [], "dossiers": []}
+    by_stage["non_reconnu"] = {"n": 0, "led": 0, "cellules": 0, "refs": [], "dossiers": []}
     today = date.today()
 
     for row in rows[1:]:
@@ -231,22 +236,22 @@ def compute_audit_pipeline(path: str) -> dict:
         sid   = stage["id"] if stage else "non_reconnu"
 
         led  = int(_num(cell(led_col)))
+        cel  = int(_num(cell(cell_col)))
         ref  = _ref(cell(ref_col))
         dt   = _parse_date(cell(date_col))
         age  = _age(dt)
 
-        by_stage[sid]["n"]   += 1
-        by_stage[sid]["led"] += led
+        by_stage[sid]["n"]        += 1
+        by_stage[sid]["led"]      += led
+        by_stage[sid]["cellules"] += cel
         if ref:
             by_stage[sid]["refs"].append(ref)
-        by_stage[sid]["dossiers"].append({"ref": ref, "led": led, "age_days": age})
+        by_stage[sid]["dossiers"].append({"ref": ref, "led": led, "cellules": cel, "age_days": age})
 
     # Construire les étapes
     etapes = []
     for s in AUDIT_STAGES:
         b = by_stage[s["id"]]
-        # Trier par LED décroissant, garder top-20 pour le drawer
-        doss_sorted = sorted(b["dossiers"], key=lambda x: -(x["led"] or 0))
         etapes.append({
             "id":       s["id"],
             "label":    s["label"],
@@ -255,10 +260,12 @@ def compute_audit_pipeline(path: str) -> dict:
             "conseil":  s["conseil"],
             "n":        b["n"],
             "led":      b["led"],
+            "cellules": b["cellules"],
         })
 
     total = sum(e["n"] for e in etapes)
     led_total = sum(e["led"] for e in etapes)
+    cellules_total = sum(e["cellules"] for e in etapes)
 
     # Quickwins audit (modif + etude_prête uniquement)
     quickwins = []
@@ -268,7 +275,7 @@ def compute_audit_pipeline(path: str) -> dict:
         s  = next(x for x in AUDIT_STAGES if x["id"] == sid)
         if b["n"] == 0:
             continue
-        doss_sorted = sorted(b["dossiers"], key=lambda x: -(x["led"] or 0))
+        doss_sorted = sorted(b["dossiers"], key=lambda x: -(x["cellules"] or 0))
         top5 = doss_sorted[:5]
         quickwins.append({
             "rank":      rank,
@@ -276,20 +283,21 @@ def compute_audit_pipeline(path: str) -> dict:
             "urgence":   s["urgence"],
             "n":         b["n"],
             "led":       b["led"],
+            "cellules":  b["cellules"],
             "action":    s["conseil"],
             "effort":    "~1h" if sid == "modif_a_faire" else "~demi-journée",
-            "top5_led":  sum(d["led"] for d in top5),
             "top5_refs": [d["ref"] for d in top5 if d["ref"]],
         })
 
     # Dossiers "modif à faire" pour le drawer (top-50)
     modif_doss = sorted(by_stage["modif_a_faire"]["dossiers"],
-                        key=lambda x: -(x["led"] or 0))[:50]
+                        key=lambda x: -(x["cellules"] or 0))[:50]
 
     non_reco = by_stage["non_reconnu"]["n"]
     result = {
-        "generated":     today.strftime("%Y-%m-%d"),
-        "source":        "betool_auditeur",
+        "generated":      today.strftime("%Y-%m-%d"),
+        "cellules_total": cellules_total,
+        "source":         "betool_auditeur",
         "total":         total,
         "led_total":     led_total,
         "etapes":        etapes,
@@ -354,15 +362,17 @@ def main():
     etapes_str = "  ".join(
         f"{e['short']}:{e['n']}" for e in audit["etapes"] if e["n"]
     )
-    print(f"  {audit['total']:,} dossiers · {audit['led_total']:,} LED".replace(",", " "))
+    vol = (f" · {audit['led_total']:,} LED" if audit['led_total']
+           else f" · {audit['cellules_total']:,} cellules")
+    print(f"  {audit['total']:,} dossiers{vol}".replace(",", " "))
     print(f"  {etapes_str}")
     if audit["non_reconnu_n"]:
         print(f"  ⚠ {audit['non_reconnu_n']} statuts non reconnus "
               f"→ lancer --inspect pour vérifier les valeurs.")
     if audit["quickwins"]:
         qw = audit["quickwins"][0]
-        print(f"  ⚡ Top quickwin : {qw['n']} '{qw['stage_id']}' · {qw['led']:,} LED"
-              .replace(",", " "))
+        print(f"  ⚡ Top quickwin : {qw['n']} '{qw['stage_id']}' "
+              f"({qw['cellules']} cellules)")
 
     # Merge dans public_data.json
     data: dict = {}

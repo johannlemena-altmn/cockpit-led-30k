@@ -3074,5 +3074,403 @@
       "batiment_ouvert": 19,
       "autre_motif": 2
     }
+  },
+  "audit_pipeline": {
+    "generated": "2026-06-04",
+    "cellules_total": 6390,
+    "source": "betool_auditeur",
+    "total": 2764,
+    "led_total": 0,
+    "etapes": [
+      {
+        "id": "modif_a_faire",
+        "label": "Modification à faire",
+        "short": "Modif 🔴",
+        "urgence": "urgent",
+        "conseil": "Corriger les études bloquées → libère les dépôts en attente.",
+        "n": 179,
+        "led": 0,
+        "cellules": 487
+      },
+      {
+        "id": "etude_prête",
+        "label": "Étude prête",
+        "short": "Prêt ✅",
+        "urgence": "action",
+        "conseil": "Valider et corriger les études prêtes avant envoi au délégataire.",
+        "n": 2408,
+        "led": 0,
+        "cellules": 5438
+      },
+      {
+        "id": "etude_en_cours",
+        "label": "Étude en cours",
+        "short": "En cours",
+        "urgence": "normal",
+        "conseil": "Études en traitement — suivre l'avancement.",
+        "n": 113,
+        "led": 0,
+        "cellules": 302
+      },
+      {
+        "id": "etude_a_realiser",
+        "label": "Étude à réaliser",
+        "short": "À faire",
+        "urgence": "normal",
+        "conseil": "Planifier la réalisation des études restantes.",
+        "n": 38,
+        "led": 0,
+        "cellules": 118
+      },
+      {
+        "id": "annulation",
+        "label": "Annulation",
+        "short": "Annulé",
+        "urgence": "ok",
+        "conseil": "",
+        "n": 26,
+        "led": 0,
+        "cellules": 45
+      }
+    ],
+    "quickwins": [
+      {
+        "rank": 1,
+        "stage_id": "modif_a_faire",
+        "urgence": "urgent",
+        "n": 179,
+        "led": 0,
+        "cellules": 487,
+        "action": "Corriger les études bloquées → libère les dépôts en attente.",
+        "effort": "~1h",
+        "top5_refs": [
+          "LE-14557",
+          "LE-12748",
+          "LE-12737",
+          "LE-12545",
+          "LE-6823"
+        ]
+      },
+      {
+        "rank": 2,
+        "stage_id": "etude_prête",
+        "urgence": "action",
+        "n": 2408,
+        "led": 0,
+        "cellules": 5438,
+        "action": "Valider et corriger les études prêtes avant envoi au délégataire.",
+        "effort": "~demi-journée",
+        "top5_refs": [
+          "LE-12996",
+          "LE-12422",
+          "LE-11816",
+          "LE-11692",
+          "LE-11619"
+        ]
+      }
+    ],
+    "non_reconnu_n": 0,
+    "modif_dossiers": [
+      {
+        "ref": "LE-14557",
+        "led": 0,
+        "cellules": 7,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12748",
+        "led": 0,
+        "cellules": 7,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12737",
+        "led": 0,
+        "cellules": 7,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12545",
+        "led": 0,
+        "cellules": 7,
+        "age_days": null
+      },
+      {
+        "ref": "LE-6823",
+        "led": 0,
+        "cellules": 7,
+        "age_days": null
+      },
+      {
+        "ref": "LE-521",
+        "led": 0,
+        "cellules": 7,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12553",
+        "led": 0,
+        "cellules": 6,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12467",
+        "led": 0,
+        "cellules": 6,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11641",
+        "led": 0,
+        "cellules": 6,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11288",
+        "led": 0,
+        "cellules": 6,
+        "age_days": null
+      },
+      {
+        "ref": "LE-13340",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-13261",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-13009",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12853",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11991",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11270",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11061",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-10371",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-10271",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-1657",
+        "led": 0,
+        "cellules": 5,
+        "age_days": null
+      },
+      {
+        "ref": "LE-14379",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-13350",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12989",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12920",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12826",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12520",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12434",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12426",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12377",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11653",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11408",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11377",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11313",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-11036",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-10685",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-9671",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-7742",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-1020",
+        "led": 0,
+        "cellules": 4,
+        "age_days": null
+      },
+      {
+        "ref": "LE-14561",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-13516",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12965",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12944",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12797",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12720",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12599",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12584",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12577",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12544",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12536",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      },
+      {
+        "ref": "LE-12521",
+        "led": 0,
+        "cellules": 3,
+        "age_days": null
+      }
+    ]
   }
 }

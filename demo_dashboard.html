@@ -581,6 +581,9 @@ function renderAuditPipeline(a){
   var etapes=(a.etapes||[]).filter(function(e){return e.n>0});
   if(!etapes.length) return;
 
+  /* cette source n'a pas de nb LED → on affiche dossiers + cellules (zones) */
+  var useLed=(a.led_total||0)>0;
+  var volLbl=function(e){return useLed?fi(e.led)+' LED':fi(e.cellules||0)+' cellules'};
   var maxN=Math.max.apply(null,etapes.map(function(e){return e.n}));
   var html='<div style="background:var(--card);border:1px solid var(--line);'
     +'border-radius:var(--r);padding:14px 16px;margin-bottom:10px">';
@@ -588,7 +591,8 @@ function renderAuditPipeline(a){
   var modif=(a.etapes||[]).find(function(e){return e.id==='modif_a_faire'});
   html+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">'
     +'<div><div style="font-size:18px;font-weight:800">'+fi(a.total)+'</div>'
-    +'<div style="font-size:11px;color:var(--muted)">dossiers audit · '+fi(a.led_total)+' LED</div></div>';
+    +'<div style="font-size:11px;color:var(--muted)">dossiers audit · '
+    +(useLed?fi(a.led_total)+' LED':fi(a.cellules_total||0)+' cellules')+'</div></div>';
   if(modif && modif.n){
     html+='<div style="text-align:right;background:#7a1212;border-radius:8px;padding:6px 10px">'
       +'<div style="font-size:16px;font-weight:800;color:#ffd24a">'+modif.n+'</div>'
@@ -603,7 +607,7 @@ function renderAuditPipeline(a){
     html+='<div style="margin-bottom:10px">'
       +'<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">'
       +'<span style="font-weight:600">'+e.short+'</span>'
-      +'<span style="color:var(--muted)">'+fi(e.n)+' doss. · '+fi(e.led)+' LED</span></div>'
+      +'<span style="color:var(--muted)">'+fi(e.n)+' doss. · '+volLbl(e)+'</span></div>'
       +'<div style="background:var(--line);border-radius:999px;height:7px;overflow:hidden">'
       +'<div id="'+bid+'" style="height:100%;border-radius:999px;background:'+c+';width:0%;'
       +'transition:width .7s ease"></div></div>'
@@ -617,9 +621,10 @@ function renderAuditPipeline(a){
     html+='<div style="border-top:1px solid var(--line);margin-top:8px;padding-top:10px">';
     qw.forEach(function(q){
       var uc=AUDIT_URGENCE_C[q.urgence]||'#2E6FB7';
+      var qvol=(q.led? fi(q.led)+' LED' : fi(q.cellules||0)+' cellules');
       html+='<div style="padding:9px 11px;border-left:4px solid '+uc+';border-radius:0 8px 8px 0;'
         +'background:var(--soft);margin-bottom:6px">'
-        +'<div style="font-size:12.5px;font-weight:700">'+q.n+' dossiers · '+fi(q.led)+' LED'
+        +'<div style="font-size:12.5px;font-weight:700">'+q.n+' dossiers · '+qvol
         +(q.top5_refs&&q.top5_refs.length?' · ex: '+q.top5_refs.slice(0,2).join(', '):'')+'</div>'
         +'<div style="font-size:11px;color:var(--muted);margin-top:2px">→ '+q.action+'</div>'
         +'</div>';

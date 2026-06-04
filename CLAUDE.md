@@ -65,3 +65,4 @@ L'extraction depuis le CRM Pixel nécessite une session navigateur + l'extension
 - **S1 ⏳** : brancher l'ETL (`infra/etl.py`) → Postgres → dashboards Metabase (manager + pôles) ; activer les vues avancées dans `infra/sql/views.sql`.
 - **S2 ⏳** : déployer la stack Docker (auto-hébergé) + refresh 15-30 min (`infra/refresh.sh`). Code prêt, pas encore déployé.
 - **S3 ✅** : résumé quotidien `daily_summary.py` + workflow GitHub Actions (`daily_summary.yml`, cron 07h00 Paris lun.–ven.).
+- **Board auditeur ✅** : `auditeur_summary.py` branché sur l'export Prime Evolution (2 764 dossiers — 179 « Modification à faire », 2 408 « Étude prête »). ⚠ Cette source n'a PAS de nb LED (col `Jetons` = emoji ♾️/🪙) → on agrège les dossiers + cellules (zones). Bloc `audit_pipeline` affiché dans `demo_dashboard.html`. Réf = `LE-XXXX`. Lancer via `--auditeur data/export.xlsx` (ou `--inspect` pour vérifier les colonnes).
