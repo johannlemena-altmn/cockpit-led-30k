@@ -719,6 +719,15 @@ def write_public_json(agg: dict, output_path: str = "public_data.json"):
         for m, led in sorted(agg["by_month"].items()):
             mois.append({"m": m, "led": int(led)})
 
+    # Préserver les clés BETOOL déjà présentes (pipeline, taux_pose_pct BETOOL)
+    existing = {}
+    if os.path.isfile(output_path):
+        try:
+            with open(output_path, encoding="utf-8") as f:
+                existing = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            pass
+
     data = {
         "generated":        today.strftime("%Y-%m-%d"),
         "demo_mode":        demo_mode,
@@ -729,9 +738,14 @@ def write_public_json(agg: dict, output_path: str = "public_data.json"):
         "led_med":          30,
         "led_max":          459,
         "objectif_mensuel": OBJECTIF_MENSUEL,
-        "taux_pose_pct":    taux_pct if taux_pct is not None else 67,
+        "taux_pose_pct":    taux_pct if taux_pct is not None else existing.get("taux_pose_pct", 67),
         "mois":             mois,
     }
+
+    # Réinjecter pipeline BETOOL si présent (betool_summary.py le met à jour séparément)
+    for key in ("pipeline",):
+        if key in existing:
+            data[key] = existing[key]
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
