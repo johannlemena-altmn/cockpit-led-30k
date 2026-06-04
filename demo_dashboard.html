@@ -295,8 +295,8 @@ body {
     <div class="progress-bar" style="width:100%"></div>
   </div>
   <div class="progress-label">
-    <span>196 177 LED signées</span>
-    <span>×6,5 l'objectif mensuel ✓</span>
+    <span id="hdrLed">233 504 LED signées</span>
+    <span id="hdrRatio">×7,8 l'objectif mensuel ✓</span>
   </div>
 </div>
 
@@ -346,48 +346,59 @@ body {
   <!-- DIAGNOSTIC -->
   <div class="sec-title">Diagnostic — frein principal</div>
 
-  <div class="alert amber">
+  <div class="alert amber" id="diagAlert">
     <div class="alert-icon">⚠️</div>
-    <div>
+    <div id="diagText">
       <b>Le stock n'est pas le problème</b>
-      196 177 LED signées = ×6,5 l'objectif. Le frein est le <strong>débit de traitement</strong> (contrôle → dépôt) et le <strong>taux de pose</strong>.
+      233 504 LED signées = ×7,8 l'objectif. Le frein est le <strong>débit de traitement</strong> (contrôle → dépôt) et le <strong>taux de pose</strong>.
     </div>
   </div>
 
-  <!-- FUNNEL POSE -->
-  <div class="card">
-    <h3>Entonnoir — taux de pose actuel vs cible</h3>
-    <div class="funnel">
-      <div class="funnel-step">
-        <div class="funnel-label">Signées</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:100%; background:#2E6FB7;">196 177</div>
-        </div>
-        <div class="funnel-pct" style="color:#2E6FB7;">100%</div>
-      </div>
-      <div class="funnel-step">
-        <div class="funnel-label">Contrôlées</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:85%; background:#5a9fd4;">~166 750</div>
-        </div>
-        <div class="funnel-pct" style="color:#5a9fd4;">~85%</div>
-      </div>
-      <div class="funnel-step">
-        <div class="funnel-label">Posées</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:67%; background:#E08600;">~131 440</div>
-        </div>
-        <div class="funnel-pct" style="color:#E08600;">~67%</div>
-      </div>
-      <div class="funnel-step">
-        <div class="funnel-label">Cible pose</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:95%; background:#2E7D32; opacity:.4;">≥95%</div>
-        </div>
-        <div class="funnel-pct" style="color:#2E7D32;">≥95%</div>
-      </div>
+  <!-- TAUX DE POSE KPI -->
+  <div class="kpi-grid" style="grid-template-columns:1fr 1fr 1fr; margin-bottom:14px;">
+    <div class="kpi danger" id="kTauxPoseWrap">
+      <div class="val" id="kTauxPose">72%</div>
+      <div class="lbl">taux de pose réel</div>
     </div>
-    <div style="font-size:10.5px; color:var(--muted); margin-top:8px;">* Taux de pose estimé 60-75% · cible ≥95% pour déblocage dépôt</div>
+    <div class="kpi ok">
+      <div class="val">≥95%</div>
+      <div class="lbl">cible pose</div>
+    </div>
+    <div class="kpi warn">
+      <div class="val" id="kGapPose">−23pt</div>
+      <div class="lbl">écart à combler</div>
+    </div>
+  </div>
+
+  <!-- FUNNEL POSE — rendu dynamique depuis BETOOL -->
+  <div class="card">
+    <h3>Entonnoir pipeline — données réelles BETOOL</h3>
+    <div id="funnelWrap">
+      <!-- rempli par JS si public_data.json disponible -->
+      <div class="funnel">
+        <div class="funnel-step">
+          <div class="funnel-label">Signées</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#2E6FB7;">233 504</div></div>
+          <div class="funnel-pct" style="color:#2E6FB7;">100%</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-label">En pipeline</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:72%;background:#5a9fd4;">171 516</div></div>
+          <div class="funnel-pct" style="color:#5a9fd4;">72%</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-label">Déposées ✅</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:40%;background:#2E7D32;">94 202</div></div>
+          <div class="funnel-pct" style="color:#2E7D32;">40%</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-label">Cible pose</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:95%;background:#2E7D32;opacity:.35;">≥95%</div></div>
+          <div class="funnel-pct" style="color:#2E7D32;">≥95%</div>
+        </div>
+      </div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:8px;">Source : BETOOL · taux pose = (posés + en traitement) / total pipeline</div>
+    </div>
   </div>
 
   <!-- RÉPARTITION DOSSIERS -->
@@ -514,7 +525,7 @@ body {
   </div>
 
   <div class="foot">
-    Cockpit LED 30k · Énergie Responsable · données agrégées anonymisées · 03/06/2026<br>
+    Cockpit LED 30k · Énergie Responsable · données agrégées anonymisées · <span id="footDate">04/06/2026</span><br>
     Aucune donnée client (PII) dans ce fichier
   </div>
 
@@ -565,22 +576,76 @@ body {
     setText('kMoy',   d.led_moy != null ? String(d.led_moy) : '—');
     setText('kMed',   d.led_med != null ? String(d.led_med) : '—');
 
-    /* Date dans le sous-titre header */
-    var sub = document.getElementById('hdrSub');
-    if (sub) {
-      var gen = d.generated || '';
-      if (gen) {
-        /* Convertir YYYY-MM-DD → DD/MM/YYYY */
-        var parts = gen.split('-');
-        var dateFr = parts.length === 3
-          ? parts[2] + '/' + parts[1] + '/' + parts[0]
-          : gen;
-        sub.textContent = 'Données réelles du ' + dateFr + ' · données anonymisées';
-      }
+    /* Header — labels dynamiques */
+    var obj   = d.objectif_mensuel || 30000;
+    var ratio = (d.led_signees / obj).toFixed(1).replace('.', ',');
+    setText('hdrLed',   fmtInt(d.led_signees) + ' LED signées');
+    setText('hdrRatio', '×' + ratio + ' l\'objectif mensuel ✓');
+
+    /* Alerte diagnostic */
+    var diagEl = document.getElementById('diagText');
+    if (diagEl) diagEl.innerHTML = '<b>Le stock n\'est pas le problème</b> '
+      + fmtInt(d.led_signees) + ' LED signées = ×' + ratio
+      + ' l\'objectif mensuel. Le frein est le <strong>débit de traitement</strong> (contrôle → dépôt) et le <strong>taux de pose</strong>.';
+
+    /* Taux de pose */
+    if (d.taux_pose_pct != null) {
+      setText('kTauxPose', d.taux_pose_pct + '%');
+      setText('kGapPose', '−' + (95 - d.taux_pose_pct) + 'pt');
+      var wrap = document.getElementById('kTauxPoseWrap');
+      if (wrap) wrap.className = 'kpi ' + (d.taux_pose_pct >= 95 ? 'ok' : d.taux_pose_pct >= 80 ? 'warn' : 'danger');
+    }
+
+    /* Date */
+    var gen = d.generated || '';
+    if (gen) {
+      var parts = gen.split('-');
+      var dateFr = parts.length === 3 ? parts[2] + '/' + parts[1] + '/' + parts[0] : gen;
+      setText('hdrSub',   'Données réelles du ' + dateFr + ' · données anonymisées');
+      setText('footDate', dateFr);
     }
 
     injectBadge(!!d.demo_mode);
-    if (d.pipeline) renderPipeline(d.pipeline);
+    if (d.pipeline) { renderFunnel(d.pipeline, d.led_signees); renderPipeline(d.pipeline); }
+  }
+
+  /* ── Funnel BETOOL ───────────────────────────────────── */
+  function funnelRow(label, valStr, pct, color, faded) {
+    return '<div class="funnel-step">'
+      + '<div class="funnel-label">' + label + '</div>'
+      + '<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:' + Math.max(pct, 2)
+      + '%;background:' + color + ';' + (faded ? 'opacity:.35;' : '') + '">' + valStr + '</div></div>'
+      + '<div class="funnel-pct" style="color:' + color + ';">' + pct + '%</div>'
+      + '</div>';
+  }
+
+  function renderFunnel(p, led_signees) {
+    var wrap = document.getElementById('funnelWrap');
+    if (!wrap || !p.etapes) return;
+    var dep      = p.etapes.filter(function(e){ return e.id === 'depose'; })[0] || {};
+    var led_dep  = dep.led  || 0;
+    var n_dep    = dep.n    || 0;
+    var led_pipe = (p.led_actif || 0) + led_dep;   /* total BETOOL */
+    var pct      = function(n){ return led_signees > 0 ? Math.round(n / led_signees * 100) : 0; };
+    var tp       = p.taux_pose_pct || 0;
+    var tpColor  = tp >= 95 ? '#2E7D32' : tp >= 80 ? '#E08600' : '#C0392B';
+
+    var html = '<div class="funnel">';
+    html += funnelRow('Signées (CRM)',    fmtInt(led_signees),        100,        '#2E6FB7', false);
+    html += funnelRow('En pipeline BETOOL', fmtInt(led_pipe),         pct(led_pipe), '#5a9fd4', false);
+    html += funnelRow('Tâches actives ⚡', fmtInt(p.action_led||0),  pct(p.action_led||0), '#E08600', false);
+    html += funnelRow('Déposées ✅ (TE)', fmtInt(led_dep) + ' · ' + n_dep + ' dos.', pct(led_dep), '#2E7D32', false);
+    html += '<div class="funnel-step">'
+          + '<div class="funnel-label">Taux pose réel</div>'
+          + '<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:' + tp + '%;background:' + tpColor + ';">'
+          + tp + '%</div></div>'
+          + '<div class="funnel-pct" style="color:' + tpColor + ';">' + tp + '%</div>'
+          + '</div>';
+    html += funnelRow('Cible pose', '≥95%', 95, '#2E7D32', true);
+    html += '</div>';
+    html += '<div style="font-size:10.5px;color:var(--muted);margin-top:8px;">'
+          + 'Source BETOOL · taux pose = (posés + traitement + déposés) / total pipeline</div>';
+    wrap.innerHTML = html;
   }
 
   /* ── Pipeline BETOOL ─────────────────────────────────── */
