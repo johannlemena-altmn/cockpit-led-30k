@@ -9,6 +9,8 @@
 #   ./update_dashboard.sh --confirme "data/LISTE EQ 127 CONFIRME.csv" → confirmés CEE
 #   ./update_dashboard.sh --confirme liste.csv --ary "data/TABLEAU ARY.csv" → + autres secteurs
 #   ./update_dashboard.sh --betool b.xlsx --confirme liste.csv --ary ary.csv → tout
+#   ./update_dashboard.sh --auditeur data/prime_evolution.xlsx              → board auditeur seul
+#   ./update_dashboard.sh --betool b.xlsx --confirme liste.csv --ary ary.csv --auditeur pe.xlsx → complet
 #
 # Prérequis : fichier .env dans ce dossier avec :
 #   PIXEL_BASE_URL=https://crm.pixel-crm.fr
@@ -45,19 +47,17 @@ CSV_ARG=""
 BETOOL_ARG=""
 CONFIRME_ARG=""
 ARY_ARG=""
-ARGS=("$@")
-i=0
-while [ $i -lt ${#ARGS[@]} ]; do
-  if [ "${ARGS[$i]}" = "--betool" ]; then
-    i=$((i+1)); BETOOL_ARG="${ARGS[$i]:-}"
-  elif [ "${ARGS[$i]}" = "--confirme" ]; then
-    i=$((i+1)); CONFIRME_ARG="${ARGS[$i]:-}"
-  elif [ "${ARGS[$i]}" = "--ary" ]; then
-    i=$((i+1)); ARY_ARG="${ARGS[$i]:-}"
-  elif [ -z "$CSV_ARG" ] && [ "${ARGS[$i]:0:1}" != "-" ]; then
-    CSV_ARG="${ARGS[$i]}"
-  fi
-  i=$((i+1))
+AUDITEUR_ARG=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --betool)   shift; BETOOL_ARG="${1:-}"   ;;
+    --confirme) shift; CONFIRME_ARG="${1:-}" ;;
+    --ary)      shift; ARY_ARG="${1:-}"      ;;
+    --auditeur) shift; AUDITEUR_ARG="${1:-}" ;;
+    -*)         ;;
+    *)          [ -z "$CSV_ARG" ] && CSV_ARG="$1" ;;
+  esac
+  shift
 done
 
 # ── Source de données ─────────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ if [ -n "$CSV_ARG" ]; then
   mkdir -p data
   cp "$CSV_ARG" data/export_crm.csv
   "$PYTHON" daily_summary.py
-elif [ -n "$BETOOL_ARG" ] || [ -n "$CONFIRME_ARG" ]; then
+elif [ -n "$BETOOL_ARG" ] || [ -n "$CONFIRME_ARG" ] || [ -n "$AUDITEUR_ARG" ]; then
   # Mode fichiers locaux (BETOOL / LISTE CONFIRME) : pas d'API Pixel.
   echo "Mode fichiers locaux — pas d'appel à l'API Pixel."
 elif [ -n "${PIXEL_BASE_URL:-}" ] && [ -n "${PIXEL_SESSION_COOKIE:-}" ]; then
@@ -105,6 +105,16 @@ if [ -n "$CONFIRME_ARG" ]; then
   else
     "$PYTHON" confirme_summary.py "$CONFIRME_ARG"
   fi
+fi
+
+# ── BETOOL auditeur / Prime Evolution (optionnel) ────────────────────────────
+if [ -n "$AUDITEUR_ARG" ]; then
+  if [ ! -f "$AUDITEUR_ARG" ]; then
+    echo "[ERREUR] Fichier auditeur introuvable : $AUDITEUR_ARG"
+    exit 1
+  fi
+  echo "Pipeline auditeur (Prime Evolution) : $AUDITEUR_ARG"
+  "$PYTHON" auditeur_summary.py "$AUDITEUR_ARG"
 fi
 
 # ── Brief quotidien + delta J-1 (toujours) ────────────────────────────────────

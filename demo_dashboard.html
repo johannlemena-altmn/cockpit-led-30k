@@ -371,6 +371,10 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
   <div class="sec-title" id="confTitle" style="display:none">Confirmés CEE · suivi central</div>
   <div id="confWrap" style="display:none"></div>
 
+  <!-- ②ter  AUDIT PIPELINE (Prime Evolution) ─ -->
+  <div class="sec-title" id="auditTitle" style="display:none">Audit qualité · Prime Evolution</div>
+  <div id="auditWrap" style="display:none"></div>
+
   <!-- ③  FUNNEL ────────────────────────────── -->
   <div class="sec-title" id="funnelTitle" style="display:none">Pipeline — entonnoir réel</div>
   <div style="background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:none" id="funnelCard">
@@ -527,6 +531,9 @@ function applyData(d){
 
   /* confirmés CEE + autres secteurs */
   if(d.confirmes) renderConfirmes(d.confirmes, d.autres_secteurs);
+
+  /* audit pipeline (Prime Evolution) */
+  if(d.audit_pipeline) renderAuditPipeline(d.audit_pipeline);
 }
 
 /* ── CONFIRMÉS CEE (LISTE EQ 127) ─────── */
@@ -560,6 +567,64 @@ function renderConfirmes(c, autres){
       +fi(autres.n)+' dossiers · '+fi(autres.led)+' LED · seulement '+autres.photos_pct
       +'% de photos reçues → relancer pour débloquer la valorisation</div>'
       +'</div>';
+  }
+  html+='</div>';
+  wrap.innerHTML=html;
+}
+
+/* ── AUDIT PIPELINE (Prime Evolution) ────── */
+var AUDIT_URGENCE_C={urgent:'#C0392B',action:'#E08600',relance:'#e07000',ok:'#27ae60',normal:'#2E6FB7'};
+
+function renderAuditPipeline(a){
+  show('auditTitle');
+  var wrap=el('auditWrap'); if(!wrap) return; wrap.style.display='';
+  var etapes=(a.etapes||[]).filter(function(e){return e.n>0});
+  if(!etapes.length) return;
+
+  var maxN=Math.max.apply(null,etapes.map(function(e){return e.n}));
+  var html='<div style="background:var(--card);border:1px solid var(--line);'
+    +'border-radius:var(--r);padding:14px 16px;margin-bottom:10px">';
+
+  var modif=(a.etapes||[]).find(function(e){return e.id==='modif_a_faire'});
+  html+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">'
+    +'<div><div style="font-size:18px;font-weight:800">'+fi(a.total)+'</div>'
+    +'<div style="font-size:11px;color:var(--muted)">dossiers audit · '+fi(a.led_total)+' LED</div></div>';
+  if(modif && modif.n){
+    html+='<div style="text-align:right;background:#7a1212;border-radius:8px;padding:6px 10px">'
+      +'<div style="font-size:16px;font-weight:800;color:#ffd24a">'+modif.n+'</div>'
+      +'<div style="font-size:10px;color:rgba(255,255,255,.8)">Modifs 🔴</div></div>';
+  }
+  html+='</div>';
+
+  etapes.forEach(function(e,i){
+    var c=AUDIT_URGENCE_C[e.urgence]||'#2E6FB7';
+    var pct=maxN>0?Math.round(e.n/maxN*100):0;
+    var bid='ab'+i;
+    html+='<div style="margin-bottom:10px">'
+      +'<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">'
+      +'<span style="font-weight:600">'+e.short+'</span>'
+      +'<span style="color:var(--muted)">'+fi(e.n)+' doss. · '+fi(e.led)+' LED</span></div>'
+      +'<div style="background:var(--line);border-radius:999px;height:7px;overflow:hidden">'
+      +'<div id="'+bid+'" style="height:100%;border-radius:999px;background:'+c+';width:0%;'
+      +'transition:width .7s ease"></div></div>'
+      +(e.conseil?'<div style="font-size:10.5px;color:var(--muted);margin-top:3px">→ '+e.conseil+'</div>':'')
+      +'</div>';
+    setTimeout(function(bi,p){return function(){var el2=document.getElementById(bi);if(el2)el2.style.width=Math.max(p,1)+'%'}}(bid,pct),400+i*80);
+  });
+
+  var qw=(a.quickwins||[]);
+  if(qw.length){
+    html+='<div style="border-top:1px solid var(--line);margin-top:8px;padding-top:10px">';
+    qw.forEach(function(q){
+      var uc=AUDIT_URGENCE_C[q.urgence]||'#2E6FB7';
+      html+='<div style="padding:9px 11px;border-left:4px solid '+uc+';border-radius:0 8px 8px 0;'
+        +'background:var(--soft);margin-bottom:6px">'
+        +'<div style="font-size:12.5px;font-weight:700">'+q.n+' dossiers · '+fi(q.led)+' LED'
+        +(q.top5_refs&&q.top5_refs.length?' · ex: '+q.top5_refs.slice(0,2).join(', '):'')+'</div>'
+        +'<div style="font-size:11px;color:var(--muted);margin-top:2px">→ '+q.action+'</div>'
+        +'</div>';
+    });
+    html+='</div>';
   }
   html+='</div>';
   wrap.innerHTML=html;
