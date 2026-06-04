@@ -1,0 +1,76 @@
+{
+  "date": "2026-06-01",
+  "sources": ["betool", "audit", "confirmes"],
+  "kpis": {
+    "led_signees": 231840,
+    "nb_dossiers": 6571,
+    "prime_total": 15318720,
+    "taux_pose": 69
+  },
+  "pipeline": {
+    "total_actif": 1498,
+    "led_actif": 81240,
+    "action_led": 33420,
+    "pct_depose": 52,
+    "etapes": {
+      "en_cours":          {"n": 921, "vol": 49800},
+      "attente_audit":     {"n": 418, "vol": 22640},
+      "attente_signature": {"n": 171, "vol": 10560},
+      "modif_audit":       {"n": 14,  "vol": 1080},
+      "depose":            {"n": 1695, "vol": 90120}
+    }
+  },
+  "audit": {
+    "total": 2764,
+    "cellules_total": 6390,
+    "etapes": {
+      "modif_a_faire":    {"n": 201, "vol": 545},
+      "etude_prête":      {"n": 2370, "vol": 5348},
+      "etude_en_cours":   {"n": 128, "vol": 342},
+      "etude_a_realiser": {"n": 42,  "vol": 130},
+      "annulation":       {"n": 23,  "vol": 25}
+    }
+  },
+  "confirmes": {
+    "n": 5391,
+    "led": 156920,
+    "prime": 11286240
+  },
+  "autres_secteurs": {
+    "n": 1040,
+    "led": 7714,
+    "en_attente_photos": 950
+  },
+  "top_prios": [
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"#1 · interne","internal":true,"led":420,"cellules":null,"age_days":9,"prio":100},
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"29875","internal":false,"led":96,"cellules":null,"age_days":7,"prio":100},
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"34770","internal":false,"led":78,"cellules":null,"age_days":5,"prio":100},
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"28171","internal":false,"led":60,"cellules":null,"age_days":12,"prio":100},
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"35100","internal":false,"led":54,"cellules":null,"age_days":3,"prio":100},
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"34484","internal":false,"led":54,"cellules":null,"age_days":6,"prio":100},
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"34505","internal":false,"led":48,"cellules":null,"age_days":4,"prio":100},
+    {"source":"betool","stage":"modif_audit","stage_label":"Modif audit (avant dépôt)","ref":"34734","internal":false,"led":42,"cellules":null,"age_days":8,"prio":100},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-14557","internal":false,"led":0,"cellules":8,"age_days":14,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-12748","internal":false,"led":0,"cellules":7,"age_days":11,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-12737","internal":false,"led":0,"cellules":7,"age_days":9,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-12545","internal":false,"led":0,"cellules":7,"age_days":8,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-6823","internal":false,"led":0,"cellules":7,"age_days":21,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-521","internal":false,"led":0,"cellules":7,"age_days":30,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-12553","internal":false,"led":0,"cellules":6,"age_days":7,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-12467","internal":false,"led":0,"cellules":6,"age_days":5,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-11641","internal":false,"led":0,"cellules":6,"age_days":18,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-11288","internal":false,"led":0,"cellules":6,"age_days":15,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-13340","internal":false,"led":0,"cellules":5,"age_days":6,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-13261","internal":false,"led":0,"cellules":5,"age_days":4,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-13009","internal":false,"led":0,"cellules":5,"age_days":3,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-12853","internal":false,"led":0,"cellules":5,"age_days":9,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-11991","internal":false,"led":0,"cellules":5,"age_days":12,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-11270","internal":false,"led":0,"cellules":5,"age_days":20,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-11061","internal":false,"led":0,"cellules":5,"age_days":16,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-10371","internal":false,"led":0,"cellules":5,"age_days":22,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-10271","internal":false,"led":0,"cellules":5,"age_days":25,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-1657","internal":false,"led":0,"cellules":5,"age_days":28,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-14379","internal":false,"led":0,"cellules":4,"age_days":2,"prio":95},
+    {"source":"audit","stage":"modif_a_faire","stage_label":"Modif audit (étude)","ref":"LE-13350","internal":false,"led":0,"cellules":4,"age_days":5,"prio":95}
+  ]
+}
