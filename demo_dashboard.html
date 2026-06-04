@@ -267,6 +267,38 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 
 /* responsive */
 @media(max-width:370px){.qw-led-big{font-size:22px}.hdr h1{font-size:17px}}
+
+/* ── ONBOARDING / TOUR GUIDÉ ─────────────── */
+.tour-spot{position:fixed;z-index:90;border-radius:14px;border:2px solid #ffd24a;
+  box-shadow:0 0 0 9999px rgba(10,16,24,.78);pointer-events:none;
+  transition:all .35s cubic-bezier(.4,0,.2,1);opacity:0}
+.tour-spot.on{opacity:1}
+.tour-bubble{position:fixed;z-index:92;background:var(--card);color:var(--ink);
+  border-radius:16px;padding:16px 18px;max-width:300px;width:calc(100vw - 32px);
+  box-shadow:0 12px 40px rgba(0,0,0,.45);opacity:0;transform:translateY(8px);
+  transition:opacity .25s,transform .25s;pointer-events:auto}
+.tour-bubble.on{opacity:1;transform:translateY(0)}
+.tour-step{font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:5px}
+.tour-title{font-size:16px;font-weight:800;line-height:1.25;margin-bottom:6px}
+.tour-text{font-size:13px;color:var(--muted);line-height:1.5}
+.tour-text b{color:var(--ink)}
+.tour-act{margin-top:8px;font-size:12px;font-weight:600;color:var(--green);
+  background:var(--soft);border-radius:9px;padding:7px 10px;line-height:1.4}
+.tour-nav{display:flex;align-items:center;gap:8px;margin-top:14px}
+.tour-dots{display:flex;gap:5px;flex:1}
+.tour-dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.tour-dot.active{background:var(--blue);width:18px;border-radius:3px;transition:width .3s}
+.tour-btn{border:none;border-radius:10px;cursor:pointer;font-family:inherit;
+  font-size:12.5px;font-weight:700;padding:8px 14px}
+.tour-skip{background:none;color:var(--muted);padding:8px 6px;font-weight:600}
+.tour-prev{background:var(--soft);color:var(--ink)}
+.tour-next{background:linear-gradient(135deg,#1F3A5F,#2E6FB7);color:#fff}
+.tour-help{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom)+14px);
+  z-index:55;width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#1F3A5F,#2E6FB7);color:#fff;font-size:20px;font-weight:700;
+  box-shadow:0 4px 16px rgba(46,111,183,.4);display:flex;align-items:center;justify-content:center}
+.tour-help:active{transform:scale(.92)}
 </style>
 </head>
 <body>
@@ -437,6 +469,22 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- ONBOARDING / TOUR GUIDÉ -->
+<button class="tour-help" id="tourHelp" title="Revoir le guide" style="display:none">?</button>
+<div class="tour-spot" id="tourSpot"></div>
+<div class="tour-bubble" id="tourBubble">
+  <div class="tour-step" id="tourStep"></div>
+  <div class="tour-title" id="tourTitle"></div>
+  <div class="tour-text" id="tourText"></div>
+  <div class="tour-act" id="tourActWrap" style="display:none"><span id="tourAct"></span></div>
+  <div class="tour-nav">
+    <div class="tour-dots" id="tourDots"></div>
+    <button class="tour-btn tour-skip" id="tourSkip">Passer</button>
+    <button class="tour-btn tour-prev" id="tourPrev" style="display:none">←</button>
+    <button class="tour-btn tour-next" id="tourNext">Suivant</button>
+  </div>
+</div>
+
 <script>
 (function(){
 'use strict';
@@ -534,7 +582,98 @@ function applyData(d){
 
   /* audit pipeline (Prime Evolution) */
   if(d.audit_pipeline) renderAuditPipeline(d.audit_pipeline);
+
+  /* onboarding : tour guidé au 1er chargement, sinon bouton "?" */
+  show('tourHelp');
+  setTimeout(function(){
+    try{
+      if(!localStorage.getItem('cockpit_tour_done')) startTour();
+    }catch(e){}
+  }, 900);
 }
+
+/* ── ONBOARDING / TOUR GUIDÉ ──────────────── */
+var TOUR_STEPS=[
+  { target:null, title:'Bienvenue dans le Cockpit LED 30k',
+    text:'En 6 écrans : à quoi sert chaque bloc et <b>quoi en faire chaque matin</b> pour pousser les dépôts vers l\'objectif de 30 000 LED/mois.' },
+  { target:'.hdr', title:'Le KPI central : taux de pose',
+    text:'C\'est le verrou du débit. Tant qu\'il est sous <b>95 %</b>, des LED signées dorment au lieu d\'être déposées.',
+    act:'👉 S\'il est bas, c\'est que le pipeline traîne : les blocs ci-dessous te disent où.' },
+  { target:'#qwWrap', title:'Actions du jour',
+    text:'Les dossiers triés par <b>priorité</b> : 🔴 modifs bloquantes, 📞 relances signature, 📋 audits à traiter.',
+    act:'👉 Tape une carte pour voir la liste des dossiers + copier leurs n° (à coller dans le CRM).' },
+  { target:'#simCard', title:'Simulateur d\'objectif',
+    text:'Coche ce que tu comptes traiter aujourd\'hui : la jauge calcule en direct combien de LED ça débloque.',
+    act:'👉 Sers-t\'en pour fixer un objectif réaliste de la journée.' },
+  { target:'#confWrap', title:'Confirmés CEE (suivi central)',
+    text:'Les opérations déjà confirmées au dépôt CEE : <b>158 583 LED, 11,4 M€</b>. Réfs ERS cherchables à 100 %.',
+    act:'👉 L\'alerte 📸 « autres secteurs » = des dossiers bloqués juste faute de photos → une relance suffit.' },
+  { target:'#auditWrap', title:'Audit qualité (Prime Evolution)',
+    text:'Le contrôle en amont du CRM. Le chiffre clé : les <b>179 « Modification à faire »</b> = vrais blocages audit.',
+    act:'👉 Les corriger en priorité libère tout ce qui attend derrière. Réfs LE-XXXX cherchables.' },
+  { target:'#briefBtn', title:'Le brief en 1 clic',
+    text:'Génère un résumé texte (KPIs + actions du jour) prêt à coller dans WhatsApp / Slack pour le standup.',
+    act:'✅ Tu sais tout — bon sprint ! (Rouvre ce guide via le bouton « ? » en bas à droite.)' },
+];
+var TOUR={i:0};
+
+function _tourVisible(sel){
+  if(!sel) return true;
+  var e=document.querySelector(sel);
+  return e && e.offsetParent!==null && e.getBoundingClientRect().height>4;
+}
+function _tourSteps(){ return TOUR_STEPS.filter(function(s){return s.target===null||_tourVisible(s.target)}); }
+
+function startTour(){ TOUR.i=0; TOUR.list=_tourSteps(); el('tourBubble').classList.add('on'); renderTourStep(); }
+function endTour(){
+  try{ localStorage.setItem('cockpit_tour_done','1'); }catch(e){}
+  el('tourSpot').classList.remove('on'); el('tourBubble').classList.remove('on');
+  el('tourSpot').style.display='none'; el('tourBubble').style.display='none';
+}
+
+function renderTourStep(){
+  var list=TOUR.list||_tourSteps(); var s=list[TOUR.i]; if(!s){endTour();return;}
+  el('tourBubble').style.display='';
+  txt('tourStep','Étape '+(TOUR.i+1)+' / '+list.length);
+  txt('tourTitle', s.title);
+  el('tourText').innerHTML=s.text;
+  if(s.act){ el('tourActWrap').style.display=''; el('tourAct').innerHTML=s.act; }
+  else el('tourActWrap').style.display='none';
+  /* dots */
+  el('tourDots').innerHTML=list.map(function(_,k){
+    return '<span class="tour-dot'+(k===TOUR.i?' active':'')+'"></span>';}).join('');
+  el('tourPrev').style.display=TOUR.i>0?'':'none';
+  txt('tourNext', TOUR.i===list.length-1?'Terminer':'Suivant');
+
+  var spot=el('tourSpot'), bubble=el('tourBubble');
+  if(!s.target){
+    spot.classList.remove('on'); spot.style.display='none';
+    bubble.style.left='50%'; bubble.style.top='50%';
+    bubble.style.transform='translate(-50%,-50%)'; bubble.classList.add('on');
+    return;
+  }
+  var tgt=document.querySelector(s.target);
+  tgt.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(function(){
+    var r=tgt.getBoundingClientRect(), pad=8;
+    spot.style.display=''; spot.classList.add('on');
+    spot.style.left=(r.left-pad)+'px'; spot.style.top=(r.top-pad)+'px';
+    spot.style.width=(r.width+pad*2)+'px'; spot.style.height=(r.height+pad*2)+'px';
+    /* bulle : sous la cible si place, sinon au-dessus */
+    var vh=window.innerHeight, below=r.bottom+12, bh=bubble.offsetHeight||220;
+    bubble.style.transform='none';
+    bubble.style.left='50%'; bubble.style.marginLeft='-'+Math.min(150,(window.innerWidth-32)/2)+'px';
+    if(below+bh<vh){ bubble.style.top=below+'px'; }
+    else { bubble.style.top=Math.max(12,r.top-bh-12)+'px'; }
+    bubble.classList.add('on');
+  }, 360);
+}
+function tourNext(){ var list=TOUR.list||_tourSteps(); if(TOUR.i>=list.length-1){endTour();return;} TOUR.i++; renderTourStep(); }
+function tourPrev(){ if(TOUR.i>0){TOUR.i--; renderTourStep();} }
+el('tourNext').addEventListener('click', tourNext);
+el('tourPrev').addEventListener('click', tourPrev);
+el('tourSkip').addEventListener('click', endTour);
+el('tourHelp').addEventListener('click', startTour);
 
 /* ── CONFIRMÉS CEE (LISTE EQ 127) ─────── */
 function renderConfirmes(c, autres){
