@@ -92,9 +92,9 @@ def load_betool(path: str) -> list[dict]:
 def compute_pipeline(records: list[dict]) -> dict:
     today = date.today()
 
-    # Accumulateurs par stage_id
+    # Accumulateurs par stage_id — n, led, ages, dossiers (anon)
     acc: dict[str, dict] = {
-        s["id"]: {"n": 0, "led": 0, "ages": []}
+        s["id"]: {"n": 0, "led": 0, "ages": [], "dossiers": []}
         for s in PIPELINE_STAGES
     }
 
@@ -125,6 +125,7 @@ def compute_pipeline(records: list[dict]) -> dict:
         acc[stage_id]["led"] += led
         if age is not None:
             acc[stage_id]["ages"].append(age)
+        acc[stage_id]["dossiers"].append({"led": led, "age_days": age})
 
     # Construction de la réponse
     etapes = []
@@ -164,16 +165,93 @@ def compute_pipeline(records: list[dict]) -> dict:
     denom_pose  = total_actif_n + depose_n
     taux_pose_pct = round((posed_n + depose_n) / denom_pose * 100) if denom_pose else 0
 
-    return {
-        "generated":      today.strftime("%Y-%m-%d"),
-        "total_actif":    total_actif_n,
-        "led_actif":      total_actif_led,
-        "action_n":       action_n,
-        "action_led":     action_led,
-        "pct_depose":     pct_depose,
-        "taux_pose_pct":  taux_pose_pct,
-        "etapes":         etapes,
+    # Dossiers anonymes par stage actionnable (triés par LED desc)
+    ACTIONABLE = ["modif_audit", "attente_signature", "attente_audit"]
+    dossiers_pipeline = {
+        sid: sorted(acc[sid]["dossiers"], key=lambda x: x["led"], reverse=True)
+        for sid in ACTIONABLE
     }
+
+    return {
+        "generated":        today.strftime("%Y-%m-%d"),
+        "total_actif":      total_actif_n,
+        "led_actif":        total_actif_led,
+        "action_n":         action_n,
+        "action_led":       action_led,
+        "pct_depose":       pct_depose,
+        "taux_pose_pct":    taux_pose_pct,
+        "etapes":           etapes,
+        "dossiers_pipeline": dossiers_pipeline,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Quickwins & snapshot
+# ---------------------------------------------------------------------------
+
+_QUICKWIN_META = {
+    "modif_audit": {
+        "urgence": "urgent", "effort": "< 1h par dossier",
+        "action": "Corriger les audits et envoyer à Total Energies immédiatement.",
+    },
+    "attente_signature": {
+        "urgence": "relance", "effort": "Appel/email par dossier",
+        "action": "Rappeler les clients en commençant par les dossiers les plus anciens.",
+    },
+    "attente_audit": {
+        "urgence": "action", "effort": "~30 min par audit",
+        "action": "Traiter en priorité les plus gros dossiers (plus de LED = plus d'impact).",
+    },
+}
+
+def compute_quickwins(pipeline: dict) -> list[dict]:
+    """Génère la liste des quickwins — utilise les totaux réels des étapes pour n/led."""
+    dp      = pipeline.get("dossiers_pipeline", {})
+    etapes  = {e["id"]: e for e in pipeline.get("etapes", [])}
+    order   = {"urgent": 0, "relance": 1, "action": 2}
+    qw      = []
+    for stage_id, meta in _QUICKWIN_META.items():
+        etape = etapes.get(stage_id, {})
+        n_real   = etape.get("n", 0)
+        led_real = etape.get("led", 0)
+        if n_real == 0:
+            continue
+        dossiers = dp.get(stage_id, [])
+        ages     = [d["age_days"] for d in dossiers if d.get("age_days") is not None]
+        old_count = sum(1 for a in ages if a > 7)
+        top5_led  = sum(d["led"] for d in dossiers[:5]) if dossiers else 0
+        qw.append({
+            "rank":        order[meta["urgence"]],
+            "stage_id":    stage_id,
+            "urgence":     meta["urgence"],
+            "n":           n_real,
+            "led":         led_real,
+            "effort":      meta["effort"],
+            "action":      meta["action"],
+            "blocage_old": old_count,
+            "top5_led":    top5_led,
+            "top":         dossiers[:10],
+        })
+    qw.sort(key=lambda x: (x["rank"], -x["led"]))
+    for i, q in enumerate(qw, 1):
+        q["rank"] = i
+    return qw
+
+
+def save_snapshot(data: dict, output_path: str = "public_data.json"):
+    """Sauvegarde un snapshot daté pour le calcul du delta J-1."""
+    today     = date.today().strftime("%Y-%m-%d")
+    snap_dir  = os.path.join(os.path.dirname(os.path.abspath(output_path)), "snapshots")
+    os.makedirs(snap_dir, exist_ok=True)
+    snap_path = os.path.join(snap_dir, f"{today}.json")
+    snap = {
+        "date":     today,
+        "pipeline": data.get("pipeline"),
+        "quickwins": data.get("quickwins"),
+    }
+    with open(snap_path, "w", encoding="utf-8") as f:
+        json.dump(snap, f, ensure_ascii=False, indent=2)
+    return snap_path
 
 
 # ---------------------------------------------------------------------------
@@ -189,14 +267,20 @@ def update_public_json(pipeline: dict, output_path: str = "public_data.json"):
             except json.JSONDecodeError:
                 pass
 
-    data["pipeline"]       = pipeline
-    data["taux_pose_pct"]  = pipeline["taux_pose_pct"]
-    data["generated"]      = date.today().strftime("%Y-%m-%d")
+    data["pipeline"]          = pipeline
+    data["taux_pose_pct"]     = pipeline["taux_pose_pct"]
+    data["generated"]         = date.today().strftime("%Y-%m-%d")
+    data["dossiers_pipeline"] = pipeline.pop("dossiers_pipeline", {})
+    data["quickwins"]         = compute_quickwins(
+        {**pipeline, "dossiers_pipeline": data["dossiers_pipeline"]}
+    )
+    snap_path = save_snapshot(data, output_path)
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"[OK] {output_path} mis à jour avec pipeline BETOOL")
+    print(f"[OK] {output_path} mis à jour avec pipeline BETOOL + quickwins")
+    print(f"[OK] Snapshot sauvegardé : {snap_path}")
     return data
 
 

@@ -70,5 +70,2390 @@
         "age_moy": null
       }
     ]
+  },
+  "dossiers_pipeline": {
+    "modif_audit": [
+      {
+        "led": 140,
+        "age_days": null
+      },
+      {
+        "led": 121,
+        "age_days": null
+      },
+      {
+        "led": 104,
+        "age_days": null
+      },
+      {
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "led": 83,
+        "age_days": null
+      },
+      {
+        "led": 82,
+        "age_days": null
+      },
+      {
+        "led": 22,
+        "age_days": null
+      }
+    ],
+    "attente_signature": [
+      {
+        "led": 132,
+        "age_days": null
+      },
+      {
+        "led": 132,
+        "age_days": null
+      },
+      {
+        "led": 131,
+        "age_days": null
+      },
+      {
+        "led": 123,
+        "age_days": null
+      },
+      {
+        "led": 121,
+        "age_days": null
+      },
+      {
+        "led": 114,
+        "age_days": null
+      },
+      {
+        "led": 114,
+        "age_days": null
+      },
+      {
+        "led": 110,
+        "age_days": null
+      },
+      {
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "led": 105,
+        "age_days": null
+      },
+      {
+        "led": 104,
+        "age_days": null
+      },
+      {
+        "led": 104,
+        "age_days": null
+      },
+      {
+        "led": 104,
+        "age_days": null
+      },
+      {
+        "led": 103,
+        "age_days": null
+      },
+      {
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "led": 101,
+        "age_days": null
+      },
+      {
+        "led": 98,
+        "age_days": null
+      },
+      {
+        "led": 97,
+        "age_days": null
+      },
+      {
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "led": 95,
+        "age_days": null
+      },
+      {
+        "led": 94,
+        "age_days": null
+      },
+      {
+        "led": 91,
+        "age_days": null
+      },
+      {
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 87,
+        "age_days": null
+      },
+      {
+        "led": 87,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 85,
+        "age_days": null
+      },
+      {
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "led": 83,
+        "age_days": null
+      },
+      {
+        "led": 83,
+        "age_days": null
+      },
+      {
+        "led": 83,
+        "age_days": null
+      },
+      {
+        "led": 82,
+        "age_days": null
+      },
+      {
+        "led": 82,
+        "age_days": null
+      },
+      {
+        "led": 81,
+        "age_days": null
+      },
+      {
+        "led": 81,
+        "age_days": null
+      },
+      {
+        "led": 81,
+        "age_days": null
+      },
+      {
+        "led": 80,
+        "age_days": null
+      },
+      {
+        "led": 80,
+        "age_days": null
+      },
+      {
+        "led": 79,
+        "age_days": null
+      },
+      {
+        "led": 79,
+        "age_days": null
+      },
+      {
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "led": 77,
+        "age_days": null
+      },
+      {
+        "led": 77,
+        "age_days": null
+      },
+      {
+        "led": 76,
+        "age_days": null
+      },
+      {
+        "led": 76,
+        "age_days": null
+      },
+      {
+        "led": 76,
+        "age_days": null
+      },
+      {
+        "led": 76,
+        "age_days": null
+      },
+      {
+        "led": 75,
+        "age_days": null
+      },
+      {
+        "led": 75,
+        "age_days": null
+      },
+      {
+        "led": 73,
+        "age_days": null
+      },
+      {
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 67,
+        "age_days": null
+      },
+      {
+        "led": 67,
+        "age_days": null
+      },
+      {
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 63,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 59,
+        "age_days": null
+      },
+      {
+        "led": 59,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 56,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 51,
+        "age_days": null
+      },
+      {
+        "led": 51,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 46,
+        "age_days": null
+      },
+      {
+        "led": 45,
+        "age_days": null
+      },
+      {
+        "led": 45,
+        "age_days": null
+      },
+      {
+        "led": 44,
+        "age_days": null
+      },
+      {
+        "led": 44,
+        "age_days": null
+      },
+      {
+        "led": 44,
+        "age_days": null
+      },
+      {
+        "led": 43,
+        "age_days": null
+      },
+      {
+        "led": 43,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 38,
+        "age_days": null
+      },
+      {
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "led": 35,
+        "age_days": null
+      },
+      {
+        "led": 33,
+        "age_days": null
+      },
+      {
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "led": 28,
+        "age_days": null
+      },
+      {
+        "led": 28,
+        "age_days": null
+      },
+      {
+        "led": 27,
+        "age_days": null
+      },
+      {
+        "led": 27,
+        "age_days": null
+      },
+      {
+        "led": 27,
+        "age_days": null
+      },
+      {
+        "led": 26,
+        "age_days": null
+      },
+      {
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "led": 23,
+        "age_days": null
+      },
+      {
+        "led": 23,
+        "age_days": null
+      },
+      {
+        "led": 23,
+        "age_days": null
+      },
+      {
+        "led": 21,
+        "age_days": null
+      },
+      {
+        "led": 17,
+        "age_days": null
+      },
+      {
+        "led": 17,
+        "age_days": null
+      },
+      {
+        "led": 16,
+        "age_days": null
+      },
+      {
+        "led": 14,
+        "age_days": null
+      },
+      {
+        "led": 13,
+        "age_days": null
+      },
+      {
+        "led": 9,
+        "age_days": null
+      },
+      {
+        "led": 4,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      }
+    ],
+    "attente_audit": [
+      {
+        "led": 139,
+        "age_days": null
+      },
+      {
+        "led": 135,
+        "age_days": null
+      },
+      {
+        "led": 112,
+        "age_days": null
+      },
+      {
+        "led": 111,
+        "age_days": null
+      },
+      {
+        "led": 111,
+        "age_days": null
+      },
+      {
+        "led": 111,
+        "age_days": null
+      },
+      {
+        "led": 110,
+        "age_days": null
+      },
+      {
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "led": 107,
+        "age_days": null
+      },
+      {
+        "led": 104,
+        "age_days": null
+      },
+      {
+        "led": 104,
+        "age_days": null
+      },
+      {
+        "led": 104,
+        "age_days": null
+      },
+      {
+        "led": 103,
+        "age_days": null
+      },
+      {
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "led": 100,
+        "age_days": null
+      },
+      {
+        "led": 99,
+        "age_days": null
+      },
+      {
+        "led": 99,
+        "age_days": null
+      },
+      {
+        "led": 99,
+        "age_days": null
+      },
+      {
+        "led": 98,
+        "age_days": null
+      },
+      {
+        "led": 97,
+        "age_days": null
+      },
+      {
+        "led": 97,
+        "age_days": null
+      },
+      {
+        "led": 94,
+        "age_days": null
+      },
+      {
+        "led": 93,
+        "age_days": null
+      },
+      {
+        "led": 92,
+        "age_days": null
+      },
+      {
+        "led": 92,
+        "age_days": null
+      },
+      {
+        "led": 92,
+        "age_days": null
+      },
+      {
+        "led": 91,
+        "age_days": null
+      },
+      {
+        "led": 91,
+        "age_days": null
+      },
+      {
+        "led": 91,
+        "age_days": null
+      },
+      {
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "led": 89,
+        "age_days": null
+      },
+      {
+        "led": 89,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 88,
+        "age_days": null
+      },
+      {
+        "led": 87,
+        "age_days": null
+      },
+      {
+        "led": 87,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 86,
+        "age_days": null
+      },
+      {
+        "led": 85,
+        "age_days": null
+      },
+      {
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "led": 83,
+        "age_days": null
+      },
+      {
+        "led": 83,
+        "age_days": null
+      },
+      {
+        "led": 83,
+        "age_days": null
+      },
+      {
+        "led": 82,
+        "age_days": null
+      },
+      {
+        "led": 81,
+        "age_days": null
+      },
+      {
+        "led": 81,
+        "age_days": null
+      },
+      {
+        "led": 80,
+        "age_days": null
+      },
+      {
+        "led": 80,
+        "age_days": null
+      },
+      {
+        "led": 80,
+        "age_days": null
+      },
+      {
+        "led": 80,
+        "age_days": null
+      },
+      {
+        "led": 79,
+        "age_days": null
+      },
+      {
+        "led": 79,
+        "age_days": null
+      },
+      {
+        "led": 79,
+        "age_days": null
+      },
+      {
+        "led": 79,
+        "age_days": null
+      },
+      {
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "led": 77,
+        "age_days": null
+      },
+      {
+        "led": 77,
+        "age_days": null
+      },
+      {
+        "led": 76,
+        "age_days": null
+      },
+      {
+        "led": 76,
+        "age_days": null
+      },
+      {
+        "led": 76,
+        "age_days": null
+      },
+      {
+        "led": 75,
+        "age_days": null
+      },
+      {
+        "led": 75,
+        "age_days": null
+      },
+      {
+        "led": 74,
+        "age_days": null
+      },
+      {
+        "led": 74,
+        "age_days": null
+      },
+      {
+        "led": 74,
+        "age_days": null
+      },
+      {
+        "led": 74,
+        "age_days": null
+      },
+      {
+        "led": 73,
+        "age_days": null
+      },
+      {
+        "led": 73,
+        "age_days": null
+      },
+      {
+        "led": 73,
+        "age_days": null
+      },
+      {
+        "led": 73,
+        "age_days": null
+      },
+      {
+        "led": 73,
+        "age_days": null
+      },
+      {
+        "led": 73,
+        "age_days": null
+      },
+      {
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 71,
+        "age_days": null
+      },
+      {
+        "led": 70,
+        "age_days": null
+      },
+      {
+        "led": 70,
+        "age_days": null
+      },
+      {
+        "led": 70,
+        "age_days": null
+      },
+      {
+        "led": 70,
+        "age_days": null
+      },
+      {
+        "led": 70,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 69,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 68,
+        "age_days": null
+      },
+      {
+        "led": 67,
+        "age_days": null
+      },
+      {
+        "led": 67,
+        "age_days": null
+      },
+      {
+        "led": 67,
+        "age_days": null
+      },
+      {
+        "led": 67,
+        "age_days": null
+      },
+      {
+        "led": 67,
+        "age_days": null
+      },
+      {
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "led": 65,
+        "age_days": null
+      },
+      {
+        "led": 65,
+        "age_days": null
+      },
+      {
+        "led": 65,
+        "age_days": null
+      },
+      {
+        "led": 65,
+        "age_days": null
+      },
+      {
+        "led": 65,
+        "age_days": null
+      },
+      {
+        "led": 65,
+        "age_days": null
+      },
+      {
+        "led": 65,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 64,
+        "age_days": null
+      },
+      {
+        "led": 63,
+        "age_days": null
+      },
+      {
+        "led": 63,
+        "age_days": null
+      },
+      {
+        "led": 63,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 62,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 61,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "led": 59,
+        "age_days": null
+      },
+      {
+        "led": 59,
+        "age_days": null
+      },
+      {
+        "led": 59,
+        "age_days": null
+      },
+      {
+        "led": 59,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 58,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 57,
+        "age_days": null
+      },
+      {
+        "led": 56,
+        "age_days": null
+      },
+      {
+        "led": 56,
+        "age_days": null
+      },
+      {
+        "led": 56,
+        "age_days": null
+      },
+      {
+        "led": 56,
+        "age_days": null
+      },
+      {
+        "led": 56,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 55,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 53,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "led": 51,
+        "age_days": null
+      },
+      {
+        "led": 51,
+        "age_days": null
+      },
+      {
+        "led": 51,
+        "age_days": null
+      },
+      {
+        "led": 51,
+        "age_days": null
+      },
+      {
+        "led": 51,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 50,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 49,
+        "age_days": null
+      },
+      {
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 47,
+        "age_days": null
+      },
+      {
+        "led": 46,
+        "age_days": null
+      },
+      {
+        "led": 46,
+        "age_days": null
+      },
+      {
+        "led": 46,
+        "age_days": null
+      },
+      {
+        "led": 46,
+        "age_days": null
+      },
+      {
+        "led": 45,
+        "age_days": null
+      },
+      {
+        "led": 45,
+        "age_days": null
+      },
+      {
+        "led": 45,
+        "age_days": null
+      },
+      {
+        "led": 45,
+        "age_days": null
+      },
+      {
+        "led": 44,
+        "age_days": null
+      },
+      {
+        "led": 44,
+        "age_days": null
+      },
+      {
+        "led": 44,
+        "age_days": null
+      },
+      {
+        "led": 44,
+        "age_days": null
+      },
+      {
+        "led": 43,
+        "age_days": null
+      },
+      {
+        "led": 43,
+        "age_days": null
+      },
+      {
+        "led": 43,
+        "age_days": null
+      },
+      {
+        "led": 43,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "led": 41,
+        "age_days": null
+      },
+      {
+        "led": 41,
+        "age_days": null
+      },
+      {
+        "led": 41,
+        "age_days": null
+      },
+      {
+        "led": 41,
+        "age_days": null
+      },
+      {
+        "led": 40,
+        "age_days": null
+      },
+      {
+        "led": 40,
+        "age_days": null
+      },
+      {
+        "led": 40,
+        "age_days": null
+      },
+      {
+        "led": 40,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 39,
+        "age_days": null
+      },
+      {
+        "led": 38,
+        "age_days": null
+      },
+      {
+        "led": 38,
+        "age_days": null
+      },
+      {
+        "led": 38,
+        "age_days": null
+      },
+      {
+        "led": 38,
+        "age_days": null
+      },
+      {
+        "led": 38,
+        "age_days": null
+      },
+      {
+        "led": 38,
+        "age_days": null
+      },
+      {
+        "led": 37,
+        "age_days": null
+      },
+      {
+        "led": 37,
+        "age_days": null
+      },
+      {
+        "led": 37,
+        "age_days": null
+      },
+      {
+        "led": 37,
+        "age_days": null
+      },
+      {
+        "led": 37,
+        "age_days": null
+      },
+      {
+        "led": 37,
+        "age_days": null
+      },
+      {
+        "led": 37,
+        "age_days": null
+      },
+      {
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "led": 35,
+        "age_days": null
+      },
+      {
+        "led": 35,
+        "age_days": null
+      },
+      {
+        "led": 35,
+        "age_days": null
+      },
+      {
+        "led": 35,
+        "age_days": null
+      },
+      {
+        "led": 35,
+        "age_days": null
+      },
+      {
+        "led": 35,
+        "age_days": null
+      },
+      {
+        "led": 34,
+        "age_days": null
+      },
+      {
+        "led": 34,
+        "age_days": null
+      },
+      {
+        "led": 34,
+        "age_days": null
+      },
+      {
+        "led": 34,
+        "age_days": null
+      },
+      {
+        "led": 34,
+        "age_days": null
+      },
+      {
+        "led": 33,
+        "age_days": null
+      },
+      {
+        "led": 33,
+        "age_days": null
+      },
+      {
+        "led": 33,
+        "age_days": null
+      },
+      {
+        "led": 33,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 32,
+        "age_days": null
+      },
+      {
+        "led": 31,
+        "age_days": null
+      },
+      {
+        "led": 31,
+        "age_days": null
+      },
+      {
+        "led": 31,
+        "age_days": null
+      },
+      {
+        "led": 31,
+        "age_days": null
+      },
+      {
+        "led": 31,
+        "age_days": null
+      },
+      {
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "led": 29,
+        "age_days": null
+      },
+      {
+        "led": 29,
+        "age_days": null
+      },
+      {
+        "led": 29,
+        "age_days": null
+      },
+      {
+        "led": 28,
+        "age_days": null
+      },
+      {
+        "led": 27,
+        "age_days": null
+      },
+      {
+        "led": 27,
+        "age_days": null
+      },
+      {
+        "led": 26,
+        "age_days": null
+      },
+      {
+        "led": 26,
+        "age_days": null
+      },
+      {
+        "led": 26,
+        "age_days": null
+      },
+      {
+        "led": 26,
+        "age_days": null
+      },
+      {
+        "led": 26,
+        "age_days": null
+      },
+      {
+        "led": 26,
+        "age_days": null
+      },
+      {
+        "led": 25,
+        "age_days": null
+      },
+      {
+        "led": 25,
+        "age_days": null
+      },
+      {
+        "led": 25,
+        "age_days": null
+      },
+      {
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "led": 23,
+        "age_days": null
+      },
+      {
+        "led": 22,
+        "age_days": null
+      },
+      {
+        "led": 22,
+        "age_days": null
+      },
+      {
+        "led": 22,
+        "age_days": null
+      },
+      {
+        "led": 22,
+        "age_days": null
+      },
+      {
+        "led": 22,
+        "age_days": null
+      },
+      {
+        "led": 21,
+        "age_days": null
+      },
+      {
+        "led": 21,
+        "age_days": null
+      },
+      {
+        "led": 20,
+        "age_days": null
+      },
+      {
+        "led": 20,
+        "age_days": null
+      },
+      {
+        "led": 20,
+        "age_days": null
+      },
+      {
+        "led": 19,
+        "age_days": null
+      },
+      {
+        "led": 19,
+        "age_days": null
+      },
+      {
+        "led": 18,
+        "age_days": null
+      },
+      {
+        "led": 17,
+        "age_days": null
+      },
+      {
+        "led": 17,
+        "age_days": null
+      },
+      {
+        "led": 17,
+        "age_days": null
+      },
+      {
+        "led": 16,
+        "age_days": null
+      },
+      {
+        "led": 16,
+        "age_days": null
+      },
+      {
+        "led": 15,
+        "age_days": null
+      },
+      {
+        "led": 15,
+        "age_days": null
+      },
+      {
+        "led": 15,
+        "age_days": null
+      },
+      {
+        "led": 14,
+        "age_days": null
+      },
+      {
+        "led": 13,
+        "age_days": null
+      },
+      {
+        "led": 13,
+        "age_days": null
+      },
+      {
+        "led": 13,
+        "age_days": null
+      },
+      {
+        "led": 13,
+        "age_days": null
+      },
+      {
+        "led": 12,
+        "age_days": null
+      },
+      {
+        "led": 11,
+        "age_days": null
+      },
+      {
+        "led": 10,
+        "age_days": null
+      },
+      {
+        "led": 9,
+        "age_days": null
+      },
+      {
+        "led": 7,
+        "age_days": null
+      },
+      {
+        "led": 7,
+        "age_days": null
+      },
+      {
+        "led": 7,
+        "age_days": null
+      },
+      {
+        "led": 3,
+        "age_days": null
+      },
+      {
+        "led": 2,
+        "age_days": null
+      },
+      {
+        "led": 2,
+        "age_days": null
+      },
+      {
+        "led": 2,
+        "age_days": null
+      },
+      {
+        "led": 2,
+        "age_days": null
+      },
+      {
+        "led": 2,
+        "age_days": null
+      },
+      {
+        "led": 2,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      },
+      {
+        "led": 1,
+        "age_days": null
+      }
+    ]
+  },
+  "quickwins": [
+    {
+      "rank": 1,
+      "stage_id": "modif_audit",
+      "urgence": "urgent",
+      "n": 8,
+      "led": 720,
+      "effort": "< 1h par dossier",
+      "action": "Corriger les audits et envoyer à Total Energies immédiatement.",
+      "blocage_old": 0,
+      "top5_led": 533,
+      "top": [
+        {
+          "led": 140,
+          "age_days": null
+        },
+        {
+          "led": 121,
+          "age_days": null
+        },
+        {
+          "led": 104,
+          "age_days": null
+        },
+        {
+          "led": 84,
+          "age_days": null
+        },
+        {
+          "led": 84,
+          "age_days": null
+        },
+        {
+          "led": 83,
+          "age_days": null
+        },
+        {
+          "led": 82,
+          "age_days": null
+        },
+        {
+          "led": 22,
+          "age_days": null
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "stage_id": "attente_signature",
+      "urgence": "relance",
+      "n": 154,
+      "led": 9430,
+      "effort": "Appel/email par dossier",
+      "action": "Rappeler les clients en commençant par les dossiers les plus anciens.",
+      "blocage_old": 0,
+      "top5_led": 639,
+      "top": [
+        {
+          "led": 132,
+          "age_days": null
+        },
+        {
+          "led": 132,
+          "age_days": null
+        },
+        {
+          "led": 131,
+          "age_days": null
+        },
+        {
+          "led": 123,
+          "age_days": null
+        },
+        {
+          "led": 121,
+          "age_days": null
+        },
+        {
+          "led": 114,
+          "age_days": null
+        },
+        {
+          "led": 114,
+          "age_days": null
+        },
+        {
+          "led": 110,
+          "age_days": null
+        },
+        {
+          "led": 108,
+          "age_days": null
+        },
+        {
+          "led": 105,
+          "age_days": null
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "stage_id": "attente_audit",
+      "urgence": "action",
+      "n": 391,
+      "led": 20456,
+      "effort": "~30 min par audit",
+      "action": "Traiter en priorité les plus gros dossiers (plus de LED = plus d'impact).",
+      "blocage_old": 0,
+      "top5_led": 608,
+      "top": [
+        {
+          "led": 139,
+          "age_days": null
+        },
+        {
+          "led": 135,
+          "age_days": null
+        },
+        {
+          "led": 112,
+          "age_days": null
+        },
+        {
+          "led": 111,
+          "age_days": null
+        },
+        {
+          "led": 111,
+          "age_days": null
+        },
+        {
+          "led": 111,
+          "age_days": null
+        },
+        {
+          "led": 110,
+          "age_days": null
+        },
+        {
+          "led": 108,
+          "age_days": null
+        },
+        {
+          "led": 107,
+          "age_days": null
+        },
+        {
+          "led": 104,
+          "age_days": null
+        }
+      ]
+    }
+  ],
+  "brief": {
+    "date": "2026-06-04",
+    "statut": "URGENT",
+    "headline": "553 dossiers actionnables · 30 606 LED à débloquer",
+    "urgences": [
+      "8 modif_audit bloquants → 720 LED libérées en < 1h par dossier"
+    ],
+    "top_action": "Corriger les audits et envoyer à Total Energies immédiatement.",
+    "objectif_jour": 750,
+    "taux_pose_pct": 72,
+    "pipeline_bilan": "premier_run"
   }
 }

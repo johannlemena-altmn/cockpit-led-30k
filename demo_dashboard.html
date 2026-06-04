@@ -267,6 +267,40 @@ body {
   .pipe-stage-count { color: var(--blue); }
 }
 
+/* ── Quickwins ────────────────────────────────────── */
+.qw-card {
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  padding: 13px 15px;
+  margin-bottom: 10px;
+  background: var(--card);
+}
+.qw-card.urgence-urgent  { border-left: 4px solid var(--red);   background: #fff5f5; }
+.qw-card.urgence-relance { border-left: 3px solid #e07000; }
+.qw-card.urgence-action  { border-left: 3px solid var(--amber); }
+@media (prefers-color-scheme: dark) {
+  .qw-card.urgence-urgent { background: #2a0a0a; }
+}
+.qw-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:5px; }
+.qw-rank { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; opacity:.7; }
+.qw-led  { font-size:20px; font-weight:700; color:var(--navy); }
+.qw-title { font-size:13px; font-weight:600; margin-bottom:3px; }
+.qw-action { font-size:12px; color:var(--muted); margin-bottom:6px; }
+.qw-meta { display:flex; gap:12px; flex-wrap:wrap; }
+.qw-badge {
+  font-size:10.5px; padding:2px 8px; border-radius:999px;
+  background:var(--soft); color:var(--muted); border:1px solid var(--line);
+}
+.qw-badge.red   { background:#fdecea; border-color:#f5b5b0; color:#7a1a1a; }
+.qw-badge.amber { background:#fff8e7; border-color:#f5d77e; color:#7a4900; }
+.qw-badge.orange{ background:#fff3e0; border-color:#ffd09e; color:#6a3300; }
+
+/* Delta J-1 */
+.delta-row { display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:5px; }
+.delta-pos { color:var(--green); font-weight:700; }
+.delta-neg { color:var(--red);   font-weight:700; }
+.delta-0   { color:var(--muted); }
+
 /* FOOTER */
 .foot {
   text-align: center;
@@ -456,8 +490,12 @@ body {
     <div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Quasi 100% secteur Entrepôts · cohérent BAT-EQ-127</div>
   </div>
 
+  <!-- ACTIONS DU JOUR (quickwins) -->
+  <div class="sec-title" id="quickwinsTitle" style="display:none">Actions du jour — Quickwins</div>
+  <div id="quickwinsWrap" style="display:none"></div>
+
   <!-- PIPELINE BETOOL -->
-  <div class="sec-title" id="pipelineTitle" style="display:none">Pipeline BETOOL — Chaîne active</div>
+  <div class="sec-title" id="pipelineTitle" style="display:none">Pipeline BETOOL — Détail par étape</div>
   <div id="pipelineWrap" style="display:none"></div>
 
   <!-- BACKLOG SPRINT -->
@@ -606,7 +644,80 @@ body {
     }
 
     injectBadge(!!d.demo_mode);
+    if (d.quickwins && d.quickwins.length) renderQuickwins(d.quickwins, d.brief, d.delta);
     if (d.pipeline) { renderFunnel(d.pipeline, d.led_signees); renderPipeline(d.pipeline); }
+  }
+
+  /* ── Quickwins du jour ───────────────────────────── */
+  var QW_URGENCE = {
+    urgent:  { flag: '🔴', badge: 'red',   label: 'URGENT' },
+    relance: { flag: '📞', label: 'RELANCE', badge: 'orange' },
+    action:  { flag: '📋', label: 'ACTION',  badge: 'amber' },
+  };
+
+  function renderQuickwins(qw, brief, delta) {
+    var wrap  = document.getElementById('quickwinsWrap');
+    var title = document.getElementById('quickwinsTitle');
+    if (!wrap) return;
+    title.style.display = '';
+    wrap.style.display  = '';
+
+    var html = '';
+
+    /* Brief headline si dispo */
+    if (brief && brief.headline) {
+      var statColor = brief.statut === 'URGENT' ? 'var(--red)' : 'var(--amber)';
+      html += '<div style="font-size:13px;font-weight:600;color:' + statColor
+            + ';margin-bottom:10px;padding:10px 14px;background:var(--soft);border-radius:10px;border:1px solid var(--line);">'
+            + brief.headline + '</div>';
+    }
+
+    /* Delta J-1 */
+    if (delta && (delta.deposees_delta !== 0 || delta.action_n_delta !== 0)) {
+      var dd = delta.deposees_delta;
+      var ad = delta.action_n_delta;
+      html += '<div style="font-size:11.5px;color:var(--muted);margin-bottom:10px;padding:8px 12px;'
+            + 'background:var(--soft);border-radius:8px;border:1px solid var(--line);">'
+            + '<b>Δ vs ' + delta.date_ref + ' :</b> '
+            + (dd > 0 ? '<span style="color:var(--green);">+' + fmtInt(dd) + ' LED déposées</span>' :
+               dd < 0 ? '<span style="color:var(--red);">' + fmtInt(dd) + ' LED déposées</span>' : '')
+            + (dd !== 0 && ad !== 0 ? ' · ' : '')
+            + (ad < 0 ? '<span style="color:var(--green);">' + ad + ' dossiers en moins à traiter</span>' :
+               ad > 0 ? '<span style="color:var(--amber);">+' + ad + ' dossiers de plus</span>' : '')
+            + '</div>';
+    }
+
+    /* Cards quickwins */
+    qw.forEach(function(q) {
+      var u    = QW_URGENCE[q.urgence] || { flag: '•', badge: '', label: q.urgence };
+      var tops = (q.top || []).slice(0, 5).map(function(t) { return fmtInt(t.led) + ' LED'; }).join(', ');
+      var old  = q.blocage_old > 0 ? (q.blocage_old + ' bloqués >7j') : '';
+
+      html += '<div class="qw-card urgence-' + q.urgence + '">'
+            + '<div class="qw-head">'
+            + '<div>'
+            + '<div class="qw-rank">' + u.flag + ' #' + q.rank + ' ' + u.label + '</div>'
+            + '<div class="qw-title">' + q.n + ' dossiers · ' + fmtInt(q.led) + ' LED</div>'
+            + '</div>'
+            + '<div class="qw-led">' + fmtInt(q.led) + '</div>'
+            + '</div>'
+            + '<div class="qw-action">' + q.action + '</div>'
+            + '<div class="qw-meta">'
+            + '<span class="qw-badge ' + u.badge + '">⏱ ' + q.effort + '</span>'
+            + (tops ? '<span class="qw-badge">Top 5: ' + tops + '</span>' : '')
+            + (old  ? '<span class="qw-badge red">' + old + '</span>' : '')
+            + '</div>'
+            + '</div>';
+    });
+
+    /* Objectif du jour */
+    if (brief && brief.objectif_jour) {
+      html += '<div style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:4px;">'
+            + 'Objectif du jour : ~' + fmtInt(brief.objectif_jour) + ' LED à faire progresser'
+            + '</div>';
+    }
+
+    wrap.innerHTML = html;
   }
 
   /* ── Funnel BETOOL ───────────────────────────────────── */
