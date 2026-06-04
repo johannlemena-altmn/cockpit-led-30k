@@ -742,8 +742,11 @@ def write_public_json(agg: dict, output_path: str = "public_data.json"):
         "mois":             mois,
     }
 
-    # Réinjecter pipeline BETOOL si présent (betool_summary.py le met à jour séparément)
-    for key in ("pipeline",):
+    # Préserver TOUS les blocs maintenus par d'autres scripts (betool_summary,
+    # confirme_summary, auditeur_summary, daily_brief). Sans ça, un run CSV/Pixel
+    # écraserait les confirmés CEE, l'audit et les quickwins → perte de données.
+    for key in ("pipeline", "dossiers_pipeline", "dossiers_source", "quickwins",
+                "confirmes", "autres_secteurs", "audit_pipeline", "brief", "delta"):
         if key in existing:
             data[key] = existing[key]
 

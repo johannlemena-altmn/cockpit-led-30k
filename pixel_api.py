@@ -298,6 +298,19 @@ def write_public_json(agg: dict, source: str,
         "mois":             [],
     }
 
+    # Préserver les blocs maintenus par les autres scripts (sinon perte de données).
+    if os.path.isfile(output_path):
+        try:
+            with open(output_path, encoding="utf-8") as f:
+                existing = json.load(f)
+            for key in ("pipeline", "dossiers_pipeline", "dossiers_source", "quickwins",
+                        "confirmes", "autres_secteurs", "audit_pipeline", "brief", "delta",
+                        "taux_pose_pct"):
+                if key in existing and existing[key] not in (None, "", [], {}):
+                    data[key] = existing[key]
+        except (json.JSONDecodeError, OSError):
+            pass
+
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
