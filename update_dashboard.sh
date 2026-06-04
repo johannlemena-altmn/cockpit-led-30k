@@ -61,16 +61,20 @@ if [ -n "$CSV_ARG" ]; then
   mkdir -p data
   cp "$CSV_ARG" data/export_crm.csv
   "$PYTHON" daily_summary.py
-else
+elif [ -n "$BETOOL_ARG" ]; then
+  # Mode BETOOL seul : pas de source CSV ni d'API Pixel → on saute cette étape.
+  # (Le pipeline BETOOL ci-dessous suffit à régénérer public_data.json.)
+  echo "Mode BETOOL seul — pas d'appel à l'API Pixel."
+elif [ -n "${PIXEL_BASE_URL:-}" ] && [ -n "${PIXEL_SESSION_COOKIE:-}" ]; then
   # Mode API Pixel (doit être lancé depuis ton PC, pas GitHub Actions)
   echo "Mode API Pixel CRM…"
-  if [ -z "${PIXEL_BASE_URL:-}" ] || [ -z "${PIXEL_SESSION_COOKIE:-}" ]; then
-    echo "[ERREUR] Créer un fichier .env avec :"
-    echo "  PIXEL_BASE_URL=https://crm.pixel-crm.fr"
-    echo "  PIXEL_SESSION_COOKIE=<valeur du header Cookie depuis DevTools>"
-    exit 1
-  fi
   "$PYTHON" pixel_api.py
+else
+  echo "[ERREUR] Aucune source de données fournie."
+  echo "  • Export BETOOL : ./update_dashboard.sh --betool data/betool.xlsx"
+  echo "  • Export CSV     : ./update_dashboard.sh data/export.csv"
+  echo "  • API Pixel      : créer un .env avec PIXEL_BASE_URL + PIXEL_SESSION_COOKIE"
+  exit 1
 fi
 
 # ── BETOOL pipeline (optionnel) ───────────────────────────────────────────────
