@@ -4,12 +4,10 @@
     {
       "date": "2026-06-04",
       "sources": [
-        "betool",
-        "audit",
-        "confirmes"
+        "betool"
       ],
-      "led_signees": 233504,
-      "taux_pose": 72,
+      "led_signees": 196177,
+      "taux_pose": 68,
       "led_actif": 77314,
       "action_led": 30606,
       "pct_depose": 55,
@@ -27,15 +25,9 @@
         "modif_audit": 720,
         "depose": 94202
       },
-      "audit": {
-        "modif_a_faire": 179,
-        "etude_prête": 2408,
-        "etude_en_cours": 113,
-        "etude_a_realiser": 38,
-        "annulation": 26
-      },
-      "confirmes_led": 158583,
-      "confirmes_n": 5440
+      "audit": {},
+      "confirmes_led": 0,
+      "confirmes_n": 0
     }
   ]
 }
