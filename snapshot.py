@@ -161,6 +161,86 @@ def _compact_day(snap: dict) -> dict:
     }
 
 
+def _find_reference(snap_date: str):
+    """Snapshot de référence pour le delta « depuis la dernière mise à jour ».
+
+    Priorité :
+      1. fichier du jour déjà présent  → delta INTRA-JOUR (ré-export same-day)
+      2. sinon, jour archivé le + récent antérieur → delta J-1.
+    Retourne (ref_snap | None, kind: 'intraday' | 'jminus' | None).
+    """
+    today_file = os.path.join(HISTORY_DIR, f"{snap_date}.json")
+    if os.path.isfile(today_file):
+        try:
+            with open(today_file, encoding="utf-8") as fh:
+                return json.load(fh), "intraday"
+        except json.JSONDecodeError:
+            pass
+    files = sorted(glob.glob(os.path.join(HISTORY_DIR, "20*-*-*.json")))
+    prior = [f for f in files if os.path.basename(f)[:10] < snap_date]
+    if prior:
+        try:
+            with open(prior[-1], encoding="utf-8") as fh:
+                return json.load(fh), "jminus"
+        except json.JSONDecodeError:
+            pass
+    return None, None
+
+
+def _signature(snap: dict) -> str:
+    """Empreinte des métriques clés — sert à détecter un export identique
+    (idempotence : ne pas remettre le delta à zéro si la donnée n'a pas bougé)."""
+    k = snap.get("kpis", {})
+    p = snap.get("pipeline", {})
+    dep = (p.get("etapes", {}).get("depose") or {})
+    a = snap.get("audit", {}).get("etapes", {})
+    parts = [
+        k.get("led_signees", 0), k.get("taux_pose", 0),
+        p.get("led_actif", 0), p.get("action_led", 0),
+        dep.get("n", 0), dep.get("vol", 0),
+        (a.get("modif_a_faire") or {}).get("n", 0),
+        snap.get("confirmes", {}).get("led", 0),
+        snap.get("confirmes", {}).get("n", 0),
+    ]
+    return "|".join(str(x) for x in parts)
+
+
+def compute_delta(new_snap: dict, ref: dict, kind: str) -> dict | None:
+    """Delta agrégé entre le snapshot courant et sa référence.
+
+    Convention de signe : valeur brute (cur - ref). L'interprétation
+    bon/mauvais est portée par le front (déposés ↑ = bon, stock actif ↓ = bon).
+    """
+    if not ref:
+        return None
+
+    def _n(etapes: dict, k: str) -> int:
+        return (etapes.get(k) or {}).get("n", 0)
+
+    def _vol(etapes: dict, k: str) -> int:
+        return (etapes.get(k) or {}).get("vol", 0)
+
+    nk, rk = new_snap["kpis"], ref.get("kpis", {})
+    np_, rp = new_snap["pipeline"], ref.get("pipeline", {})
+    na, ra = new_snap["audit"].get("etapes", {}), ref.get("audit", {}).get("etapes", {})
+    nc, rc = new_snap["confirmes"], ref.get("confirmes", {})
+    npe, rpe = np_.get("etapes", {}), rp.get("etapes", {})
+
+    return {
+        "ref_date":      ref.get("date", ""),
+        "kind":          kind,                       # 'intraday' | 'jminus'
+        "taux_pose":     nk.get("taux_pose", 0) - rk.get("taux_pose", 0),
+        "led_signees":   nk.get("led_signees", 0) - rk.get("led_signees", 0),
+        "deposees_n":    _n(npe, "depose") - _n(rpe, "depose"),
+        "deposees_led":  _vol(npe, "depose") - _vol(rpe, "depose"),
+        "led_actif":     np_.get("led_actif", 0) - rp.get("led_actif", 0),
+        "action_led":    np_.get("action_led", 0) - rp.get("action_led", 0),
+        "modif_audit":   _n(na, "modif_a_faire") - _n(ra, "modif_a_faire"),
+        "confirmes_led": nc.get("led", 0) - rc.get("led", 0),
+        "confirmes_n":   nc.get("n", 0) - rc.get("n", 0),
+    }
+
+
 def rebuild_indexes():
     """Régénère timeseries.json + index.json en scannant history/*.json."""
     files = sorted(glob.glob(os.path.join(HISTORY_DIR, "20*-*-*.json")))
@@ -218,6 +298,22 @@ def main():
         snap_date = gen
 
     snap = compute_snapshot(data, snap_date)
+
+    # ── Delta « depuis la dernière mise à jour » (avant écrasement) ──────────
+    ref, kind = _find_reference(snap_date)
+    cur_sig = _signature(snap)
+    ref_delta = (ref or {}).get("delta") or {}
+    if ref and ref_delta.get("cur_sig") == cur_sig:
+        # Donnée identique au snapshot existant → on PRÉSERVE le delta précédent
+        # (idempotence : re-run / cron quotidien ne doit pas écraser le mouvement réel).
+        delta = ref_delta
+    else:
+        delta = compute_delta(snap, ref, kind)
+        if delta:
+            delta["cur_sig"] = cur_sig
+    if delta:
+        snap["delta"] = delta
+
     _assert_no_pii(snap)
 
     os.makedirs(HISTORY_DIR, exist_ok=True)
@@ -225,9 +321,23 @@ def main():
     with open(out, "w", encoding="utf-8") as f:
         json.dump(snap, f, ensure_ascii=False, indent=2)
 
+    # Réinjecte le delta dans public_data.json pour le cockpit du jour
+    if delta:
+        try:
+            data["delta"] = delta
+            with open(inp, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except OSError as e:
+            print(f"[WARN] delta non réinjecté dans {inp} : {e}", file=sys.stderr)
+
     n = rebuild_indexes()
     tp = len(snap["top_prios"])
     print(f"[OK] {out} écrit · {tp} top prios · sources={snap['sources']}")
+    if delta:
+        lbl = "intra-jour" if kind == "intraday" else f"vs {delta['ref_date']}"
+        print(f"[OK] delta calculé ({lbl}) : déposés {delta['deposees_n']:+d} dossiers / "
+              f"{delta['deposees_led']:+d} LED · taux pose {delta['taux_pose']:+d}pt · "
+              f"modifs audit {delta['modif_audit']:+d}")
     print(f"[OK] history/timeseries.json + index.json régénérés ({n} jours archivés)")
 
 

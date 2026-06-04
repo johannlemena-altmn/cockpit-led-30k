@@ -451,6 +451,30 @@ function loadDayPrios(dateStr){
       $('prioList').innerHTML='<div class="empty">Snapshot indisponible pour ce jour.</div>';
     });
 }
+/* bandeau « ce qui a bougé » pour la journée sélectionnée */
+function dayDeltaHtml(dl){
+  if(!dl) return '';
+  var ref=dl.kind==='intraday'?'depuis la dernière maj':'vs '+(dl.ref_date||'veille');
+  var defs=[
+    {k:'deposees_led',s:1,l:'LED déposées',u:''},
+    {k:'taux_pose',   s:1,l:'taux pose',   u:'pt'},
+    {k:'led_actif',   s:-1,l:'stock actif', u:''},
+    {k:'modif_audit', s:-1,l:'modifs audit',u:''},
+  ];
+  var chips=defs.map(function(t){
+    var v=dl[t.k]; if(v==null||v===0) return '';
+    var good=(v*t.s)>0, sign=v>0?'+':'', arr=v>0?'↑':'↓';
+    var col=good?'var(--green)':'var(--red)';
+    return '<span style="font-size:11.5px;font-weight:700;color:'+col+'">'
+      +arr+' '+sign+fi(v)+t.u+' <span style="color:var(--muted);font-weight:500">'+t.l+'</span></span>';
+  }).filter(Boolean).join('');
+  if(!chips) return '';
+  return '<div style="background:var(--card);border:1px solid var(--line);border-radius:12px;'
+    +'padding:10px 12px;margin-bottom:10px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">'
+    +'<span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;'
+    +'letter-spacing:.08em">Δ '+ref+'</span>'+chips+'</div>';
+}
+
 function renderPrios(){
   var s=STATE.curDay; if(!s){return;}
   var list=(s.top_prios||[]).slice();
@@ -464,7 +488,7 @@ function renderPrios(){
     });
   list=list.slice(0,20);
   if(!list.length){$('prioList').innerHTML='<div class="empty">Aucune prio ce jour.</div>';return;}
-  $('prioList').innerHTML=list.map(function(p,i){
+  $('prioList').innerHTML=dayDeltaHtml(s.delta)+list.map(function(p,i){
     var vol=p.led?fi(p.led):fi(p.cellules||0);
     var vlbl=p.led?'LED':'cell.';
     var refHtml=p.internal?'<span class="int">'+p.ref+'</span>':p.ref;

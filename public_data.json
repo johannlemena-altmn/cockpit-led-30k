@@ -8,16 +8,16 @@
   "led_med": 30,
   "led_max": 459,
   "objectif_mensuel": 30000,
-  "taux_pose_pct": 72,
+  "taux_pose_pct": 73,
   "mois": [],
   "pipeline": {
     "generated": "2026-06-04",
-    "total_actif": 1442,
-    "led_actif": 77314,
-    "action_n": 553,
-    "action_led": 30606,
-    "pct_depose": 55,
-    "taux_pose_pct": 72,
+    "total_actif": 1420,
+    "led_actif": 76006,
+    "action_n": 550,
+    "action_led": 30224,
+    "pct_depose": 56,
+    "taux_pose_pct": 73,
     "etapes": [
       {
         "id": "en_cours",
@@ -25,8 +25,8 @@
         "short": "En cours",
         "urgence": "normal",
         "conseil": "Attendre fin d'installation avant action.",
-        "n": 889,
-        "led": 46708,
+        "n": 870,
+        "led": 45782,
         "age_moy": null
       },
       {
@@ -35,8 +35,8 @@
         "short": "Audit ⚡",
         "urgence": "action",
         "conseil": "Contrôler audits → envoyer au client → commenter auditeurs.",
-        "n": 391,
-        "led": 20456,
+        "n": 389,
+        "led": 20284,
         "age_moy": null
       },
       {
@@ -45,8 +45,8 @@
         "short": "Signature ⏳",
         "urgence": "relance",
         "conseil": "Rappeler le client pour signature du dossier.",
-        "n": 154,
-        "led": 9430,
+        "n": 157,
+        "led": 9466,
         "age_moy": null
       },
       {
@@ -55,8 +55,8 @@
         "short": "Modif 🔴",
         "urgence": "urgent",
         "conseil": "Corriger les audits → envoyer à Total Energies.",
-        "n": 8,
-        "led": 720,
+        "n": 4,
+        "led": 474,
         "age_moy": null
       },
       {
@@ -65,8 +65,8 @@
         "short": "Déposé",
         "urgence": "ok",
         "conseil": "En attente validation + paiement Total Energies.",
-        "n": 1743,
-        "led": 94202,
+        "n": 1763,
+        "led": 95354,
         "age_moy": null
       }
     ]
@@ -79,37 +79,17 @@
         "age_days": null
       },
       {
-        "ref": "29875",
-        "led": 78,
-        "age_days": null
-      },
-      {
-        "ref": "34770",
-        "led": 60,
-        "age_days": null
-      },
-      {
-        "ref": "28171",
-        "led": 54,
-        "age_days": null
-      },
-      {
-        "ref": "35100",
-        "led": 48,
-        "age_days": null
-      },
-      {
-        "ref": "34484",
-        "led": 48,
-        "age_days": null
-      },
-      {
         "ref": "34505",
         "led": 48,
         "age_days": null
       },
       {
-        "ref": "34734",
+        "ref": "35763",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "33017",
         "led": 36,
         "age_days": null
       }
@@ -166,11 +146,6 @@
         "age_days": null
       },
       {
-        "ref": "33153",
-        "led": 126,
-        "age_days": null
-      },
-      {
         "ref": "26796",
         "led": 126,
         "age_days": null
@@ -182,11 +157,6 @@
       },
       {
         "ref": "32445",
-        "led": 120,
-        "age_days": null
-      },
-      {
-        "ref": "23235",
         "led": 120,
         "age_days": null
       },
@@ -251,7 +221,12 @@
         "age_days": null
       },
       {
-        "ref": "33151",
+        "ref": "35597",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "33191",
         "led": 84,
         "age_days": null
       },
@@ -272,6 +247,21 @@
       },
       {
         "ref": "32580",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "30974",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "26628",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "30963",
         "led": 78,
         "age_days": null
       },
@@ -306,7 +296,7 @@
         "age_days": null
       },
       {
-        "ref": "32805",
+        "ref": "33020",
         "led": 72,
         "age_days": null
       },
@@ -317,11 +307,6 @@
       },
       {
         "ref": "26636",
-        "led": 72,
-        "age_days": null
-      },
-      {
-        "ref": "25924",
         "led": 72,
         "age_days": null
       },
@@ -337,11 +322,6 @@
       },
       {
         "ref": "31765",
-        "led": 66,
-        "age_days": null
-      },
-      {
-        "ref": "30888",
         "led": 66,
         "age_days": null
       },
@@ -376,7 +356,17 @@
         "age_days": null
       },
       {
+        "ref": "31824",
+        "led": 60,
+        "age_days": null
+      },
+      {
         "ref": "34780",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "34770",
         "led": 60,
         "age_days": null
       },
@@ -406,7 +396,7 @@
         "age_days": null
       },
       {
-        "ref": "29207",
+        "ref": "30794",
         "led": 60,
         "age_days": null
       },
@@ -446,11 +436,6 @@
         "age_days": null
       },
       {
-        "ref": "31148",
-        "led": 54,
-        "age_days": null
-      },
-      {
         "ref": "32027",
         "led": 54,
         "age_days": null
@@ -471,6 +456,16 @@
         "age_days": null
       },
       {
+        "ref": "28743",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "28483",
+        "led": 54,
+        "age_days": null
+      },
+      {
         "ref": "24822",
         "led": 54,
         "age_days": null
@@ -486,22 +481,12 @@
         "age_days": null
       },
       {
-        "ref": "35979",
+        "ref": "31038",
         "led": 48,
         "age_days": null
       },
       {
         "ref": "33135",
-        "led": 48,
-        "age_days": null
-      },
-      {
-        "ref": "30216",
-        "led": 48,
-        "age_days": null
-      },
-      {
-        "ref": "31788",
         "led": 48,
         "age_days": null
       },
@@ -541,12 +526,12 @@
         "age_days": null
       },
       {
-        "ref": "35763",
+        "ref": "29062",
         "led": 42,
         "age_days": null
       },
       {
-        "ref": "29062",
+        "ref": "34460",
         "led": 42,
         "age_days": null
       },
@@ -611,11 +596,6 @@
         "age_days": null
       },
       {
-        "ref": "24134",
-        "led": 42,
-        "age_days": null
-      },
-      {
         "ref": "27012",
         "led": 42,
         "age_days": null
@@ -631,11 +611,6 @@
         "age_days": null
       },
       {
-        "ref": "30464",
-        "led": 36,
-        "age_days": null
-      },
-      {
         "ref": "31489",
         "led": 36,
         "age_days": null
@@ -646,22 +621,12 @@
         "age_days": null
       },
       {
-        "ref": "33017",
-        "led": 36,
-        "age_days": null
-      },
-      {
         "ref": "31794",
         "led": 36,
         "age_days": null
       },
       {
         "ref": "30851",
-        "led": 36,
-        "age_days": null
-      },
-      {
-        "ref": "",
         "led": 36,
         "age_days": null
       },
@@ -677,6 +642,11 @@
       },
       {
         "ref": "33029",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30776",
         "led": 36,
         "age_days": null
       },
@@ -721,6 +691,11 @@
         "age_days": null
       },
       {
+        "ref": "36490",
+        "led": 30,
+        "age_days": null
+      },
+      {
         "ref": "33033",
         "led": 30,
         "age_days": null
@@ -736,7 +711,12 @@
         "age_days": null
       },
       {
-        "ref": "30149",
+        "ref": "31747",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "32699",
         "led": 30,
         "age_days": null
       },
@@ -747,6 +727,11 @@
       },
       {
         "ref": "34575",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "29014",
         "led": 30,
         "age_days": null
       },
@@ -796,7 +781,17 @@
         "age_days": null
       },
       {
+        "ref": "35960",
+        "led": 24,
+        "age_days": null
+      },
+      {
         "ref": "35483",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34766",
         "led": 24,
         "age_days": null
       },
@@ -816,17 +811,17 @@
         "age_days": null
       },
       {
-        "ref": "33050",
-        "led": 24,
-        "age_days": null
-      },
-      {
-        "ref": "27263",
+        "ref": "31044",
         "led": 24,
         "age_days": null
       },
       {
         "ref": "30178",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34465",
         "led": 24,
         "age_days": null
       },
@@ -1043,6 +1038,11 @@
         "age_days": null
       },
       {
+        "ref": "36421",
+        "led": 98,
+        "age_days": null
+      },
+      {
         "ref": "36425",
         "led": 96,
         "age_days": null
@@ -1073,12 +1073,27 @@
         "age_days": null
       },
       {
+        "ref": "37120",
+        "led": 90,
+        "age_days": null
+      },
+      {
         "ref": "",
         "led": 90,
         "age_days": null
       },
       {
         "ref": "36358",
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "ref": "33136",
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "ref": "28892",
         "led": 90,
         "age_days": null
       },
@@ -1098,11 +1113,6 @@
         "age_days": null
       },
       {
-        "ref": "35597",
-        "led": 84,
-        "age_days": null
-      },
-      {
         "ref": "30492",
         "led": 84,
         "age_days": null
@@ -1118,11 +1128,6 @@
         "age_days": null
       },
       {
-        "ref": "33191",
-        "led": 84,
-        "age_days": null
-      },
-      {
         "ref": "32349",
         "led": 84,
         "age_days": null
@@ -1134,11 +1139,6 @@
       },
       {
         "ref": "31016",
-        "led": 84,
-        "age_days": null
-      },
-      {
-        "ref": "32051",
         "led": 84,
         "age_days": null
       },
@@ -1223,22 +1223,7 @@
         "age_days": null
       },
       {
-        "ref": "30974",
-        "led": 78,
-        "age_days": null
-      },
-      {
         "ref": "32317",
-        "led": 78,
-        "age_days": null
-      },
-      {
-        "ref": "26628",
-        "led": 78,
-        "age_days": null
-      },
-      {
-        "ref": "30963",
         "led": 78,
         "age_days": null
       },
@@ -1268,6 +1253,11 @@
         "age_days": null
       },
       {
+        "ref": "36366",
+        "led": 72,
+        "age_days": null
+      },
+      {
         "ref": "36341",
         "led": 72,
         "age_days": null
@@ -1284,11 +1274,6 @@
       },
       {
         "ref": "",
-        "led": 72,
-        "age_days": null
-      },
-      {
-        "ref": "33020",
         "led": 72,
         "age_days": null
       },
@@ -1328,6 +1313,11 @@
         "age_days": null
       },
       {
+        "ref": "36447",
+        "led": 66,
+        "age_days": null
+      },
+      {
         "ref": "32330",
         "led": 66,
         "age_days": null
@@ -1349,11 +1339,6 @@
       },
       {
         "ref": "28372",
-        "led": 66,
-        "age_days": null
-      },
-      {
-        "ref": "25606",
         "led": 66,
         "age_days": null
       },
@@ -1384,11 +1369,6 @@
       },
       {
         "ref": "35107",
-        "led": 60,
-        "age_days": null
-      },
-      {
-        "ref": "31824",
         "led": 60,
         "age_days": null
       },
@@ -1454,11 +1434,6 @@
       },
       {
         "ref": "25536",
-        "led": 60,
-        "age_days": null
-      },
-      {
-        "ref": "30794",
         "led": 60,
         "age_days": null
       },
@@ -1608,16 +1583,6 @@
         "age_days": null
       },
       {
-        "ref": "28743",
-        "led": 54,
-        "age_days": null
-      },
-      {
-        "ref": "28483",
-        "led": 54,
-        "age_days": null
-      },
-      {
         "ref": "24192",
         "led": 54,
         "age_days": null
@@ -1688,6 +1653,11 @@
         "age_days": null
       },
       {
+        "ref": "35488",
+        "led": 48,
+        "age_days": null
+      },
+      {
         "ref": "34787",
         "led": 48,
         "age_days": null
@@ -1733,17 +1703,17 @@
         "age_days": null
       },
       {
+        "ref": "31118",
+        "led": 48,
+        "age_days": null
+      },
+      {
         "ref": "36186",
         "led": 48,
         "age_days": null
       },
       {
         "ref": "31425",
-        "led": 48,
-        "age_days": null
-      },
-      {
-        "ref": "31038",
         "led": 48,
         "age_days": null
       },
@@ -1828,7 +1798,17 @@
         "age_days": null
       },
       {
+        "ref": "35471",
+        "led": 42,
+        "age_days": null
+      },
+      {
         "ref": "35591",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "36570",
         "led": 42,
         "age_days": null
       },
@@ -1838,7 +1818,7 @@
         "age_days": null
       },
       {
-        "ref": "34460",
+        "ref": "35109",
         "led": 42,
         "age_days": null
       },
@@ -1953,6 +1933,11 @@
         "age_days": null
       },
       {
+        "ref": "37032",
+        "led": 36,
+        "age_days": null
+      },
+      {
         "ref": "36728",
         "led": 36,
         "age_days": null
@@ -1984,6 +1969,11 @@
       },
       {
         "ref": "36440",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36387",
         "led": 36,
         "age_days": null
       },
@@ -2053,6 +2043,11 @@
         "age_days": null
       },
       {
+        "ref": "33154",
+        "led": 36,
+        "age_days": null
+      },
+      {
         "ref": "33234",
         "led": 36,
         "age_days": null
@@ -2079,6 +2074,11 @@
       },
       {
         "ref": "28202",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "38439",
         "led": 36,
         "age_days": null
       },
@@ -2134,11 +2134,6 @@
       },
       {
         "ref": "28741",
-        "led": 36,
-        "age_days": null
-      },
-      {
-        "ref": "30776",
         "led": 36,
         "age_days": null
       },
@@ -2258,6 +2253,11 @@
         "age_days": null
       },
       {
+        "ref": "35464",
+        "led": 30,
+        "age_days": null
+      },
+      {
         "ref": "35599",
         "led": 30,
         "age_days": null
@@ -2318,11 +2318,6 @@
         "age_days": null
       },
       {
-        "ref": "36490",
-        "led": 30,
-        "age_days": null
-      },
-      {
         "ref": "26668",
         "led": 30,
         "age_days": null
@@ -2378,17 +2373,7 @@
         "age_days": null
       },
       {
-        "ref": "31747",
-        "led": 30,
-        "age_days": null
-      },
-      {
         "ref": "30487",
-        "led": 30,
-        "age_days": null
-      },
-      {
-        "ref": "32699",
         "led": 30,
         "age_days": null
       },
@@ -2404,11 +2389,6 @@
       },
       {
         "ref": "37183",
-        "led": 30,
-        "age_days": null
-      },
-      {
-        "ref": "29014",
         "led": 30,
         "age_days": null
       },
@@ -2493,6 +2473,11 @@
         "age_days": null
       },
       {
+        "ref": "37509",
+        "led": 24,
+        "age_days": null
+      },
+      {
         "ref": "36814",
         "led": 24,
         "age_days": null
@@ -2564,11 +2549,6 @@
       },
       {
         "ref": "35392",
-        "led": 24,
-        "age_days": null
-      },
-      {
-        "ref": "35960",
         "led": 24,
         "age_days": null
       },
@@ -2663,11 +2643,6 @@
         "age_days": null
       },
       {
-        "ref": "34766",
-        "led": 24,
-        "age_days": null
-      },
-      {
         "ref": "30617",
         "led": 24,
         "age_days": null
@@ -2693,7 +2668,17 @@
         "age_days": null
       },
       {
+        "ref": "33789",
+        "led": 24,
+        "age_days": null
+      },
+      {
         "ref": "33097",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33099",
         "led": 24,
         "age_days": null
       },
@@ -2738,7 +2723,7 @@
         "age_days": null
       },
       {
-        "ref": "31044",
+        "ref": "32077",
         "led": 24,
         "age_days": null
       },
@@ -2849,41 +2834,16 @@
       "rank": 1,
       "stage_id": "modif_audit",
       "urgence": "urgent",
-      "n": 8,
-      "led": 720,
+      "n": 4,
+      "led": 474,
       "effort": "< 1h par dossier",
       "action": "Corriger les audits et envoyer à Total Energies immédiatement.",
       "blocage_old": 0,
-      "top5_led": 588,
+      "top5_led": 474,
       "top": [
         {
           "ref": "",
           "led": 348,
-          "age_days": null
-        },
-        {
-          "ref": "29875",
-          "led": 78,
-          "age_days": null
-        },
-        {
-          "ref": "34770",
-          "led": 60,
-          "age_days": null
-        },
-        {
-          "ref": "28171",
-          "led": 54,
-          "age_days": null
-        },
-        {
-          "ref": "35100",
-          "led": 48,
-          "age_days": null
-        },
-        {
-          "ref": "34484",
-          "led": 48,
           "age_days": null
         },
         {
@@ -2892,7 +2852,12 @@
           "age_days": null
         },
         {
-          "ref": "34734",
+          "ref": "35763",
+          "led": 42,
+          "age_days": null
+        },
+        {
+          "ref": "33017",
           "led": 36,
           "age_days": null
         }
@@ -2902,8 +2867,8 @@
       "rank": 2,
       "stage_id": "attente_signature",
       "urgence": "relance",
-      "n": 154,
-      "led": 9430,
+      "n": 157,
+      "led": 9466,
       "effort": "Appel/email par dossier",
       "action": "Rappeler les clients en commençant par les dossiers les plus anciens.",
       "blocage_old": 0,
@@ -2965,8 +2930,8 @@
       "rank": 3,
       "stage_id": "attente_audit",
       "urgence": "action",
-      "n": 391,
-      "led": 20456,
+      "n": 389,
+      "led": 20284,
       "effort": "~30 min par audit",
       "action": "Traiter en priorité les plus gros dossiers (plus de LED = plus d'impact).",
       "blocage_old": 0,
@@ -3077,9 +3042,9 @@
   },
   "audit_pipeline": {
     "generated": "2026-06-04",
-    "cellules_total": 6390,
+    "cellules_total": 6395,
     "source": "betool_auditeur",
-    "total": 2764,
+    "total": 2766,
     "led_total": 0,
     "etapes": [
       {
@@ -3088,9 +3053,9 @@
         "short": "Modif 🔴",
         "urgence": "urgent",
         "conseil": "Corriger les études bloquées → libère les dépôts en attente.",
-        "n": 179,
+        "n": 182,
         "led": 0,
-        "cellules": 487
+        "cellules": 491
       },
       {
         "id": "etude_prête",
@@ -3098,9 +3063,9 @@
         "short": "Prêt ✅",
         "urgence": "action",
         "conseil": "Valider et corriger les études prêtes avant envoi au délégataire.",
-        "n": 2408,
+        "n": 2405,
         "led": 0,
-        "cellules": 5438
+        "cellules": 5434
       },
       {
         "id": "etude_en_cours",
@@ -3108,9 +3073,9 @@
         "short": "En cours",
         "urgence": "normal",
         "conseil": "Études en traitement — suivre l'avancement.",
-        "n": 113,
+        "n": 117,
         "led": 0,
-        "cellules": 302
+        "cellules": 312
       },
       {
         "id": "etude_a_realiser",
@@ -3118,9 +3083,9 @@
         "short": "À faire",
         "urgence": "normal",
         "conseil": "Planifier la réalisation des études restantes.",
-        "n": 38,
+        "n": 36,
         "led": 0,
-        "cellules": 118
+        "cellules": 113
       },
       {
         "id": "annulation",
@@ -3138,9 +3103,9 @@
         "rank": 1,
         "stage_id": "modif_a_faire",
         "urgence": "urgent",
-        "n": 179,
+        "n": 182,
         "led": 0,
-        "cellules": 487,
+        "cellules": 491,
         "action": "Corriger les études bloquées → libère les dépôts en attente.",
         "effort": "~1h",
         "top5_refs": [
@@ -3155,9 +3120,9 @@
         "rank": 2,
         "stage_id": "etude_prête",
         "urgence": "action",
-        "n": 2408,
+        "n": 2405,
         "led": 0,
-        "cellules": 5438,
+        "cellules": 5434,
         "action": "Valider et corriger les études prêtes avant envoi au délégataire.",
         "effort": "~demi-journée",
         "top5_refs": [
@@ -3472,5 +3437,19 @@
         "age_days": null
       }
     ]
+  },
+  "delta": {
+    "ref_date": "2026-06-04",
+    "kind": "intraday",
+    "taux_pose": 1,
+    "led_signees": 0,
+    "deposees_n": 20,
+    "deposees_led": 1152,
+    "led_actif": -1308,
+    "action_led": -382,
+    "modif_audit": 3,
+    "confirmes_led": 0,
+    "confirmes_n": 0,
+    "cur_sig": "233504|73|76006|30224|1763|95354|182|158583|5440"
   }
 }
