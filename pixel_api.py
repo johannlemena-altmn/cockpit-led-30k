@@ -1,81 +1,61 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 """
 Pixel CRM — agrégats BAT-EQ-127 sans export CSV (pas de PII).
-Interroge l'endpoint de recherche pour obtenir les totaux directement.
+Interroge l'endpoint DataTables ASP.NET pour obtenir les totaux directement.
 
 Usage :
-    # Depuis la session Pixel (cookie de session nécessaire)
-    export PIXEL_SESSION_COOKIE="..."   # cookie de session Pixel
-    export PIXEL_BASE_URL="https://..."  # URL base Pixel CRM
+    export PIXEL_BASE_URL="https://crm.pixel-crm.fr"
+    export PIXEL_SESSION_COOKIE="..."
     python pixel_api.py
 
-    # Mode dry-run (affiche la requête sans l'envoyer)
     python pixel_api.py --dry-run
-
-Sortie : public_data.json (agrégats anonymisés, commitable dans git)
-
-Variables d'environnement (ou fichier .env) :
-    PIXEL_BASE_URL          URL de base du CRM Pixel (ex: https://app.pixel-crm.fr)
-    PIXEL_SESSION_COOKIE    Valeur du cookie de session (copier depuis DevTools → Network)
-    PIXEL_REFERER           (optionnel) URL de la page de recherche pour le header Referer
 """
 
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
 import urllib.error
 from datetime import date
 
-# ---------------------------------------------------------------------------
-# Constantes
-# ---------------------------------------------------------------------------
-
 ENDPOINT_PATH = "/Fiche/Recherche"
 HANDLER_PARAM = "handler=GetBody_ServerSide"
 OBJECTIF_MENSUEL = 30_000
 
-# Payloads à essayer (du plus probable au moins probable).
-# Le format exact des paramètres Pixel n'est pas documenté publiquement ;
-# on tente plusieurs variantes pour maximiser les chances de succès.
-# Adapter si la réponse indique un format différent.
-CANDIDATE_PAYLOADS = [
-    # Variante 1 : paramètres courants des CRM ASP.NET Core (Razor Pages handler)
-    {
-        "Search.BaremeMultiple": "BAT-EQ-127",
-        "Search.TypeOperation":  "BAT-EQ-127",
-        "Search.Statut":         "",
-        "draw":                  "1",
-        "start":                 "0",
-        "length":                "1",  # on ne veut que les totaux, pas les lignes
-    },
-    # Variante 2 : nommage plus court
-    {
-        "BaremeMultiple": "BAT-EQ-127",
-        "draw":           "1",
-        "start":          "0",
-        "length":         "1",
-    },
-    # Variante 3 : JSON body (certains endpoints Pixel acceptent du JSON)
-    # Marqué avec la clé spéciale "__json__" pour indiquer l'encodage
-    {
-        "__json__": True,
-        "search": {
-            "baremeMultiple": "BAT-EQ-127",
-        },
-        "draw":   1,
-        "start":  0,
-        "length": 1,
-    },
+DATATABLE_COLUMNS = [
+    "inputCheckbox", "logo", "operation", "raisonsociale", "tele",
+    "nomsite", "codepostalchantier", "villechantier", "intervenant",
+    "statut", "cumac", "organisme", "commentaire", "actions",
 ]
 
+SEARCH_FIELDS = [
+    "Search.NumDossier", "Search.RefDossierExterne", "Search.RaisonSociale",
+    "Search.NumDevis", "Search.NumFacture", "Search.DateFacture",
+    "Search.NomChantier", "Search.AdresseChantier", "Search.NomSignataire",
+    "Search.PrenomSignataire", "Search.PhoneClient", "Search.MailClient",
+    "Search.AgeBatiment", "Search.Zone", "Search.CodePostalChantier",
+    "Search.VilleChantier", "Search.Operateur", "Search.Confirmateur",
+    "Search.CommercialTerrain", "Search.Previsiteur", "Search.Poseur",
+    "Search.Administrateur", "Search.AgentConfirmateur",
+    "Search.DateConfirmation", "Search.DatePrevisite", "Search.DatePose",
+    "Search.DateControle", "Search.DateOperation", "Search.Organisme",
+    "Search.InstallateurRGE", "Search.Regie", "Search.Source",
+    "Search.IsResteacharge", "Search.TypeQuartier", "Search.NumDepot",
+    "Search.NumLot", "Search.Produit", "Search.BureauControle",
+    "Search.ZoneInterventions", "Search.DateCreation", "Search.DateStatut",
+    "Search.AcAcompte", "Search.AcAvoir", "Search.TypeChauffage",
+    "Search.TypeOperation", "Search.TypeEnergie",
+]
+
+
 # ---------------------------------------------------------------------------
-# Lecture de l'environnement (supporte aussi un fichier .env minimal)
+# Config
 # ---------------------------------------------------------------------------
 
 def _load_dotenv(path: str = ".env"):
-    """Charge un fichier .env simple (KEY=VALUE, commentaires #) dans os.environ."""
     if not os.path.isfile(path):
         return
     with open(path, encoding="utf-8") as f:
@@ -92,62 +72,116 @@ def _load_dotenv(path: str = ".env"):
 
 
 def get_config() -> dict:
-    """Retourne la config depuis l'environnement."""
     _load_dotenv()
     base_url = os.environ.get("PIXEL_BASE_URL", "").rstrip("/")
     session_cookie = os.environ.get("PIXEL_SESSION_COOKIE", "")
-    referer = os.environ.get("PIXEL_REFERER", base_url + "/Fiche/Recherche" if base_url else "")
+    referer = os.environ.get("PIXEL_REFERER", base_url + ENDPOINT_PATH if base_url else "")
+    return {"base_url": base_url, "session_cookie": session_cookie, "referer": referer}
+
+
+# ---------------------------------------------------------------------------
+# CSRF token
+# ---------------------------------------------------------------------------
+
+def _browser_headers(session_cookie: str, referer: str, base_url: str,
+                     accept: str = "text/html,*/*") -> dict:
     return {
-        "base_url":       base_url,
-        "session_cookie": session_cookie,
-        "referer":        referer,
-    }
-
-
-# ---------------------------------------------------------------------------
-# Construction de la requête
-# ---------------------------------------------------------------------------
-
-def build_request(base_url: str, session_cookie: str, referer: str,
-                  payload: dict) -> urllib.request.Request:
-    """
-    Construit un objet Request pour un payload donné.
-    Gère les deux modes : form-urlencoded et JSON.
-    """
-    url = f"{base_url}{ENDPOINT_PATH}?{HANDLER_PARAM}"
-
-    is_json = payload.get("__json__", False)
-    if is_json:
-        body_dict = {k: v for k, v in payload.items() if k != "__json__"}
-        body = json.dumps(body_dict, ensure_ascii=False).encode("utf-8")
-        content_type = "application/json; charset=utf-8"
-    else:
-        body = urllib.parse.urlencode(payload).encode("utf-8")
-        content_type = "application/x-www-form-urlencoded"
-
-    headers = {
-        "Content-Type":  content_type,
-        "Cookie":        session_cookie,
-        "User-Agent":    (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "Cookie": session_cookie,
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/124.0.0.0 Safari/537.36"
         ),
-        "Accept":        "application/json, text/javascript, */*; q=0.01",
-        "X-Requested-With": "XMLHttpRequest",
-        "Referer":       referer,
-        "Origin":        base_url,
+        "Accept": accept,
+        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+        "Referer": referer,
+        "Origin": base_url,
     }
 
-    return urllib.request.Request(url, data=body, headers=headers, method="POST")
+
+def get_csrf_token(config: dict) -> str:
+    """GET la page de recherche pour extraire le __RequestVerificationToken."""
+    base_url = config["base_url"]
+    url = base_url + ENDPOINT_PATH
+    print(f"  GET {url} (récupération token CSRF)…", flush=True)
+
+    req = urllib.request.Request(
+        url,
+        headers=_browser_headers(config["session_cookie"], url, base_url),
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as exc:
+        print(f"  -> GET HTTP {exc.code} — impossible de récupérer le token CSRF", file=sys.stderr)
+        return ""
+    except urllib.error.URLError as exc:
+        print(f"  -> Erreur réseau GET : {exc.reason}", file=sys.stderr)
+        return ""
+
+    # Cherche le token dans le HTML (input hidden)
+    patterns = [
+        r'name="__RequestVerificationToken"[^>]+value="([^"]+)"',
+        r'value="([^"]+)"[^>]+name="__RequestVerificationToken"',
+        r'"__RequestVerificationToken":"([^"]+)"',
+    ]
+    for pat in patterns:
+        m = re.search(pat, html)
+        if m:
+            token = m.group(1)
+            print(f"  -> Token CSRF trouvé ({len(token)} chars)", flush=True)
+            return token
+
+    print("  -> Token CSRF non trouvé dans le HTML", file=sys.stderr)
+    return ""
 
 
 # ---------------------------------------------------------------------------
-# Parseur de réponse
+# Payload DataTables
+# ---------------------------------------------------------------------------
+
+def build_datatable_payload(csrf_token: str, operation_filter: str = "BAT-EQ-127",
+                             length: int = 1) -> dict:
+    payload: dict[str, str] = {
+        "draw": "1",
+        "order[0][column]": "0",
+        "order[0][dir]": "asc",
+        "start": "0",
+        "length": str(length),
+        "search[value]": "",
+        "search[regex]": "false",
+        "Archiver": "False",
+        "Search.Modele": "0",
+        "FeatureFlag.EnableAntidatage": "True",
+        "FeatureFlag.EnableRAIPhase1": "True",
+    }
+
+    for i, col in enumerate(DATATABLE_COLUMNS):
+        orderable = "false" if i <= 2 else "true"
+        payload[f"columns[{i}][data]"] = col
+        payload[f"columns[{i}][name]"] = ""
+        payload[f"columns[{i}][searchable]"] = "true"
+        payload[f"columns[{i}][orderable]"] = orderable
+        payload[f"columns[{i}][search][value]"] = ""
+        payload[f"columns[{i}][search][regex]"] = "false"
+
+    for field in SEARCH_FIELDS:
+        payload[field] = ""
+
+    if operation_filter:
+        payload["Search.TypeOperation"] = operation_filter
+
+    if csrf_token:
+        payload["__RequestVerificationToken"] = csrf_token
+
+    return payload
+
+
+# ---------------------------------------------------------------------------
+# Envoi
 # ---------------------------------------------------------------------------
 
 def _safe_int(v) -> int | None:
-    """Tente de convertir une valeur en int (accepte str avec espaces, virgules)."""
     if v is None:
         return None
     if isinstance(v, (int, float)):
@@ -159,167 +193,108 @@ def _safe_int(v) -> int | None:
         return None
 
 
-def parse_aggregates(data: dict) -> dict | None:
-    """
-    Tente d'extraire les agrégats depuis la réponse JSON Pixel.
-
-    Les réponses DataTables (format standard Pixel/ASP.NET) contiennent :
-      - recordsTotal    : nombre total de dossiers
-      - data            : liste de lignes (on ne lit pas les détails)
-
-    D'autres formats possibles sont aussi tentés.
-    Retourne un dict {nb_dossiers, total_led, prime_total} ou None si non parsé.
-    """
-    agg = {}
-
-    # --- Format DataTables (le plus courant) ---
-    if "recordsTotal" in data:
-        agg["nb_dossiers"] = _safe_int(data["recordsTotal"])
-
-    # Champs de totaux qui peuvent varier selon la configuration Pixel
-    # (noms observés dans des exports JSON similaires)
-    led_keys   = ["totalLED", "total_led", "TotalLED", "produit_qte_total",
-                  "led_total", "sumLED", "SumLED"]
-    prime_keys = ["totalPrime", "total_prime", "TotalPrime", "prime_cee_total",
-                  "sumPrime", "SumPrime", "primeTotale"]
-    doss_keys  = ["recordsTotal", "recordsFiltered", "nb_dossiers", "NbDossiers",
-                  "totalDossiers"]
-
-    for k in led_keys:
-        if k in data and data[k] is not None:
-            agg["total_led"] = _safe_int(data[k])
-            break
-
-    for k in prime_keys:
-        if k in data and data[k] is not None:
-            agg["prime_total"] = _safe_int(data[k])
-            break
-
-    if "nb_dossiers" not in agg:
-        for k in doss_keys:
-            if k in data and data[k] is not None:
-                agg["nb_dossiers"] = _safe_int(data[k])
-                break
-
-    # --- Tentative de lecture depuis un champ "summary" ou "totaux" ---
-    for key in ("summary", "totaux", "totals", "aggregate", "aggregates"):
-        if key in data and isinstance(data[key], dict):
-            sub = data[key]
-            for k in led_keys:
-                if k in sub:
-                    agg.setdefault("total_led", _safe_int(sub[k]))
-            for k in prime_keys:
-                if k in sub:
-                    agg.setdefault("prime_total", _safe_int(sub[k]))
-            for k in doss_keys:
-                if k in sub:
-                    agg.setdefault("nb_dossiers", _safe_int(sub[k]))
-
-    if not agg:
-        return None
-    return agg
-
-
-# ---------------------------------------------------------------------------
-# Envoi de la requête
-# ---------------------------------------------------------------------------
-
 def fetch_aggregates(config: dict) -> tuple[dict | None, str]:
-    """
-    Essaie les payloads candidats dans l'ordre.
-    Retourne (agrégats_dict_ou_None, message_diagnostic).
-    """
-    base_url       = config["base_url"]
+    base_url = config["base_url"]
     session_cookie = config["session_cookie"]
-    referer        = config["referer"]
+    referer = config["referer"]
 
-    for i, payload in enumerate(CANDIDATE_PAYLOADS, 1):
-        is_json = payload.get("__json__", False)
-        mode    = "JSON" if is_json else "form-urlencoded"
-        print(f"[Tentative {i}/{len(CANDIDATE_PAYLOADS)}] Payload {mode}...", flush=True)
+    # Étape 1 : récupérer le token CSRF
+    csrf_token = get_csrf_token(config)
 
-        req = build_request(base_url, session_cookie, referer, payload)
+    # Étape 2 : essayer avec filtre BAT-EQ-127, puis sans filtre
+    filters = [("BAT-EQ-127", "avec filtre BAT-EQ-127"), ("", "sans filtre (tous dossiers)")]
+
+    for operation_filter, label in filters:
+        print(f"\n[POST DataTables] {label}…", flush=True)
+        payload = build_datatable_payload(csrf_token, operation_filter, length=1)
+        body = urllib.parse.urlencode(payload).encode("utf-8")
+
+        headers = _browser_headers(session_cookie, referer, base_url,
+                                   accept="application/json, text/javascript, */*; q=0.01")
+        headers["Content-Type"] = "application/x-www-form-urlencoded"
+        headers["X-Requested-With"] = "XMLHttpRequest"
+
+        url = f"{base_url}{ENDPOINT_PATH}?{HANDLER_PARAM}"
+        req = urllib.request.Request(url, data=body, headers=headers, method="POST")
 
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:
-                status  = resp.status
-                headers = dict(resp.getheaders())
-                raw     = resp.read()
+                status = resp.status
+                raw = resp.read()
         except urllib.error.HTTPError as exc:
-            status  = exc.code
-            headers = dict(exc.headers)
-            raw     = exc.read()
-            print(f"  -> HTTP {status}", file=sys.stderr)
-            _print_diag(status, headers, raw)
+            status = exc.code
+            raw = exc.read()
+            body_snippet = raw[:300].decode("utf-8", errors="replace")
+            print(f"  -> HTTP {status} — {body_snippet!r}", file=sys.stderr)
             continue
         except urllib.error.URLError as exc:
             print(f"  -> Erreur réseau : {exc.reason}", file=sys.stderr)
             continue
 
-        print(f"  -> HTTP {status}")
-
-        if status not in (200, 201, 202):
-            _print_diag(status, headers, raw)
+        print(f"  -> HTTP {status}", flush=True)
+        if status not in (200, 201):
+            print(f"  Body : {raw[:300].decode('utf-8', errors='replace')!r}", file=sys.stderr)
             continue
 
-        # Tenter le décodage JSON
         try:
-            text = raw.decode("utf-8", errors="replace")
-            data = json.loads(text)
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            print(f"  -> Réponse non-JSON ({exc}) — premiers 500 chars :")
-            print(f"     {raw[:500]!r}", file=sys.stderr)
+            data = json.loads(raw.decode("utf-8", errors="replace"))
+        except json.JSONDecodeError as exc:
+            print(f"  -> Réponse non-JSON : {exc}", file=sys.stderr)
             continue
 
-        agg = parse_aggregates(data)
-        if agg:
-            print(f"  -> Agrégats extraits : {agg}")
-            return agg, f"payload_{i}_{mode}"
+        nb_dossiers = _safe_int(data.get("recordsTotal") or data.get("recordsFiltered"))
+        if nb_dossiers is None:
+            print(f"  -> Clés reçues : {list(data.keys())[:20]}", file=sys.stderr)
+            continue
 
-        # Pas d'agrégats reconnus : dump diagnostic
-        print(f"  -> Réponse JSON reçue mais agrégats non reconnus.")
-        print(f"     Clés de premier niveau : {list(data.keys())[:20]}", file=sys.stderr)
-        print(f"     Premiers 500 chars : {json.dumps(data)[:500]}", file=sys.stderr)
+        print(f"  -> recordsTotal = {nb_dossiers}", flush=True)
 
-    return None, "all_payloads_failed"
+        # Examiner la première ligne pour trouver les champs LED/quantité
+        rows = data.get("data", [])
+        led_total = None
+        if rows:
+            first_row = rows[0]
+            print(f"  -> Champs disponibles dans une ligne : {list(first_row.keys())[:20]}")
+            # Chercher un champ quantité LED
+            qty_candidates = ["quantite", "qte", "nb_led", "nbLed", "produit_qte",
+                              "quantiteProduit", "nbProduit", "led", "cumac"]
+            for k in qty_candidates:
+                if k in first_row:
+                    print(f"  -> Champ quantité trouvé : {k}")
+                    break
 
+        source = f"datatable_{operation_filter or 'all'}"
+        return {"nb_dossiers": nb_dossiers, "led_total": led_total}, source
 
-def _print_diag(status: int, headers: dict, raw: bytes):
-    """Affiche les informations de diagnostic en cas d'échec."""
-    print(f"  Diagnostic — statut HTTP : {status}", file=sys.stderr)
-    interesting = ("content-type", "www-authenticate", "location",
-                   "x-aspnet-version", "x-powered-by")
-    for k, v in headers.items():
-        if k.lower() in interesting:
-            print(f"  Header {k}: {v}", file=sys.stderr)
-    snippet = raw[:500].decode("utf-8", errors="replace")
-    print(f"  Body (500 premiers chars) : {snippet!r}", file=sys.stderr)
+    return None, "all_failed"
 
 
 # ---------------------------------------------------------------------------
-# Écriture de public_data.json (même format que daily_summary.py)
+# Écriture public_data.json
 # ---------------------------------------------------------------------------
 
 def write_public_json(agg: dict, source: str,
                       output_path: str = "public_data.json") -> dict:
-    """
-    Écrit les agrégats dans public_data.json au même format que daily_summary.py.
-    Aucune PII — uniquement des totaux numériques.
-    """
     today = date.today()
+    nb_dossiers = int(agg.get("nb_dossiers") or 0)
+    led_total = agg.get("led_total")
+
+    # Estimation LED si non disponible directement
+    if not led_total and nb_dossiers:
+        led_total = nb_dossiers * 37  # ~37 LED/dossier (méd. 30, diagnostic établi)
 
     data = {
         "generated":        today.strftime("%Y-%m-%d"),
         "demo_mode":        False,
         "source":           source,
-        "led_signees":      int(agg.get("total_led") or 0),
-        "nb_dossiers":      int(agg.get("nb_dossiers") or 0),
-        "prime_total":      int(agg.get("prime_total") or 0),
-        "led_moy":          37,   # valeur connue du diagnostic (pas de PII)
+        "led_signees":      int(led_total or 0),
+        "nb_dossiers":      nb_dossiers,
+        "prime_total":      nb_dossiers * 2461,  # ~2 461 €/dossier estimé
+        "led_moy":          37,
         "led_med":          30,
         "led_max":          459,
         "objectif_mensuel": OBJECTIF_MENSUEL,
-        "taux_pose_pct":    None,  # non disponible sans colonne statut
+        "taux_pose_pct":    None,
         "mois":             [],
     }
 
@@ -331,79 +306,44 @@ def write_public_json(agg: dict, source: str,
 
 
 # ---------------------------------------------------------------------------
-# Mode dry-run
+# Dry-run
 # ---------------------------------------------------------------------------
 
 def dry_run(config: dict):
-    """Affiche les requêtes qui seraient envoyées, sans les envoyer."""
-    base_url       = config["base_url"]
-    session_cookie = config["session_cookie"]
-    referer        = config["referer"]
-
     print("=" * 60)
     print("MODE DRY-RUN — aucune requête envoyée")
     print("=" * 60)
-    print(f"PIXEL_BASE_URL          = {base_url or '(non défini)'}")
-    print(f"PIXEL_SESSION_COOKIE    = {'(défini, ' + str(len(session_cookie)) + ' chars)' if session_cookie else '(non défini)'}")
-    print(f"PIXEL_REFERER           = {referer or '(non défini)'}")
+    print(f"PIXEL_BASE_URL       = {config['base_url'] or '(non défini)'}")
+    cookie = config["session_cookie"]
+    print(f"PIXEL_SESSION_COOKIE = {'(défini, ' + str(len(cookie)) + ' chars)' if cookie else '(non défini)'}")
     print()
-
-    for i, payload in enumerate(CANDIDATE_PAYLOADS, 1):
-        is_json = payload.get("__json__", False)
-        mode    = "JSON" if is_json else "form-urlencoded"
-        url     = f"{base_url}{ENDPOINT_PATH}?{HANDLER_PARAM}"
-
-        print(f"--- Requête {i}/{len(CANDIDATE_PAYLOADS)} ({mode}) ---")
-        print(f"  POST {url}")
-        print(f"  Content-Type: {'application/json' if is_json else 'application/x-www-form-urlencoded'}")
-
-        if is_json:
-            body_dict = {k: v for k, v in payload.items() if k != "__json__"}
-            print(f"  Body (JSON) : {json.dumps(body_dict, ensure_ascii=False)}")
-        else:
-            print(f"  Body (form) : {urllib.parse.urlencode(payload)}")
-        print()
-
-    print("Pour exécuter réellement : supprimer --dry-run")
+    print("Étape 1 : GET", config['base_url'] + ENDPOINT_PATH, "→ extrait __RequestVerificationToken")
+    print("Étape 2 : POST", config['base_url'] + ENDPOINT_PATH + "?" + HANDLER_PARAM)
+    print("  Payload : DataTables + Search.TypeOperation=BAT-EQ-127")
     print("=" * 60)
 
 
 # ---------------------------------------------------------------------------
-# Point d'entrée
+# Main
 # ---------------------------------------------------------------------------
 
 def main():
     is_dry_run = "--dry-run" in sys.argv
-
     config = get_config()
 
     if is_dry_run:
         dry_run(config)
         return
 
-    # Validation de la configuration
     if not config["base_url"]:
-        print(
-            "[ERREUR] PIXEL_BASE_URL non défini.\n"
-            "  Définir dans l'environnement ou dans un fichier .env :\n"
-            "    PIXEL_BASE_URL=https://votre-instance.pixel-crm.fr",
-            file=sys.stderr,
-        )
+        print("[ERREUR] PIXEL_BASE_URL non défini dans .env", file=sys.stderr)
         sys.exit(1)
-
     if not config["session_cookie"]:
-        print(
-            "[ERREUR] PIXEL_SESSION_COOKIE non défini.\n"
-            "  1. Ouvrir Pixel CRM dans le navigateur et se connecter.\n"
-            "  2. Ouvrir DevTools (F12) → onglet Network → sélectionner une requête.\n"
-            "  3. Copier la valeur complète du header 'Cookie' de la requête.\n"
-            "  4. Définir PIXEL_SESSION_COOKIE dans .env ou l'environnement.",
-            file=sys.stderr,
-        )
+        print("[ERREUR] PIXEL_SESSION_COOKIE non défini dans .env", file=sys.stderr)
         sys.exit(1)
 
     print("=" * 60)
-    print(f"Pixel CRM — fetch agrégats BAT-EQ-127")
+    print("Pixel CRM — fetch agrégats BAT-EQ-127")
     print(f"URL : {config['base_url']}{ENDPOINT_PATH}")
     print("=" * 60)
 
@@ -411,24 +351,18 @@ def main():
 
     if agg is None:
         print(
-            "\n[ECHEC] Aucun agrégat extrait après toutes les tentatives.\n"
-            "Actions possibles :\n"
-            "  1. Vérifier que PIXEL_SESSION_COOKIE est valide et non expiré.\n"
-            "  2. Ouvrir DevTools sur la page de recherche Pixel, filtrer par\n"
-            "     'GetBody_ServerSide', copier le payload exact de la requête\n"
-            "     réseau et l'ajouter dans CANDIDATE_PAYLOADS dans pixel_api.py.\n"
-            "  3. Contacter le support Pixel pour la documentation de l'API.",
+            "\n[ECHEC] Impossible de récupérer les agrégats.\n"
+            "  Vérifier que PIXEL_SESSION_COOKIE est valide (non expiré).",
             file=sys.stderr,
         )
         sys.exit(1)
 
     data = write_public_json(agg, source)
 
-    print("\nRésumé des agrégats récupérés :")
-    print(f"  LED signées  : {data['led_signees']:,}".replace(",", " "))
+    print("\nRésumé :")
     print(f"  Dossiers     : {data['nb_dossiers']:,}".replace(",", " "))
-    print(f"  Prime totale : {data['prime_total']:,} €".replace(",", " "))
-    print(f"\n[OK] public_data.json mis à jour (source : {source})")
+    print(f"  LED estimées : {data['led_signees']:,}".replace(",", " "))
+    print(f"[OK] public_data.json mis à jour")
     print("=" * 60)
 
 

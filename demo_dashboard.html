@@ -6,531 +6,986 @@
 <title>Cockpit LED 30k — Énergie Responsable</title>
 <style>
 :root {
-  --navy: #1F3A5F;
-  --blue: #2E6FB7;
-  --amber: #E08600;
-  --green: #2E7D32;
-  --red: #C0392B;
-  --ink: #1c2530;
-  --muted: #5b6573;
-  --line: #dfe5ee;
-  --soft: #eef3fb;
-  --bg: #f0f4fa;
-  --card: #ffffff;
-  --r: 14px;
+  --navy:#1F3A5F; --blue:#2E6FB7; --amber:#E08600; --green:#2E7D32;
+  --red:#C0392B;  --ink:#1c2530; --muted:#5b6573; --line:#dfe5ee;
+  --soft:#eef3fb; --bg:#f0f4fa;  --card:#ffffff;  --r:14px;
+  --urgent:#C0392B; --relance:#e07000; --action:#E08600;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0e1621;
-    --card: #1a2535;
-    --ink: #e8edf5;
-    --muted: #8a9bb0;
-    --line: #2a3a50;
-    --soft: #1e2d42;
-    --navy: #4a7fc1;
-    --blue: #5a9fd4;
-  }
+@media(prefers-color-scheme:dark){
+  :root{--bg:#0e1621;--card:#1a2535;--ink:#e8edf5;--muted:#8a9bb0;
+        --line:#2a3a50;--soft:#1e2d42;--navy:#4a7fc1;--blue:#5a9fd4;}
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body {
-  font-family: -apple-system, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  line-height: 1.45;
-  min-height: 100dvh;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+     background:var(--bg);color:var(--ink);line-height:1.45;min-height:100dvh}
 
-/* HEADER */
-.hdr {
-  background: linear-gradient(145deg, #1F3A5F 0%, #2b5899 100%);
-  color: #fff;
-  padding: env(safe-area-inset-top, 12px) 16px 18px;
-  padding-top: max(env(safe-area-inset-top), 16px);
-}
-.hdr-tag { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; opacity: .75; margin-bottom: 4px; }
-.hdr h1 { font-size: 21px; font-weight: 700; line-height: 1.2; }
-.hdr-sub { font-size: 12px; opacity: .8; margin-top: 4px; }
+/* ── HEADER ──────────────────────────────── */
+.hdr{background:linear-gradient(145deg,#1F3A5F 0%,#2b5899 100%);
+     color:#fff;padding:env(safe-area-inset-top,12px) 16px 16px;
+     padding-top:max(env(safe-area-inset-top),16px)}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.hdr-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.7}
+.hdr h1{font-size:20px;font-weight:700;line-height:1.2}
+.badge-live{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;
+            font-weight:700;letter-spacing:.06em;background:#27ae60;color:#fff;margin-left:6px;
+            vertical-align:middle;animation:pulse-live 2s ease-in-out infinite}
+.badge-demo{background:#f5d77e;color:#7a4900}
+@keyframes pulse-live{0%,100%{opacity:1}50%{opacity:.7}}
+.hdr-date{font-size:11px;opacity:.75;margin-top:2px}
 
-/* PROGRESS BAR */
-.progress-wrap {
-  background: rgba(255,255,255,.12);
-  border-radius: 999px;
-  height: 8px;
-  margin-top: 14px;
-  overflow: hidden;
-}
-.progress-bar {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #ffd24a, #ffb300);
-  transition: width .6s ease;
-}
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  opacity: .85;
-  margin-top: 5px;
-}
+/* Gauge taux pose */
+.pose-gauge{margin-top:12px}
+.pose-gauge-label{display:flex;justify-content:space-between;font-size:11px;opacity:.85;margin-bottom:5px}
+.pose-gauge-track{background:rgba(255,255,255,.15);border-radius:999px;height:10px;overflow:hidden}
+.pose-gauge-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#e74c3c,#e67e22);
+                 transition:width 1s cubic-bezier(.4,0,.2,1)}
+.pose-gauge-target{display:flex;justify-content:space-between;font-size:10px;opacity:.65;margin-top:4px}
 
-/* SCROLL CONTAINER */
-.scroll { padding: 14px 14px calc(env(safe-area-inset-bottom) + 40px); max-width: 520px; margin: 0 auto; }
+/* ── SCROLL ──────────────────────────────── */
+.scroll{padding:14px 14px calc(env(safe-area-inset-bottom)+50px);max-width:520px;margin:0 auto}
 
-/* KPI GRID */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.kpi-grid.tri { grid-template-columns: 1fr 1fr 1fr; }
-.kpi {
-  background: var(--card);
-  border-radius: var(--r);
-  padding: 14px 14px 12px;
-  border: 1px solid var(--line);
-}
-.kpi .val { font-size: 24px; font-weight: 700; color: var(--navy); line-height: 1.1; }
-.kpi .lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
-.kpi.accent { background: var(--navy); border-color: transparent; }
-.kpi.accent .val { color: #ffd24a; font-size: 26px; }
-.kpi.accent .lbl { color: rgba(255,255,255,.75); }
-.kpi.warn { border-left: 3px solid var(--amber); }
-.kpi.danger { border-left: 3px solid var(--red); }
-.kpi.ok { border-left: 3px solid var(--green); }
+/* ── SEC TITLE ───────────────────────────── */
+.sec-title{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;
+           letter-spacing:.14em;margin:20px 0 10px}
+.sec-title.first{margin-top:0}
 
-/* SECTION TITLE */
-.sec-title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  margin: 18px 0 8px;
-}
+/* ── QUICKWINS ───────────────────────────── */
+.qw-urgent,.qw-relance,.qw-action{
+  border-radius:var(--r);padding:14px 16px;margin-bottom:10px;
+  opacity:0;transform:translateY(16px);
+  animation:slide-in .4s ease forwards}
+.qw-urgent{ background:linear-gradient(135deg,#7a1212 0%,#b32020 100%);color:#fff }
+.qw-relance{background:linear-gradient(135deg,#7a3800 0%,#c85e00 100%);color:#fff }
+.qw-action{ background:linear-gradient(135deg,#5a4200 0%,#a06800 100%);color:#fff }
+.qw-urgent{ animation-delay:.05s }
+.qw-relance{animation-delay:.15s }
+.qw-action{ animation-delay:.25s }
+@keyframes slide-in{to{opacity:1;transform:translateY(0)}}
 
-/* CARD */
-.card {
-  background: var(--card);
-  border-radius: var(--r);
-  border: 1px solid var(--line);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-}
-.card h3 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 10px; }
+.qw-rank{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+         opacity:.75;margin-bottom:4px}
+.qw-main{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.qw-title{font-size:15px;font-weight:700;line-height:1.25}
+.qw-n{font-size:11px;opacity:.85;margin-top:2px}
+.qw-led-big{font-size:28px;font-weight:800;color:#ffd24a;white-space:nowrap;line-height:1}
+.qw-led-lbl{font-size:9px;opacity:.7;margin-top:2px;text-align:right}
+.qw-action-txt{font-size:12px;opacity:.88;margin-top:8px;padding-top:8px;
+               border-top:1px solid rgba(255,255,255,.2);line-height:1.45}
+.qw-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.qw-chip{font-size:10.5px;padding:3px 9px;border-radius:999px;
+         background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2)}
+.qw-chip.old{background:rgba(255,0,0,.25);border-color:rgba(255,100,100,.4)}
+.qw-chip.top5{background:rgba(255,255,255,.1)}
 
-/* FUNNEL */
-.funnel { display: flex; flex-direction: column; gap: 6px; }
-.funnel-step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.funnel-bar-wrap {
-  flex: 1;
-  background: var(--soft);
-  border-radius: 6px;
-  height: 28px;
-  overflow: hidden;
-  position: relative;
-}
-.funnel-bar {
-  height: 100%;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  padding-left: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #fff;
-  white-space: nowrap;
-  transition: width .5s ease;
-}
-.funnel-label { font-size: 11px; color: var(--muted); width: 72px; text-align: right; flex-shrink: 0; }
-.funnel-pct { font-size: 11px; font-weight: 700; width: 38px; flex-shrink: 0; }
+/* Urgence pulse */
+.pulse-ring{display:inline-block;width:8px;height:8px;border-radius:50%;
+            background:#ffd24a;margin-right:6px;
+            animation:ring-pulse 1.4s ease-in-out infinite}
+@keyframes ring-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.5}}
 
-/* ALERT BOX */
-.alert {
-  border-radius: var(--r);
-  padding: 12px 14px;
-  font-size: 12.5px;
-  margin-bottom: 10px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.alert.amber { background: #fff8e7; border: 1px solid #f5d77e; color: #7a4900; }
-.alert.blue  { background: #eaf3ff; border: 1px solid #b8d6f5; color: #1a3d6d; }
-.alert.green { background: #eafaf1; border: 1px solid #a8dfbe; color: #1a5232; }
-@media (prefers-color-scheme: dark) {
-  .alert.amber { background: #2a1e00; border-color: #6b4e00; color: #ffc94a; }
-  .alert.blue  { background: #0e1e35; border-color: #1d4570; color: #7fb9f0; }
-  .alert.green { background: #0c2418; border-color: #1a5232; color: #6fcf97; }
-}
-.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: -1px; }
-.alert b { display: block; font-size: 13px; margin-bottom: 2px; }
+/* ── MINI KPI ROW ────────────────────────── */
+.kpi-row{display:flex;gap:8px;margin-bottom:10px}
+.kpi-mini{flex:1;background:var(--card);border:1px solid var(--line);
+          border-radius:var(--r);padding:11px 12px;text-align:center}
+.kpi-mini .v{font-size:20px;font-weight:700;color:var(--navy)}
+.kpi-mini .l{font-size:10px;color:var(--muted);margin-top:2px}
+.kpi-mini.accent{background:var(--navy);border-color:transparent}
+.kpi-mini.accent .v{color:#ffd24a;font-size:22px}
+.kpi-mini.accent .l{color:rgba(255,255,255,.7)}
+.kpi-mini.ok   .v{color:var(--green)}
+.kpi-mini.warn .v{color:var(--amber)}
+.kpi-mini.danger .v{color:var(--red)}
 
-/* MINI BARS */
-.mini-bar-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 7px;
-}
-.mini-bar-lbl { font-size: 11px; color: var(--muted); width: 44px; flex-shrink: 0; }
-.mini-bar-track { flex: 1; background: var(--soft); border-radius: 4px; height: 18px; overflow: hidden; }
-.mini-bar-fill { height: 100%; border-radius: 4px; background: var(--blue); }
-.mini-bar-val { font-size: 11px; color: var(--ink); font-weight: 600; width: 50px; text-align: right; flex-shrink: 0; }
+/* ── DELTA BAND ──────────────────────────── */
+.delta-band{background:var(--soft);border:1px solid var(--line);border-radius:10px;
+            padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;
+            gap:16px;align-items:center;flex-wrap:wrap}
+.delta-chip{font-weight:700}
+.delta-pos{color:var(--green)}.delta-neg{color:var(--red)}.delta-0{color:var(--muted)}
 
-/* CHECKLIST */
-.checklist { display: flex; flex-direction: column; gap: 8px; }
-.check-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 13px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--soft);
-  border: 1px solid var(--line);
-}
-.check-item .ci-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-.check-item .ci-body { flex: 1; }
-.check-item .ci-title { font-weight: 600; font-size: 13px; }
-.check-item .ci-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
-.check-item.done { background: #eafaf1; border-color: #a8dfbe; }
-.check-item.active { background: #fff8e7; border-color: #f5d77e; }
-.check-item.todo { opacity: .7; }
-@media (prefers-color-scheme: dark) {
-  .check-item.done { background: #0c2418; border-color: #1a5232; }
-  .check-item.active { background: #2a1e00; border-color: #6b4e00; }
-}
+/* ── PIPELINE ENTONNOIR ──────────────────── */
+.funnel{display:flex;flex-direction:column;gap:7px}
+.funnel-step{display:flex;align-items:center;gap:10px}
+.funnel-lbl{font-size:11px;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
+.funnel-track{flex:1;background:var(--soft);border-radius:6px;height:30px;overflow:hidden;position:relative}
+.funnel-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:9px;
+            font-size:11px;font-weight:600;color:#fff;white-space:nowrap;
+            width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.funnel-pct{font-size:11px;font-weight:700;width:36px;flex-shrink:0}
 
-/* FOOTER */
-.foot {
-  text-align: center;
-  font-size: 10.5px;
-  color: var(--muted);
-  margin-top: 20px;
-  padding-bottom: 6px;
-}
+/* ── PIPELINE STAGES ─────────────────────── */
+.pipe-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+           padding:12px 14px;margin-bottom:8px}
+.pipe-card.urgence-urgent {border-left:4px solid var(--red)}
+.pipe-card.urgence-relance{border-left:3px solid var(--relance)}
+.pipe-card.urgence-action {border-left:3px solid var(--amber)}
+.pipe-card.urgence-ok     {border-left:3px solid var(--green)}
+.pipe-card.urgence-normal {border-left:3px solid var(--blue)}
+.pipe-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.pipe-name{font-size:13px;font-weight:600}
+.pipe-count{font-size:20px;font-weight:700;color:var(--navy)}
+.pipe-led{font-size:11px;color:var(--muted);margin-bottom:6px}
+.pipe-bar-track{height:5px;background:var(--line);border-radius:999px;overflow:hidden}
+.pipe-bar-fill{height:100%;border-radius:999px;width:0;transition:width 1s .3s ease}
+.pipe-conseil{font-size:10.5px;color:var(--muted);font-style:italic;margin-top:5px}
 
-/* NUMBER FORMATTING */
-@media (max-width: 380px) {
-  .kpi .val { font-size: 20px; }
-  .kpi.accent .val { font-size: 22px; }
-  .hdr h1 { font-size: 18px; }
-}
+/* Dépôt progress */
+.depose-wrap{background:var(--soft);border:1px solid var(--line);border-radius:var(--r);
+             padding:12px 14px;margin-top:6px}
+.depose-track{height:12px;background:var(--line);border-radius:999px;overflow:hidden;margin:6px 0}
+.depose-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#27ae60,#2ecc71);
+             width:0;transition:width 1.2s ease}
+.depose-vals{display:flex;justify-content:space-between;font-size:11px}
+
+/* ── CHECKLIST ───────────────────────────── */
+.checklist{display:flex;flex-direction:column;gap:7px}
+.ci{display:flex;align-items:flex-start;gap:10px;font-size:13px;padding:10px 12px;
+    border-radius:10px;background:var(--soft);border:1px solid var(--line)}
+.ci-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.ci-body{flex:1}
+.ci-title{font-weight:600;font-size:13px}
+.ci-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+.ci.done{background:#eafaf1;border-color:#a8dfbe}
+@media(prefers-color-scheme:dark){.ci.done{background:#0c2418;border-color:#1a5232}}
+
+/* ── ALERT ───────────────────────────────── */
+.alert{border-radius:var(--r);padding:11px 13px;font-size:12.5px;margin-bottom:10px;
+       display:flex;gap:10px;align-items:flex-start}
+.alert.amber{background:#fff8e7;border:1px solid #f5d77e;color:#7a4900}
+@media(prefers-color-scheme:dark){.alert.amber{background:#2a1e00;border-color:#6b4e00;color:#ffc94a}}
+.alert-icon{font-size:18px;flex-shrink:0}
+.alert b{display:block;font-size:13px;margin-bottom:2px}
+
+/* ── FOOTER ──────────────────────────────── */
+.foot{text-align:center;font-size:10.5px;color:var(--muted);margin-top:24px;padding-bottom:6px}
+
+/* ── SIMULATEUR ──────────────────────── */
+.sim-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;margin-bottom:10px}
+.sim-obj{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.sim-obj-led{font-size:26px;font-weight:800;color:var(--navy);transition:color .3s}
+.sim-obj-led.reached{color:var(--green)}
+.sim-obj-lbl{font-size:11px;color:var(--muted)}
+.sim-track{height:16px;background:var(--soft);border-radius:999px;overflow:hidden;
+  margin:6px 0;position:relative;border:1px solid var(--line)}
+.sim-fill{height:100%;border-radius:999px;width:0;
+  background:linear-gradient(90deg,#E08600,#27ae60);transition:width .4s ease}
+.sim-target-line{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.4;left:100%}
+.sim-pct{text-align:center;font-size:12px;font-weight:600;margin-bottom:14px}
+.sim-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.sim-row-info{flex:1;min-width:0}
+.sim-row-name{font-size:12.5px;font-weight:600}
+.sim-row-sub{font-size:10.5px;color:var(--muted)}
+.sim-stepper{display:flex;align-items:center;gap:0;flex-shrink:0}
+.sim-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--soft);color:var(--ink);font-size:17px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;line-height:1;user-select:none}
+.sim-btn:active{background:var(--blue);color:#fff}
+.sim-val{width:42px;text-align:center;font-size:14px;font-weight:700}
+.sim-led{font-size:11px;font-weight:600;color:var(--green);width:60px;text-align:right;flex-shrink:0}
+.sim-actions{display:flex;gap:8px;margin-top:12px}
+.sim-max,.sim-reset{flex:1;padding:9px;border-radius:10px;border:none;cursor:pointer;
+  font-family:inherit;font-size:12px;font-weight:600}
+.sim-max{background:var(--green);color:#fff}
+.sim-reset{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+
+/* ── BRIEF BUTTON ────────────────────── */
+.brief-btn{width:100%;border:none;border-radius:14px;cursor:pointer;font-family:inherit;
+  padding:13px 16px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;
+  gap:2px;background:linear-gradient(135deg,#1F3A5F 0%,#2E6FB7 100%);color:#fff;
+  box-shadow:0 4px 14px rgba(46,111,183,.35);transition:transform .15s}
+.brief-btn:active{transform:scale(.98)}
+.brief-btn>span:first-child{font-size:15px;font-weight:700}
+.brief-btn-sub{font-size:10.5px;opacity:.75}
+
+/* ── SEARCH BAR ──────────────────────── */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-input{width:100%;padding:12px 40px 12px 38px;border-radius:12px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  font-size:14px;font-family:inherit;outline:none;transition:border .2s,box-shadow .2s}
+.search-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,111,183,.15)}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:15px;opacity:.5;pointer-events:none}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;border:none;background:var(--soft);
+  color:var(--muted);font-size:14px;cursor:pointer;display:none;align-items:center;
+  justify-content:center;line-height:1}
+.search-results{margin-bottom:12px}
+
+/* QW card clickable affordance */
+.qw-urgent,.qw-relance,.qw-action{cursor:pointer;transition:transform .15s,box-shadow .15s}
+.qw-urgent:active,.qw-relance:active,.qw-action:active{transform:scale(.985)}
+.qw-tap{font-size:10.5px;opacity:.7;margin-top:8px;display:flex;align-items:center;gap:4px}
+
+/* ── DRAWER ──────────────────────────── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--bg);
+  border-radius:18px 18px 0 0;max-height:88dvh;display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  max-width:520px;margin:0 auto}
+.drawer.open{transform:translateY(0)}
+.drawer-grip{width:38px;height:4px;border-radius:2px;background:var(--line);
+  margin:8px auto 4px}
+.drawer-head{padding:6px 16px 12px;border-bottom:1px solid var(--line)}
+.drawer-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.drawer-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.drawer-tools{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line);
+  flex-wrap:wrap;align-items:center}
+.sort-btn{font-size:11.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);color:var(--muted);cursor:pointer;font-family:inherit}
+.sort-btn.active{background:var(--navy);color:#fff;border-color:transparent}
+.copy-btn{margin-left:auto;font-size:11.5px;padding:7px 14px;border-radius:999px;
+  border:none;background:var(--green);color:#fff;cursor:pointer;font-weight:600;
+  font-family:inherit;display:flex;align-items:center;gap:5px}
+.copy-btn:active{opacity:.8}
+.drawer-list{overflow-y:auto;padding:8px 12px calc(env(safe-area-inset-bottom)+16px);flex:1}
+
+/* Dossier row */
+.dos-row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
+  background:var(--card);border:1px solid var(--line);margin-bottom:6px}
+.dos-rank{font-size:11px;font-weight:700;color:var(--muted);width:24px;text-align:center;flex-shrink:0}
+.dos-ref{flex:1;font-size:13.5px;font-weight:600;font-family:ui-monospace,Menlo,monospace;
+  letter-spacing:.02em}
+.dos-led{font-size:15px;font-weight:700;color:var(--navy);text-align:right}
+.dos-led-lbl{font-size:9px;color:var(--muted)}
+.dos-age{font-size:10.5px;padding:3px 8px;border-radius:999px;background:var(--soft);
+  color:var(--muted);flex-shrink:0;min-width:42px;text-align:center}
+.dos-age.old{background:#fdecea;color:#7a1a1a;font-weight:600}
+.dos-copy{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--card);color:var(--muted);cursor:pointer;flex-shrink:0;font-size:13px}
+.dos-copy:active{background:var(--soft)}
+@media(prefers-color-scheme:dark){.dos-age.old{background:#2a0a0a;color:#ff8a80}}
+
+/* ── TOAST ───────────────────────────── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;
+  font-size:13px;font-weight:600;z-index:60;opacity:0;transition:opacity .25s,transform .25s;
+  pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* responsive */
+@media(max-width:370px){.qw-led-big{font-size:22px}.hdr h1{font-size:17px}}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div class="hdr">
-  <div class="hdr-tag">Énergie Responsable · BAT-EQ-127</div>
-  <h1>Cockpit LED 30 000</h1>
-  <div class="hdr-sub" id="hdrSub">Agrégats du 03/06/2026 · données anonymisées</div>
-  <div class="progress-wrap">
-    <div class="progress-bar" style="width:100%"></div>
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-tag">Énergie Responsable · BAT-EQ-127</div>
+      <h1>Cockpit LED 30k <span id="liveBadge" class="badge-live">LIVE</span></h1>
+      <div class="hdr-date" id="hdrDate">Chargement…</div>
+    </div>
   </div>
-  <div class="progress-label">
-    <span>196 177 LED signées</span>
-    <span>×6,5 l'objectif mensuel ✓</span>
+  <!-- Gauge taux de pose -->
+  <div class="pose-gauge">
+    <div class="pose-gauge-label">
+      <span>Taux de pose <b id="gaugePct">—</b></span>
+      <span id="gaugeGap" style="color:#ffd24a"></span>
+    </div>
+    <div class="pose-gauge-track">
+      <div class="pose-gauge-fill" id="gaugeFill" style="width:0%"></div>
+    </div>
+    <div class="pose-gauge-target">
+      <span id="hdrLed">— LED signées</span>
+      <span>Cible ≥95%</span>
+    </div>
   </div>
 </div>
 
-<!-- SCROLL AREA -->
+<!-- SCROLL -->
 <div class="scroll">
 
-  <!-- KPIs PRINCIPAUX -->
-  <div class="sec-title">KPIs clés</div>
-  <div class="kpi-grid">
-    <div class="kpi accent" style="grid-column: 1 / -1;">
-      <div class="val" id="kLed">196 177</div>
-      <div class="lbl">LED signées (total portefeuille)</div>
+  <!-- 📋 BRIEF DU JOUR (copiable) ───────────── -->
+  <button class="brief-btn" id="briefBtn" style="display:none">
+    <span>📋 Copier le brief du jour</span>
+    <span class="brief-btn-sub">pour WhatsApp / Slack / standup</span>
+  </button>
+
+  <!-- 🔍 RECHERCHE DOSSIER ─────────────────── -->
+  <div class="search-wrap" id="searchWrap" style="display:none">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput"
+           placeholder="Rechercher un n° de dossier…" autocomplete="off">
+    <button class="search-clear" id="searchClear">✕</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+
+  <!-- ①  ACTIONS DU JOUR ──────────────────── -->
+  <div class="sec-title first" id="qwTitle" style="display:none">
+    ⚡ Actions du jour <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:.6">· touchez une carte pour voir les dossiers</span>
+  </div>
+  <div id="qwWrap"></div>
+
+  <!-- Delta J-1 -->
+  <div id="deltaWrap" style="display:none"></div>
+
+  <!-- 🎯 SIMULATEUR OBJECTIF ──────────────── -->
+  <div class="sec-title" id="simTitle" style="display:none">🎯 Simulateur — atteins ton objectif</div>
+  <div class="sim-card" id="simCard" style="display:none">
+    <div class="sim-obj">
+      <div><span class="sim-obj-led" id="simLed">0</span>
+           <span class="sim-obj-lbl"> / <span id="simObjTarget">30 000</span> LED</span></div>
+      <div class="sim-obj-lbl" id="simStatus"></div>
     </div>
-    <div class="kpi">
-      <div class="val" id="kDoss">5 280</div>
-      <div class="lbl">dossiers signés</div>
-    </div>
-    <div class="kpi">
-      <div class="val" id="kPrime">13,0 M€</div>
-      <div class="lbl">prime CEE totale</div>
-    </div>
-    <div class="kpi">
-      <div class="val" id="kMoy">37</div>
-      <div class="lbl">LED/dossier (moy.)</div>
-    </div>
-    <div class="kpi">
-      <div class="val" id="kMed">30</div>
-      <div class="lbl">médiane LED/dossier</div>
+    <div class="sim-track"><div class="sim-fill" id="simFill"></div></div>
+    <div class="sim-pct" id="simPct">Sélectionne ce que tu vas traiter aujourd'hui</div>
+    <div id="simRows"></div>
+    <div class="sim-actions">
+      <button class="sim-max"   id="simMax">⚡ Tout traiter</button>
+      <button class="sim-reset" id="simReset">↺ Réinitialiser</button>
     </div>
   </div>
 
-  <div class="kpi-grid tri">
-    <div class="kpi">
-      <div class="val">30 000</div>
-      <div class="lbl">objectif / mois</div>
+  <!-- ②  KPIs ─────────────────────────────── -->
+  <div class="sec-title">Portefeuille</div>
+  <div class="kpi-row">
+    <div class="kpi-mini accent">
+      <div class="v" id="kLed">—</div>
+      <div class="l">LED signées</div>
     </div>
-    <div class="kpi">
-      <div class="val">1 500</div>
-      <div class="lbl">cible / jour</div>
+    <div class="kpi-mini">
+      <div class="v" id="kDoss">—</div>
+      <div class="l">dossiers</div>
     </div>
-    <div class="kpi">
-      <div class="val">200 €</div>
-      <div class="lbl">prime / pers.</div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi-mini">
+      <div class="v" id="kPrime">—</div>
+      <div class="l">prime totale</div>
+    </div>
+    <div class="kpi-mini">
+      <div class="v" id="kMoy">—</div>
+      <div class="l">LED / dossier</div>
+    </div>
+    <div class="kpi-mini danger" id="kTauxWrap">
+      <div class="v" id="kTaux">—</div>
+      <div class="l">taux de pose</div>
     </div>
   </div>
 
-  <!-- DIAGNOSTIC -->
-  <div class="sec-title">Diagnostic — frein principal</div>
-
-  <div class="alert amber">
-    <div class="alert-icon">⚠️</div>
-    <div>
-      <b>Le stock n'est pas le problème</b>
-      196 177 LED signées = ×6,5 l'objectif. Le frein est le <strong>débit de traitement</strong> (contrôle → dépôt) et le <strong>taux de pose</strong>.
-    </div>
+  <!-- ③  FUNNEL ────────────────────────────── -->
+  <div class="sec-title" id="funnelTitle" style="display:none">Pipeline — entonnoir réel</div>
+  <div style="background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:none" id="funnelCard">
+    <div class="funnel" id="funnelWrap"></div>
+    <div style="font-size:10.5px;color:var(--muted);margin-top:8px" id="funnelNote"></div>
   </div>
 
-  <!-- FUNNEL POSE -->
-  <div class="card">
-    <h3>Entonnoir — taux de pose actuel vs cible</h3>
-    <div class="funnel">
-      <div class="funnel-step">
-        <div class="funnel-label">Signées</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:100%; background:#2E6FB7;">196 177</div>
-        </div>
-        <div class="funnel-pct" style="color:#2E6FB7;">100%</div>
-      </div>
-      <div class="funnel-step">
-        <div class="funnel-label">Contrôlées</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:85%; background:#5a9fd4;">~166 750</div>
-        </div>
-        <div class="funnel-pct" style="color:#5a9fd4;">~85%</div>
-      </div>
-      <div class="funnel-step">
-        <div class="funnel-label">Posées</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:67%; background:#E08600;">~131 440</div>
-        </div>
-        <div class="funnel-pct" style="color:#E08600;">~67%</div>
-      </div>
-      <div class="funnel-step">
-        <div class="funnel-label">Cible pose</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:95%; background:#2E7D32; opacity:.4;">≥95%</div>
-        </div>
-        <div class="funnel-pct" style="color:#2E7D32;">≥95%</div>
-      </div>
-    </div>
-    <div style="font-size:10.5px; color:var(--muted); margin-top:8px;">* Taux de pose estimé 60-75% · cible ≥95% pour déblocage dépôt</div>
-  </div>
+  <!-- ④  PIPELINE BETOOL ───────────────────── -->
+  <div class="sec-title" id="pipeTitle" style="display:none">Détail par étape (BETOOL)</div>
+  <div id="pipeWrap"></div>
 
-  <!-- RÉPARTITION DOSSIERS -->
-  <div class="sec-title">Répartition dossiers par taille</div>
-  <div class="card">
-    <h3>Distribution LED / dossier</h3>
-    <div>
-      <div class="mini-bar-row">
-        <div class="mini-bar-lbl">1-9</div>
-        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:18%; background:#5a9fd4;"></div></div>
-        <div class="mini-bar-val">~950</div>
-      </div>
-      <div class="mini-bar-row">
-        <div class="mini-bar-lbl">10-19</div>
-        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:22%; background:#5a9fd4;"></div></div>
-        <div class="mini-bar-val">~1 160</div>
-      </div>
-      <div class="mini-bar-row">
-        <div class="mini-bar-lbl">20-29</div>
-        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:35%; background:#2E6FB7;"></div></div>
-        <div class="mini-bar-val">~1 848</div>
-      </div>
-      <div class="mini-bar-row">
-        <div class="mini-bar-lbl">30-49</div>
-        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:55%; background:#2E6FB7;"></div></div>
-        <div class="mini-bar-val">~2 904</div>
-      </div>
-      <div class="mini-bar-row">
-        <div class="mini-bar-lbl">50-99</div>
-        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:30%; background:#1F3A5F;"></div></div>
-        <div class="mini-bar-val">~1 584</div>
-      </div>
-      <div class="mini-bar-row">
-        <div class="mini-bar-lbl">100+</div>
-        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:14%; background:#E08600;"></div></div>
-        <div class="mini-bar-val">~739</div>
-      </div>
-    </div>
-    <div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Valeurs estimées · médiane 30 · max 459 LED/dossier</div>
-  </div>
-
-  <!-- SECTEUR -->
-  <div class="card">
-    <h3>Répartition secteur</h3>
-    <div class="mini-bar-row">
-      <div class="mini-bar-lbl">Entrepôts</div>
-      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:98%; background:#2E7D32;"></div></div>
-      <div class="mini-bar-val">~98%</div>
-    </div>
-    <div class="mini-bar-row">
-      <div class="mini-bar-lbl">Autres</div>
-      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:2%; background:#5b6573;"></div></div>
-      <div class="mini-bar-val">~2%</div>
-    </div>
-    <div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Quasi 100% secteur Entrepôts · cohérent BAT-EQ-127</div>
-  </div>
-
-  <!-- BACKLOG SPRINT -->
-  <div class="sec-title">Sprint — état des actions</div>
+  <!-- ⑤  SPRINT ───────────────────────────── -->
+  <div class="sec-title">Sprint — état d'avancement</div>
   <div class="checklist">
-    <div class="check-item done">
-      <div class="ci-icon">✅</div>
-      <div class="ci-body">
-        <div class="ci-title">Diagnostic & données</div>
-        <div class="ci-sub">196 177 LED signées analysées · frein identifié (pose + traitement)</div>
-      </div>
-    </div>
-    <div class="check-item done">
-      <div class="ci-icon">✅</div>
-      <div class="ci-body">
-        <div class="ci-title">Dashboards HTML générables</div>
-        <div class="ci-sub">build_dashboard_interactive.py + MVP · cockpit Excel</div>
-      </div>
-    </div>
-    <div class="check-item active">
-      <div class="ci-icon">🔄</div>
-      <div class="ci-body">
-        <div class="ci-title">S0 — Feed enrichi statut/pose</div>
-        <div class="ci-sub">Via support Pixel (export 500 colonnes) ou endpoint agrégats · en cours</div>
-      </div>
-    </div>
-    <div class="check-item todo">
-      <div class="ci-icon">⏳</div>
-      <div class="ci-body">
-        <div class="ci-title">S1 — ETL → Postgres → Metabase</div>
-        <div class="ci-sub">infra/etl.py prêt · brancher sur données live</div>
-      </div>
-    </div>
-    <div class="check-item todo">
-      <div class="ci-icon">⏳</div>
-      <div class="ci-body">
-        <div class="ci-title">S2 — Stack Docker + refresh 15 min</div>
-        <div class="ci-sub">infra/refresh.sh · déploiement auto-hébergé</div>
-      </div>
-    </div>
-    <div class="check-item todo">
-      <div class="ci-icon">💡</div>
-      <div class="ci-body">
-        <div class="ci-title">S3 — Résumé quotidien Claude + MCP</div>
-        <div class="ci-sub">Questions en langage naturel sur le pipeline</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMMENT CONNECTER LES DONNÉES -->
-  <div class="sec-title">Connecter les données réelles</div>
-  <div class="alert blue">
-    <div class="alert-icon">📱</div>
-    <div>
-      <b>Depuis un poste de bureau</b>
-      Exporter Pixel CRM (« eq 127 pour liste ») → déposer dans <code>data/</code> → lancer <code>python build_dashboard_interactive.py</code>
-    </div>
-  </div>
-  <div class="alert green">
-    <div class="alert-icon">☁️</div>
-    <div>
-      <b>Voir sur iPhone sans CSV</b>
-      Cette page est disponible via GitHub Pages après activation dans les Settings du dépôt (<em>Pages → Source → branche main</em>).
-    </div>
+    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
+      <div class="ci-title">Diagnostic & données réelles</div>
+      <div class="ci-sub">233 504 LED signées · frein identifié : pose 72% + traitement</div>
+    </div></div>
+    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
+      <div class="ci-title">S0 — Feed enrichi BETOOL + Pixel CRM</div>
+      <div class="ci-sub">taux pose réel 72% · 553 dossiers en action · pipeline live</div>
+    </div></div>
+    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
+      <div class="ci-title">S1 — ETL Postgres + 8 vues Metabase</div>
+      <div class="ci-sub">infra/etl.py + betool_lead · v_betool_pipeline / action / kpi</div>
+    </div></div>
+    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
+      <div class="ci-title">S2 — Refresh auto + snapshots J-1</div>
+      <div class="ci-sub">infra/refresh.sh · cron */20 · snapshots/ pour delta</div>
+    </div></div>
+    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
+      <div class="ci-title">S3 — Brief quotidien + questions NL</div>
+      <div class="ci-sub">daily_brief.py · ask_pipeline.py -i · contexte quickwins</div>
+    </div></div>
   </div>
 
   <div class="foot">
-    Cockpit LED 30k · Énergie Responsable · données agrégées anonymisées · 03/06/2026<br>
-    Aucune donnée client (PII) dans ce fichier
+    Cockpit LED 30k · Énergie Responsable · données agrégées anonymisées<br>
+    <span id="footDate">—</span> · aucune donnée client (PII)
   </div>
 
 </div><!-- /scroll -->
 
+<!-- DRAWER (liste dossiers) -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-grip"></div>
+  <div class="drawer-head">
+    <div class="drawer-title" id="drawerTitle">—</div>
+    <div class="drawer-sub" id="drawerSub">—</div>
+  </div>
+  <div class="drawer-tools">
+    <button class="sort-btn active" id="sortLed" data-sort="led">Plus de LED</button>
+    <button class="sort-btn" id="sortAge" data-sort="age">Plus anciens</button>
+    <button class="copy-btn" id="copyList">📋 Copier la liste</button>
+  </div>
+  <div class="drawer-list" id="drawerList"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
-(function () {
-  'use strict';
+(function(){
+'use strict';
 
-  /* ── Helpers ─────────────────────────────────────────── */
-  function fmtInt(n) {
-    return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+/* ── helpers ─────────────────────────── */
+function fi(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
+function fm(n){return(n/1e6).toFixed(1).replace('.',',')+' M€'}
+function el(id){return document.getElementById(id)}
+function txt(id,v){var e=el(id);if(e)e.textContent=v}
+function show(id){var e=el(id);if(e)e.style.display=''}
+function dateFr(s){var p=s.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s}
+
+/* ── animate numbers ─────────────────── */
+function animNum(el_id, target, fmt, duration){
+  var e=document.getElementById(el_id); if(!e) return;
+  var start=performance.now(), from=0;
+  function step(ts){
+    var p=Math.min((ts-start)/duration,1);
+    var ease=1-Math.pow(1-p,3);
+    e.textContent=fmt(from+(target-from)*ease);
+    if(p<1) requestAnimationFrame(step);
+    else e.textContent=fmt(target);
   }
-  function fmtM(n) {
-    return (n / 1e6).toFixed(1).replace('.', ',') + ' M€';
-  }
-  function setText(id, val) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = val;
-  }
+  requestAnimationFrame(step);
+}
 
-  /* ── Badge LIVE / DÉMO ───────────────────────────────── */
-  function injectBadge(isDemo) {
-    var badge = document.createElement('span');
-    badge.style.cssText = [
-      'display:inline-block',
-      'margin-left:8px',
-      'padding:2px 8px',
-      'border-radius:999px',
-      'font-size:10px',
-      'font-weight:700',
-      'letter-spacing:.08em',
-      'vertical-align:middle',
-      isDemo
-        ? 'background:#f5d77e;color:#7a4900;'
-        : 'background:#27ae60;color:#fff;'
-    ].join(';');
-    badge.textContent = isDemo ? 'DÉMO' : 'LIVE';
-    var h1 = document.querySelector('.hdr h1');
-    if (h1) h1.appendChild(badge);
-  }
+/* ── bars animate ────────────────────── */
+function animBar(el_id, pct, delay){
+  setTimeout(function(){
+    var e=document.getElementById(el_id);
+    if(e) e.style.width=Math.max(pct,1)+'%';
+  }, delay||0);
+}
 
-  /* ── Mise à jour du DOM ──────────────────────────────── */
-  function applyData(d) {
-    setText('kLed',   fmtInt(d.led_signees));
-    setText('kDoss',  fmtInt(d.nb_dossiers));
-    setText('kPrime', fmtM(d.prime_total));
-    setText('kMoy',   d.led_moy != null ? String(d.led_moy) : '—');
-    setText('kMed',   d.led_med != null ? String(d.led_med) : '—');
+/* ── global store ────────────────────── */
+var STATE = { data:null, dossiers:{}, qwMeta:{} };
 
-    /* Date dans le sous-titre header */
-    var sub = document.getElementById('hdrSub');
-    if (sub) {
-      var gen = d.generated || '';
-      if (gen) {
-        /* Convertir YYYY-MM-DD → DD/MM/YYYY */
-        var parts = gen.split('-');
-        var dateFr = parts.length === 3
-          ? parts[2] + '/' + parts[1] + '/' + parts[0]
-          : gen;
-        sub.textContent = 'Données réelles du ' + dateFr + ' · données anonymisées';
-      }
-    }
+/* ── apply all data ──────────────────── */
+function applyData(d){
+  STATE.data = d;
+  STATE.dossiers = d.dossiers_pipeline || {};
+  (d.quickwins||[]).forEach(function(q){ STATE.qwMeta[q.stage_id]=q; });
 
-    injectBadge(!!d.demo_mode);
+  var p  = d.pipeline || {};
+  var qw = d.quickwins || [];
+  var tp = d.taux_pose_pct || 0;
+  var obj= d.objectif_mensuel || 30000;
+  var gen= d.generated || '';
+  var ratio=(d.led_signees/obj).toFixed(1).replace('.',',');
+
+  /* search + brief visibles dès qu'on a des données */
+  if(Object.keys(STATE.dossiers).length) show('searchWrap');
+  if(d.quickwins && d.quickwins.length) show('briefBtn');
+
+  /* note honnête si n° dossiers de démo */
+  if(d.dossiers_source==='demo' && Object.keys(STATE.dossiers).length){
+    var sr=el('searchResults');
+    if(sr) sr.innerHTML='<div style="font-size:10.5px;color:var(--muted);'
+      +'padding:6px 8px;background:var(--soft);border-radius:8px;border:1px dashed var(--line)">'
+      +'ℹ️ N° de dossiers de démonstration. Les vrais n° apparaîtront au prochain export BETOOL.</div>';
   }
 
-  /* ── Fetch ───────────────────────────────────────────── */
-  fetch('public_data.json')
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (d) {
-      applyData(d);
-    })
-    .catch(function (err) {
-      /* Graceful degradation : les valeurs HTML hardcodées restent visibles */
-      console.warn('[Cockpit LED] public_data.json indisponible — mode statique.', err);
-      injectBadge(true);
+  /* header */
+  if(gen) txt('hdrDate','Données du '+dateFr(gen)+' · ×'+ratio+' l\'obj. mensuel');
+  txt('hdrLed', fi(d.led_signees||0)+' LED signées');
+  txt('gaugePct', tp+'%');
+  txt('gaugeGap','−'+(95-tp)+'pt vs cible');
+  el('liveBadge').className='badge-live'+(d.demo_mode?' badge-demo':'');
+  el('liveBadge').textContent=d.demo_mode?'DÉMO':'LIVE';
+  animBar('gaugeFill', Math.min(tp/95*100,100), 400);
+
+  /* footer */
+  txt('footDate', gen?dateFr(gen):'—');
+
+  /* KPIs */
+  animNum('kLed',   d.led_signees||0, fi, 900);
+  animNum('kDoss',  d.nb_dossiers||0, fi, 700);
+  animNum('kPrime', d.prime_total||0, fm, 1000);
+  txt('kMoy', (d.led_moy||'—')+'');
+  txt('kTaux', tp+'%');
+  var tw=el('kTauxWrap');
+  if(tw) tw.className='kpi-mini '+(tp>=95?'ok':tp>=80?'warn':'danger');
+
+  /* quickwins */
+  if(qw.length) renderQW(qw, d.brief, d.delta);
+
+  /* simulateur objectif */
+  if(qw.length) initSim(d);
+
+  /* funnel + pipeline */
+  if(p.etapes) { renderFunnel(p, d.led_signees); renderPipeline(p); }
+}
+
+/* ── QUICKWINS ───────────────────────── */
+var QW={
+  urgent: {cls:'qw-urgent', flag:'🔴', lbl:'URGENT — bloquant'},
+  relance:{cls:'qw-relance',flag:'📞', lbl:'RELANCES clients'},
+  action: {cls:'qw-action', flag:'📋', lbl:'AUDITS à traiter'},
+};
+
+function renderQW(qw, brief, delta){
+  show('qwTitle');
+  var wrap=el('qwWrap'); if(!wrap) return;
+  var html='';
+
+  /* headline brief */
+  if(brief && brief.headline){
+    html+='<div style="font-size:13px;font-weight:700;color:var(--red);'
+      +'padding:11px 14px;background:var(--soft);border-left:4px solid var(--red);'
+      +'border-radius:10px;margin-bottom:12px;animation:slide-in .3s ease forwards">'
+      +'⚡ '+brief.headline+'</div>';
+  }
+
+  qw.forEach(function(q){
+    var u=QW[q.urgence]||{cls:'qw-action',flag:'•',lbl:q.urgence};
+    var top5=q.top5_led?'Top 5 dossiers : '+fi(q.top5_led)+' LED':'';
+    var old=q.blocage_old>0?q.blocage_old+' bloqués >7j':'';
+    var pulse=q.urgence==='urgent'
+      ?'<span class="pulse-ring"></span>':q.urgence==='relance'?'📞 ':'';
+    var hasDoss=STATE.dossiers[q.stage_id] && STATE.dossiers[q.stage_id].length;
+    html+='<div class="'+u.cls+'" data-stage="'+q.stage_id+'">'
+      +'<div class="qw-rank">'+u.flag+' #'+q.rank+' '+u.lbl+'</div>'
+      +'<div class="qw-main">'
+      +'<div>'
+      +'<div class="qw-title">'+pulse+q.n+' dossiers</div>'
+      +'<div class="qw-n">'+fi(q.led)+' LED en jeu</div>'
+      +'</div>'
+      +'<div><div class="qw-led-big">'+fi(q.led)+'</div>'
+      +'<div class="qw-led-lbl">LED</div></div>'
+      +'</div>'
+      +'<div class="qw-action-txt">→ '+q.action+'</div>'
+      +'<div class="qw-chips">'
+      +'<span class="qw-chip">⏱ '+q.effort+'</span>'
+      +(top5?'<span class="qw-chip top5">'+top5+'</span>':'')
+      +(old?'<span class="qw-chip old">⚠ '+old+'</span>':'')
+      +'</div>'
+      +(hasDoss?'<div class="qw-tap">👆 Voir les '+q.n+' dossiers à traiter</div>':'')
+      +'</div>';
+  });
+
+  /* objectif du jour */
+  if(brief && brief.objectif_jour){
+    html+='<div style="text-align:center;font-size:11.5px;color:var(--muted);'
+      +'padding:8px;margin-bottom:2px;">Objectif du jour : ~'
+      +fi(brief.objectif_jour)+' LED à faire progresser</div>';
+  }
+
+  wrap.innerHTML=html;
+
+  /* clic carte → drawer dossiers */
+  wrap.querySelectorAll('[data-stage]').forEach(function(card){
+    card.addEventListener('click', function(){
+      openDrawer(card.getAttribute('data-stage'));
     });
+  });
+
+  /* delta J-1 */
+  if(delta && (delta.deposees_delta||delta.action_n_delta)){
+    show('deltaWrap');
+    var dw=el('deltaWrap'); if(!dw) return;
+    var dd=delta.deposees_delta, ad=delta.action_n_delta;
+    var bilan={'progression':'✅ Pipeline progresse','pipeline_reduit':'📉 Stock réduit',
+               'stable':'= Stable'}[delta.bilan]||delta.bilan;
+    dw.innerHTML='<div class="delta-band">'
+      +'<span style="font-size:11px;color:var(--muted)">Δ vs '+delta.date_ref+'</span>'
+      +(dd>0?'<span class="delta-chip delta-pos">+'+fi(dd)+' LED déposées</span>'
+        :dd<0?'<span class="delta-chip delta-neg">'+fi(dd)+' LED</span>':'')
+      +(ad<0?'<span class="delta-chip delta-pos">'+ad+' dos. en moins</span>'
+        :ad>0?'<span class="delta-chip delta-neg">+'+ad+' dos. de plus</span>':'')
+      +'<span style="font-size:11px">'+bilan+'</span>'
+      +'</div>';
+  }
+}
+
+/* ── FUNNEL ──────────────────────────── */
+function renderFunnel(p, led_total){
+  show('funnelTitle');
+  var fc=el('funnelCard'); if(fc) fc.style.display='';
+  var wrap=el('funnelWrap'); if(!wrap||!p.etapes) return;
+  var dep  = p.etapes.find(function(e){return e.id==='depose';})||{};
+  var pipe = (p.led_actif||0)+(dep.led||0);
+  var tp   = p.taux_pose_pct||0;
+  var tpC  = tp>=95?'#27ae60':tp>=80?'#E08600':'#c0392b';
+  var pct  = function(n){return led_total>0?Math.min(Math.round(n/led_total*100),100):0};
+
+  var rows=[
+    {lbl:'Signées (CRM)', val:led_total,      p:100,         c:'#2E6FB7', id:'fb0'},
+    {lbl:'En pipeline',   val:pipe,            p:pct(pipe),   c:'#5a9fd4', id:'fb1'},
+    {lbl:'Action ⚡',     val:p.action_led||0, p:pct(p.action_led||0), c:'#E08600', id:'fb2'},
+    {lbl:'Déposées ✅',   val:dep.led||0,      p:pct(dep.led||0), c:'#27ae60', id:'fb3'},
+  ];
+
+  var html=rows.map(function(r){
+    return '<div class="funnel-step">'
+      +'<div class="funnel-lbl">'+r.lbl+'</div>'
+      +'<div class="funnel-track">'
+      +'<div class="funnel-bar" id="'+r.id+'" style="background:'+r.c+'">'+fi(r.val)+'</div>'
+      +'</div>'
+      +'<div class="funnel-pct" style="color:'+r.c+'">'+r.p+'%</div>'
+      +'</div>';
+  }).join('');
+
+  /* taux pose row */
+  html+='<div class="funnel-step">'
+    +'<div class="funnel-lbl">Taux pose</div>'
+    +'<div class="funnel-track">'
+    +'<div class="funnel-bar" id="fb4" style="background:'+tpC+'">'+tp+'%</div>'
+    +'</div>'
+    +'<div class="funnel-pct" style="color:'+tpC+'">'+tp+'%</div>'
+    +'</div>'
+    /* cible */
+    +'<div class="funnel-step">'
+    +'<div class="funnel-lbl">Cible</div>'
+    +'<div class="funnel-track">'
+    +'<div class="funnel-bar" id="fb5" style="background:#27ae60;opacity:.35">≥95%</div>'
+    +'</div>'
+    +'<div class="funnel-pct" style="color:#27ae60">95%</div>'
+    +'</div>';
+
+  wrap.innerHTML=html;
+  txt('funnelNote','Source BETOOL · taux pose = (posés+traitement+déposés)/total pipeline');
+
+  var delays=[300,450,550,650,750,750];
+  ['fb0','fb1','fb2','fb3','fb4','fb5'].forEach(function(id,i){
+    var pctVal=rows[i]?rows[i].p:(id==='fb4'?tp:95);
+    animBar(id,pctVal,delays[i]);
+  });
+}
+
+/* ── PIPELINE STAGES ─────────────────── */
+var URGENCE_C={urgent:'#C0392B',action:'#E08600',relance:'#e07000',ok:'#27ae60',normal:'#2E6FB7'};
+
+function renderPipeline(p){
+  show('pipeTitle');
+  var wrap=el('pipeWrap'); if(!wrap||!p.etapes) return;
+  var maxN=Math.max.apply(null,p.etapes.map(function(e){return e.n}));
+  var html='';
+
+  p.etapes.forEach(function(e,i){
+    if(e.id==='depose') return;
+    var c=URGENCE_C[e.urgence]||'#2E6FB7';
+    var pct=maxN>0?Math.round(e.n/maxN*100):0;
+    var bid='pb'+i;
+    html+='<div class="pipe-card urgence-'+e.urgence+'">'
+      +'<div class="pipe-head"><div class="pipe-name">'+e.label+'</div>'
+      +'<div class="pipe-count">'+fi(e.n)+'</div></div>'
+      +'<div class="pipe-led">'+fi(e.led)+' LED</div>'
+      +'<div class="pipe-bar-track"><div class="pipe-bar-fill" id="'+bid
+      +'" style="background:'+c+'"></div></div>'
+      +'<div class="pipe-conseil">'+e.conseil+'</div>'
+      +'</div>';
+  });
+
+  /* dépôt */
+  var dep=p.etapes[p.etapes.length-1];
+  var pctDep=p.pct_depose||0;
+  html+='<div class="depose-wrap">'
+    +'<div style="font-size:11.5px;font-weight:600;margin-bottom:4px">Progression dépôt Total Energies</div>'
+    +'<div class="depose-track"><div class="depose-fill" id="depBar"></div></div>'
+    +'<div class="depose-vals">'
+    +'<span>✅ '+fi(dep.n)+' dossiers · '+fi(dep.led)+' LED</span>'
+    +'<span style="font-weight:700;color:var(--green)">'+pctDep+'%</span>'
+    +'</div></div>';
+
+  wrap.innerHTML=html;
+
+  p.etapes.forEach(function(e,i){
+    if(e.id==='depose') return;
+    var pct=maxN>0?Math.round(e.n/maxN*100):0;
+    animBar('pb'+i, pct, 400+i*80);
+  });
+  animBar('depBar', pctDep, 700);
+}
+
+/* ── DRAWER (liste dossiers) ─────────── */
+var DRAWER = { stage:null, sort:'led' };
+var STAGE_LABELS = {
+  modif_audit:       {t:'🔴 Modif audit', sub:'Corriger + envoyer à Total Energies'},
+  attente_signature: {t:'📞 Attente signature', sub:'Rappeler les clients pour signer'},
+  attente_audit:     {t:'📋 Attente audit', sub:'Contrôler audits + envoyer au client'},
+};
+
+function sortedDossiers(stage){
+  var list=(STATE.dossiers[stage]||[]).slice();
+  if(DRAWER.sort==='age')
+    list.sort(function(a,b){return (b.age_days||0)-(a.age_days||0)});
+  else
+    list.sort(function(a,b){return (b.led||0)-(a.led||0)});
+  return list;
+}
+
+function renderDrawerList(){
+  var list=sortedDossiers(DRAWER.stage);
+  var html=list.map(function(d,i){
+    var old=(d.age_days||0)>7;
+    var ref=d.ref||('#'+(i+1));
+    return '<div class="dos-row">'
+      +'<div class="dos-rank">'+(i+1)+'</div>'
+      +'<div class="dos-ref">'+ref+'</div>'
+      +'<div class="dos-age'+(old?' old':'')+'">'+(d.age_days!=null?d.age_days+'j':'—')+'</div>'
+      +'<div><div class="dos-led">'+fi(d.led)+'</div><div class="dos-led-lbl">LED</div></div>'
+      +'<button class="dos-copy" data-ref="'+ref+'">⧉</button>'
+      +'</div>';
+  }).join('');
+  var dl=el('drawerList'); dl.innerHTML=html;
+  dl.querySelectorAll('.dos-copy').forEach(function(b){
+    b.addEventListener('click',function(e){
+      e.stopPropagation();
+      copyText(b.getAttribute('data-ref'), 'N° copié : '+b.getAttribute('data-ref'));
+    });
+  });
+}
+
+function openDrawer(stage){
+  if(!STATE.dossiers[stage] || !STATE.dossiers[stage].length) return;
+  DRAWER.stage=stage; DRAWER.sort='led';
+  var meta=STAGE_LABELS[stage]||{t:stage,sub:''};
+  var q=STATE.qwMeta[stage]||{};
+  txt('drawerTitle', meta.t);
+  txt('drawerSub', (q.n||STATE.dossiers[stage].length)+' dossiers · '+fi(q.led||0)+' LED · '+meta.sub);
+  el('sortLed').classList.add('active'); el('sortAge').classList.remove('active');
+  renderDrawerList();
+  el('drawerOverlay').classList.add('open');
+  el('drawer').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  el('drawerOverlay').classList.remove('open');
+  el('drawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+el('drawerOverlay').addEventListener('click', closeDrawer);
+el('sortLed').addEventListener('click', function(){
+  DRAWER.sort='led'; el('sortLed').classList.add('active'); el('sortAge').classList.remove('active'); renderDrawerList();
+});
+el('sortAge').addEventListener('click', function(){
+  DRAWER.sort='age'; el('sortAge').classList.add('active'); el('sortLed').classList.remove('active'); renderDrawerList();
+});
+el('copyList').addEventListener('click', function(){
+  var list=sortedDossiers(DRAWER.stage);
+  var meta=STAGE_LABELS[DRAWER.stage]||{t:DRAWER.stage};
+  var q=STATE.qwMeta[DRAWER.stage]||{};
+  var lines=[meta.t+' — '+list.length+' dossiers · '+fi(q.led||0)+' LED', ''];
+  list.forEach(function(d,i){
+    lines.push((i+1)+'. '+(d.ref||'#'+(i+1))+'  ·  '+fi(d.led)+' LED'
+      +(d.age_days!=null?'  ·  '+d.age_days+'j':''));
+  });
+  lines.push(''); lines.push('→ '+(q.action||''));
+  copyText(lines.join('\n'), '✅ Liste copiée ('+list.length+' dossiers)');
+});
+
+/* ── COPY + TOAST ────────────────────── */
+function copyText(text, msg){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){toast(msg)},function(){fallbackCopy(text,msg)});
+  } else fallbackCopy(text,msg);
+}
+function fallbackCopy(text,msg){
+  var ta=document.createElement('textarea'); ta.value=text;
+  ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');toast(msg)}catch(e){toast('Copie impossible')}
+  document.body.removeChild(ta);
+}
+var toastTimer;
+function toast(msg){
+  var t=el('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show')},1800);
+}
+
+/* ── SIMULATEUR OBJECTIF ─────────────── */
+var SIM={ target:30000, stages:[], counts:{} };
+var SIM_META={
+  modif_audit:       {flag:'🔴', name:'Modifs corrigées',     sub:'envoyées à Total Energies'},
+  attente_signature: {flag:'📞', name:'Signatures obtenues',  sub:'clients rappelés'},
+  attente_audit:     {flag:'📋', name:'Audits validés',       sub:'contrôlés + envoyés'},
+};
+
+function initSim(d){
+  var qw=d.quickwins||[];
+  if(!qw.length) return;
+  SIM.target=d.objectif_mensuel||30000;
+  SIM.stages=qw.map(function(q){
+    return { id:q.stage_id, n:q.n, led:q.led,
+             ledPer: q.n>0 ? q.led/q.n : 0 };
+  });
+  SIM.counts={}; SIM.stages.forEach(function(s){SIM.counts[s.id]=0});
+  show('simTitle'); show('simCard');
+  txt('simObjTarget', fi(SIM.target));
+  renderSimRows();
+  updateSim();
+}
+
+function renderSimRows(){
+  var html=SIM.stages.map(function(s){
+    var m=SIM_META[s.id]||{flag:'•',name:s.id,sub:''};
+    return '<div class="sim-row" data-stage="'+s.id+'">'
+      +'<div class="sim-row-info">'
+      +'<div class="sim-row-name">'+m.flag+' '+m.name+'</div>'
+      +'<div class="sim-row-sub">'+m.sub+' · max '+s.n+'</div>'
+      +'</div>'
+      +'<div class="sim-stepper">'
+      +'<button class="sim-btn" data-act="minus" data-stage="'+s.id+'">−</button>'
+      +'<span class="sim-val" id="simv-'+s.id+'">0</span>'
+      +'<button class="sim-btn" data-act="plus" data-stage="'+s.id+'">+</button>'
+      +'</div>'
+      +'<div class="sim-led" id="siml-'+s.id+'">0</div>'
+      +'</div>';
+  }).join('');
+  var rows=el('simRows'); rows.innerHTML=html;
+  rows.querySelectorAll('.sim-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      stepSim(b.getAttribute('data-stage'), b.getAttribute('data-act'));
+    });
+  });
+}
+
+function stepSim(stage, act){
+  var s=SIM.stages.filter(function(x){return x.id===stage})[0]; if(!s) return;
+  var cur=SIM.counts[stage]||0;
+  var step=stage==='attente_audit'||stage==='attente_signature'?10:1;
+  cur += (act==='plus'?step:-step);
+  cur = Math.max(0, Math.min(cur, s.n));
+  SIM.counts[stage]=cur;
+  updateSim();
+}
+
+function updateSim(){
+  var total=0;
+  SIM.stages.forEach(function(s){
+    var c=SIM.counts[s.id]||0;
+    var led=Math.round(c*s.ledPer);
+    total+=led;
+    txt('simv-'+s.id, c);
+    txt('siml-'+s.id, '+'+fi(led));
+  });
+  var pct=Math.min(Math.round(total/SIM.target*100),100);
+  var reached=total>=SIM.target;
+  txt('simLed', fi(total));
+  el('simLed').className='sim-obj-led'+(reached?' reached':'');
+  el('simFill').style.width=pct+'%';
+  if(total===0){
+    txt('simPct','Sélectionne ce que tu vas traiter aujourd\'hui');
+    txt('simStatus','');
+  } else if(reached){
+    txt('simPct','🎉 Objectif mensuel atteint !');
+    txt('simStatus','100%');
+  } else {
+    txt('simPct',pct+'% de l\'objectif · reste '+fi(SIM.target-total)+' LED');
+    txt('simStatus',pct+'%');
+  }
+}
+
+el('simMax').addEventListener('click',function(){
+  SIM.stages.forEach(function(s){SIM.counts[s.id]=s.n}); updateSim();
+});
+el('simReset').addEventListener('click',function(){
+  SIM.stages.forEach(function(s){SIM.counts[s.id]=0}); updateSim();
+});
+
+/* ── BRIEF DU JOUR (texte copiable) ──── */
+function buildBrief(){
+  var d=STATE.data; if(!d) return '';
+  var p=d.pipeline||{}, qw=d.quickwins||[], br=d.brief||{}, dl=d.delta;
+  var dep=(p.etapes||[]).filter(function(e){return e.id==='depose'})[0]||{};
+  var L=[];
+  L.push('🟡 BRIEF LED 30k — '+(d.generated?dateFr(d.generated):''));
+  L.push('━━━━━━━━━━━━━━━━━━━━');
+  L.push('📊 Pipeline : '+(p.total_actif||0)+' dossiers actifs · '+fi(p.led_actif||0)+' LED');
+  L.push('✅ Déposé : '+fi(dep.n||0)+' dossiers · '+fi(dep.led||0)+' LED ('+(p.pct_depose||0)+'%)');
+  L.push('🎯 Taux de pose : '+(d.taux_pose_pct||0)+'% (cible ≥95%, écart '+(95-(d.taux_pose_pct||0))+'pt)');
+  if(dl && (dl.deposees_delta||dl.action_n_delta)){
+    var dd=dl.deposees_delta;
+    L.push('📈 Δ vs '+dl.date_ref+' : '+(dd>0?'+':'')+fi(dd)+' LED déposées');
+  }
+  L.push('');
+  L.push('⚡ ACTIONS DU JOUR :');
+  qw.forEach(function(q){
+    var f={urgent:'🔴',relance:'📞',action:'📋'}[q.urgence]||'•';
+    L.push(f+' '+q.n+' '+q.stage_id+' → '+fi(q.led)+' LED ('+q.effort+')');
+    L.push('   '+q.action);
+  });
+  if(br.objectif_jour){
+    L.push('');
+    L.push('🎯 Objectif du jour : ~'+fi(br.objectif_jour)+' LED à faire progresser');
+  }
+  var impact=qw.filter(function(q){return q.urgence==='urgent'})
+               .reduce(function(s,q){return s+q.led},0);
+  if(impact){ L.push('💡 Impact immédiat si modifs traitées : +'+fi(impact)+' LED'); }
+  return L.join('\n');
+}
+el('briefBtn').addEventListener('click', function(){
+  var txt=buildBrief();
+  if(txt) copyText(txt,'✅ Brief copié — prêt à coller');
+});
+
+/* ── SEARCH ──────────────────────────── */
+function allDossiers(){
+  var out=[];
+  Object.keys(STATE.dossiers).forEach(function(stage){
+    (STATE.dossiers[stage]||[]).forEach(function(d){
+      out.push({stage:stage, ref:d.ref||'', led:d.led, age_days:d.age_days});
+    });
+  });
+  return out;
+}
+function runSearch(q){
+  var res=el('searchResults');
+  q=(q||'').trim().toLowerCase();
+  el('searchClear').style.display = q ? 'flex' : 'none';
+  if(!q){ res.innerHTML=''; return; }
+  var matches=allDossiers().filter(function(d){
+    return d.ref.toLowerCase().indexOf(q)!==-1;
+  }).sort(function(a,b){return b.led-a.led}).slice(0,30);
+  if(!matches.length){
+    res.innerHTML='<div style="font-size:12px;color:var(--muted);padding:10px 4px">'
+      +'Aucun dossier trouvé pour « '+q+' »</div>'; return;
+  }
+  var html='<div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;'
+    +'letter-spacing:.1em;margin:2px 0 8px">'+matches.length+' résultat(s)</div>';
+  html+=matches.map(function(d){
+    var meta=STAGE_LABELS[d.stage]||{t:d.stage};
+    var old=(d.age_days||0)>7;
+    return '<div class="dos-row">'
+      +'<div class="dos-ref">'+d.ref+'</div>'
+      +'<div class="qw-chip" style="font-size:10px">'+meta.t+'</div>'
+      +'<div class="dos-age'+(old?' old':'')+'">'+(d.age_days!=null?d.age_days+'j':'—')+'</div>'
+      +'<div><div class="dos-led">'+fi(d.led)+'</div><div class="dos-led-lbl">LED</div></div>'
+      +'<button class="dos-copy" data-ref="'+d.ref+'">⧉</button>'
+      +'</div>';
+  }).join('');
+  res.innerHTML=html;
+  res.querySelectorAll('.dos-copy').forEach(function(b){
+    b.addEventListener('click',function(){copyText(b.getAttribute('data-ref'),'N° copié : '+b.getAttribute('data-ref'))});
+  });
+}
+el('searchInput').addEventListener('input', function(){runSearch(this.value)});
+el('searchClear').addEventListener('click', function(){
+  el('searchInput').value=''; runSearch(''); el('searchInput').focus();
+});
+
+/* ── FETCH ───────────────────────────── */
+fetch('public_data.json?v='+Date.now())
+  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+  .then(function(d){applyData(d)})
+  .catch(function(err){
+    console.warn('[Cockpit LED] public_data.json indisponible',err);
+    txt('hdrDate','Mode statique — données du 04/06/2026');
+    el('liveBadge').textContent='DÉMO';
+    el('liveBadge').className='badge-live badge-demo';
+    txt('gaugePct','72%'); txt('gaugeGap','−23pt vs cible');
+    animBar('gaugeFill',75,400);
+    txt('kLed','233 504'); txt('kDoss','6 613');
+    txt('kPrime','15,5 M€'); txt('kMoy','37');
+    txt('kTaux','72%');
+  });
+
 })();
 </script>
 </body>

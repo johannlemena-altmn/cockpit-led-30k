@@ -1,6 +1,6 @@
--- Vues Metabase — Cockpit LED (à exécuter dans la base ledcockpit après le 1er ETL)
--- Robustes avec le seul export "eq 127 pour liste". Les vues statut/pose/responsable
--- s'activent automatiquement dès que le feed enrichi (statut, dépôt, pose) est branché.
+-- Vues Metabase — Cockpit LED (appliquées automatiquement par etl.py)
+-- Vues de base : toujours créées.
+-- Vues avancées : créées seulement si les colonnes/tables requises existent.
 
 -- KPI globaux
 CREATE OR REPLACE VIEW v_kpi AS
@@ -35,18 +35,94 @@ SELECT CASE
 FROM dossier WHERE signe AND led>0 GROUP BY 1;
 
 -- ============================================================
--- AVANCÉ — nécessite le feed enrichi (statut / catégorie / pose / responsable).
--- Décommenter une fois ces colonnes présentes dans la table dossier.
+-- AVANCÉ — colonnes optionnelles (statut/responsable/pose)
+-- Créées seulement si la colonne existe dans la table dossier.
 -- ============================================================
--- CREATE OR REPLACE VIEW v_funnel_statut AS
---   SELECT statut, COUNT(*) nb, SUM(led) led FROM dossier WHERE signe GROUP BY 1 ORDER BY led DESC;
--- CREATE OR REPLACE VIEW v_funnel_categorie AS
---   SELECT categorie_statut, COUNT(*) nb, SUM(led) led FROM dossier WHERE signe GROUP BY 1;
--- CREATE OR REPLACE VIEW v_par_responsable AS
---   SELECT COALESCE(administrateur,'(non affecté)') resp, COUNT(*) nb,
---          SUM(led) FILTER (WHERE NOT depose) led_en_cours FROM dossier WHERE signe GROUP BY 1;
--- CREATE OR REPLACE VIEW v_pose AS
---   SELECT COUNT(*) FILTER (WHERE pose_terminee) poses_finies,
---          COUNT(*) FILTER (WHERE NOT pose_terminee) poses_en_attente,
---          ROUND(100.0*COUNT(*) FILTER (WHERE pose_terminee)/NULLIF(COUNT(*),0),1) taux_pose_pct
---   FROM dossier WHERE signe AND NOT depose;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name='dossier' AND column_name='statut') THEN
+    EXECUTE $v$
+      CREATE OR REPLACE VIEW v_funnel_statut AS
+      SELECT COALESCE(statut,'(vide)') AS statut,
+             COUNT(*) nb, SUM(led) led
+      FROM dossier WHERE signe GROUP BY 1 ORDER BY led DESC
+    $v$;
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name='dossier' AND column_name='categorie_statut') THEN
+    EXECUTE $v$
+      CREATE OR REPLACE VIEW v_funnel_categorie AS
+      SELECT COALESCE(categorie_statut,'(vide)') AS categorie_statut,
+             COUNT(*) nb, SUM(led) led
+      FROM dossier WHERE signe GROUP BY 1
+    $v$;
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name='dossier' AND column_name='administrateur') THEN
+    EXECUTE $v$
+      CREATE OR REPLACE VIEW v_par_responsable AS
+      SELECT COALESCE(administrateur,'(non affecté)') AS resp,
+             COUNT(*) nb,
+             SUM(led) FILTER (WHERE NOT depose) AS led_en_cours
+      FROM dossier WHERE signe GROUP BY 1 ORDER BY led_en_cours DESC NULLS LAST
+    $v$;
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name='dossier' AND column_name='pose_terminee') THEN
+    EXECUTE $v$
+      CREATE OR REPLACE VIEW v_pose AS
+      SELECT
+        COUNT(*) FILTER (WHERE pose_terminee = TRUE)  AS poses_finies,
+        COUNT(*) FILTER (WHERE pose_terminee = FALSE) AS poses_en_attente,
+        ROUND(100.0 * COUNT(*) FILTER (WHERE pose_terminee = TRUE)
+              / NULLIF(COUNT(*),0), 1)                AS taux_pose_pct
+      FROM dossier WHERE signe AND NOT depose AND pose_terminee IS NOT NULL
+    $v$;
+  END IF;
+END $$;
+
+-- ============================================================
+-- BETOOL — créées seulement si la table betool_lead existe
+-- ============================================================
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables
+             WHERE table_name='betool_lead') THEN
+    EXECUTE $v$
+      CREATE OR REPLACE VIEW v_betool_pipeline AS
+      SELECT stage_id,
+             COUNT(*)                        AS nb_dossiers,
+             COALESCE(SUM(led),0)            AS led_total,
+             ROUND(AVG(age_days)::numeric,0) AS age_moy_jours
+      FROM betool_lead GROUP BY stage_id
+    $v$;
+    EXECUTE $v$
+      CREATE OR REPLACE VIEW v_betool_action AS
+      SELECT COUNT(*)             AS nb_action,
+             COALESCE(SUM(led),0) AS led_action,
+             ROUND(AVG(age_days)::numeric,0) AS age_moy_jours
+      FROM betool_lead
+      WHERE stage_id IN ('attente_audit','attente_signature','modif_audit')
+    $v$;
+    EXECUTE $v$
+      CREATE OR REPLACE VIEW v_betool_kpi AS
+      SELECT COUNT(*) AS total_pipeline,
+             COUNT(*) FILTER (WHERE stage_id = 'depose')           AS nb_depose,
+             COALESCE(SUM(led) FILTER (WHERE stage_id = 'depose'),0) AS led_depose,
+             COALESCE(SUM(led),0)                                   AS led_total,
+             ROUND(100.0 * COUNT(*) FILTER (WHERE stage_id != 'en_cours')
+                   / NULLIF(COUNT(*),0), 0)                        AS taux_pose_pct
+      FROM betool_lead
+    $v$;
+  END IF;
+END $$;

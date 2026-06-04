@@ -1,13 +1,3041 @@
 {
-  "generated": "2026-06-03",
-  "demo_mode": true,
-  "led_signees": 196177,
-  "nb_dossiers": 5280,
-  "prime_total": 13000000,
+  "generated": "2026-06-04",
+  "demo_mode": false,
+  "led_signees": 233504,
+  "nb_dossiers": 6613,
+  "prime_total": 15503049,
   "led_moy": 37,
   "led_med": 30,
   "led_max": 459,
   "objectif_mensuel": 30000,
-  "taux_pose_pct": 68,
-  "mois": []
+  "taux_pose_pct": 72,
+  "mois": [],
+  "pipeline": {
+    "generated": "2026-06-04",
+    "total_actif": 1442,
+    "led_actif": 77314,
+    "action_n": 553,
+    "action_led": 30606,
+    "pct_depose": 55,
+    "taux_pose_pct": 72,
+    "etapes": [
+      {
+        "id": "en_cours",
+        "label": "Installation en cours",
+        "short": "En cours",
+        "urgence": "normal",
+        "conseil": "Attendre fin d'installation avant action.",
+        "n": 889,
+        "led": 46708,
+        "age_moy": null
+      },
+      {
+        "id": "attente_audit",
+        "label": "Attente doc & audit",
+        "short": "Audit ⚡",
+        "urgence": "action",
+        "conseil": "Contrôler audits → envoyer au client → commenter auditeurs.",
+        "n": 391,
+        "led": 20456,
+        "age_moy": null
+      },
+      {
+        "id": "attente_signature",
+        "label": "Attente signature",
+        "short": "Signature ⏳",
+        "urgence": "relance",
+        "conseil": "Rappeler le client pour signature du dossier.",
+        "n": 154,
+        "led": 9430,
+        "age_moy": null
+      },
+      {
+        "id": "modif_audit",
+        "label": "Modif audit avant dépôt",
+        "short": "Modif 🔴",
+        "urgence": "urgent",
+        "conseil": "Corriger les audits → envoyer à Total Energies.",
+        "n": 8,
+        "led": 720,
+        "age_moy": null
+      },
+      {
+        "id": "depose",
+        "label": "Déposé ✅",
+        "short": "Déposé",
+        "urgence": "ok",
+        "conseil": "En attente validation + paiement Total Energies.",
+        "n": 1743,
+        "led": 94202,
+        "age_moy": null
+      }
+    ]
+  },
+  "dossiers_pipeline": {
+    "modif_audit": [
+      {
+        "ref": "",
+        "led": 348,
+        "age_days": null
+      },
+      {
+        "ref": "29875",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "34770",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "28171",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "35100",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "34484",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "34505",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "34734",
+        "led": 36,
+        "age_days": null
+      }
+    ],
+    "attente_signature": [
+      {
+        "ref": "",
+        "led": 270,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 240,
+        "age_days": null
+      },
+      {
+        "ref": "24219",
+        "led": 228,
+        "age_days": null
+      },
+      {
+        "ref": "32536",
+        "led": 162,
+        "age_days": null
+      },
+      {
+        "ref": "26214",
+        "led": 162,
+        "age_days": null
+      },
+      {
+        "ref": "28538",
+        "led": 162,
+        "age_days": null
+      },
+      {
+        "ref": "24417",
+        "led": 150,
+        "age_days": null
+      },
+      {
+        "ref": "21742",
+        "led": 150,
+        "age_days": null
+      },
+      {
+        "ref": "30516",
+        "led": 138,
+        "age_days": null
+      },
+      {
+        "ref": "32114",
+        "led": 138,
+        "age_days": null
+      },
+      {
+        "ref": "33153",
+        "led": 126,
+        "age_days": null
+      },
+      {
+        "ref": "26796",
+        "led": 126,
+        "age_days": null
+      },
+      {
+        "ref": "26683",
+        "led": 120,
+        "age_days": null
+      },
+      {
+        "ref": "32445",
+        "led": 120,
+        "age_days": null
+      },
+      {
+        "ref": "23235",
+        "led": 120,
+        "age_days": null
+      },
+      {
+        "ref": "31929",
+        "led": 114,
+        "age_days": null
+      },
+      {
+        "ref": "30498",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "25546",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "25164",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "27301",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "29075",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "32312",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "24478",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "33204",
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "ref": "29095",
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "ref": "33151",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "32053",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "31066",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "28853",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "32580",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "25212",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "25592",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "35710",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "35345",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "34752",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "34796",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "32805",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "32136",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "26636",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "25924",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "33228",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "30477",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "31765",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "30888",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "33500",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "31011",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "27006",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "25615",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "32581",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "24259",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "34780",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "30777",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "33038",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "34528",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "29933",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "29229",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "29207",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "25238",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "25604",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "25925",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "25115",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "23159",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "23110",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "31734",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "31148",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "32027",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "33483",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "31040",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "24822",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "22733",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "29858",
+        "led": 52,
+        "age_days": null
+      },
+      {
+        "ref": "35979",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "33135",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "30216",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "31788",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "27214",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "25612",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "34075",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "26099",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "26084",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "23849",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "25929",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "35763",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "29062",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "32075",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "30849",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "32130",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "27244",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "30177",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "29092",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "30333",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "26142",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "25270",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "24291",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "25884",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "24134",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "27012",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "36066",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "35317",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30464",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "31489",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "34476",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "33017",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "31794",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30851",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "32443",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30997",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "33029",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "29028",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "26136",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "24525",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "35911",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35326",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34808",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34503",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "33156",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "33033",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "30166",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "30410",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "30149",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "27237",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34575",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "28859",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "25610",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "25583",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "26101",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "24816",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "24216",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "24425",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "24018",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "23192",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35483",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34768",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34470",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33052",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33050",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "27263",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30178",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30971",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "29874",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "26111",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "25611",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "26144",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "24831",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "24353",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "24250",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "26036",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 0,
+        "age_days": null
+      },
+      {
+        "ref": "23134",
+        "led": 0,
+        "age_days": null
+      }
+    ],
+    "attente_audit": [
+      {
+        "ref": "31048",
+        "led": 282,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 216,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 198,
+        "age_days": null
+      },
+      {
+        "ref": "35772",
+        "led": 188,
+        "age_days": null
+      },
+      {
+        "ref": "33082",
+        "led": 180,
+        "age_days": null
+      },
+      {
+        "ref": "33253",
+        "led": 180,
+        "age_days": null
+      },
+      {
+        "ref": "26719",
+        "led": 180,
+        "age_days": null
+      },
+      {
+        "ref": "34774",
+        "led": 162,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 156,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 156,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 150,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 150,
+        "age_days": null
+      },
+      {
+        "ref": "28971",
+        "led": 150,
+        "age_days": null
+      },
+      {
+        "ref": "31099",
+        "led": 144,
+        "age_days": null
+      },
+      {
+        "ref": "25930",
+        "led": 144,
+        "age_days": null
+      },
+      {
+        "ref": "35364",
+        "led": 126,
+        "age_days": null
+      },
+      {
+        "ref": "23198",
+        "led": 126,
+        "age_days": null
+      },
+      {
+        "ref": "34741",
+        "led": 120,
+        "age_days": null
+      },
+      {
+        "ref": "35365",
+        "led": 114,
+        "age_days": null
+      },
+      {
+        "ref": "23184",
+        "led": 114,
+        "age_days": null
+      },
+      {
+        "ref": "32482",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "28213",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "24866",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "23585",
+        "led": 108,
+        "age_days": null
+      },
+      {
+        "ref": "31504",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "35059",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "34472",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "34522",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "30795",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "30152",
+        "led": 102,
+        "age_days": null
+      },
+      {
+        "ref": "36425",
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "ref": "36114",
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "ref": "31254",
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "ref": "28531",
+        "led": 96,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "ref": "36358",
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "ref": "28730",
+        "led": 90,
+        "age_days": null
+      },
+      {
+        "ref": "36141",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "35870",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "35597",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "30492",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "35347",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "34167",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "33191",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "32349",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "32586",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "31016",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "32051",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "29932",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "29137",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "27210",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "26798",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "28577",
+        "led": 84,
+        "age_days": null
+      },
+      {
+        "ref": "37283",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "37023",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "32601",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "36370",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "35756",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "35340",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "29484",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "35395",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "31471",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "32564",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "32296",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "30974",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "32317",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "26628",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "30963",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "30784",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "35360",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "25584",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "24419",
+        "led": 78,
+        "age_days": null
+      },
+      {
+        "ref": "37123",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "36341",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "31424",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "31752",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "33020",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "33047",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "32088",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "33378",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "26605",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "25454",
+        "led": 72,
+        "age_days": null
+      },
+      {
+        "ref": "37172",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "36458",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "32330",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "30186",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "28203",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "29056",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "28372",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "25606",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "24529",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "24357",
+        "led": 66,
+        "age_days": null
+      },
+      {
+        "ref": "36559",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "35853",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "32539",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "35107",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "31824",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "34794",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "34736",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "32440",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "33793",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "33013",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "32567",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "33828",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "36118",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "33857",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "33174",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "29921",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "28408",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "25536",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "30794",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "27202",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "23198",
+        "led": 60,
+        "age_days": null
+      },
+      {
+        "ref": "37181",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "37363",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "37186",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "37272",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36360",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36375",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36191",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36560",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "35957",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "37396",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "35758",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36104",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36122",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "37482",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "35110",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "34533",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "30626",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "32333",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "33005",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "29907",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "32603",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "32083",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "37292",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "30848",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36424",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "30185",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "30494",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "28743",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "28483",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "24192",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "25172",
+        "led": 54,
+        "age_days": null
+      },
+      {
+        "ref": "36484",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36462",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36816",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36443",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36384",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36376",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36322",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36316",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "35624",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "35756",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36135",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "35611",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "34787",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "30455",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "35135",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "34733",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "33164",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "37627",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "33144",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "33035",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "33046",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36186",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "31425",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "31038",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "33505",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "30171",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "31767",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "33130",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "36105",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "29855",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "25227",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "23198",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "28728",
+        "led": 48,
+        "age_days": null
+      },
+      {
+        "ref": "37175",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "37262",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "37097",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "37029",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "36124",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "36132",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "35606",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "35591",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "35097",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "34460",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "36185",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "32965",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "32604",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "32137",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "31814",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "35273",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "36422",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "32070",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "27235",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "33437",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "30511",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "30147",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "33131",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "36544",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "29203",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "26164",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "26031",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "34728",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "25085",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "23198",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "23198",
+        "led": 42,
+        "age_days": null
+      },
+      {
+        "ref": "37366",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36728",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "38409",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36459",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36812",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36465",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36385",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36440",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36372",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "35910",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36489",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "35952",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "35847",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "37469",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "34709",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "38448",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "37299",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "38380",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "32941",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36591",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "35866",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "33234",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "36173",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "33583",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "35234",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "32310",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "28202",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "32086",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30959",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30793",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "33185",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30174",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30180",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "29887",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30549",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "29048",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "28214",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "28741",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "30776",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "24837",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "24865",
+        "led": 36,
+        "age_days": null
+      },
+      {
+        "ref": "37030",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37271",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36455",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37178",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37282",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36378",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37117",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36137",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36607",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36342",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36067",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35908",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36180",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35986",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36147",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36391",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36449",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36362",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36426",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37340",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35609",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35599",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35328",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35367",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35313",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "30475",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36199",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "35095",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34735",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34746",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34492",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34579",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36418",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "36490",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "26668",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "33724",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "33031",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "30517",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "32335",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "33949",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "32338",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "31062",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37831",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "32484",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "29421",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "31747",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "30487",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "32699",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "28462",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "29091",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37183",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "29014",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "31739",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "29098",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "34248",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "33257",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "25200",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "29857",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "29842",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "23798",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "23198",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "22732",
+        "led": 30,
+        "age_days": null
+      },
+      {
+        "ref": "37188",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "37173",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "37107",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "37584",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "37122",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36811",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36814",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36727",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36445",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36474",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36444",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35274",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36139",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36823",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36131",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36312",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36315",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36140",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "37750",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36060",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35392",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35960",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35951",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35869",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35852",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35843",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36558",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "37872",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35707",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35602",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35476",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "32945",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36430",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35322",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36820",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35594",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35182",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "37371",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "38220",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34777",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34766",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30617",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34740",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34738",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34467",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33210",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33097",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "32458",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "32450",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34471",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30507",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34513",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "34506",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "31806",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33751",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "31044",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33885",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30850",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30792",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30788",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "30150",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "32065",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "29118",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36428",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "26109",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "35352",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "26089",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "25195",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "24585",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "25151",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "29006",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "24270",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "36116",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "23198",
+        "led": 24,
+        "age_days": null
+      },
+      {
+        "ref": "33203",
+        "led": 12,
+        "age_days": null
+      },
+      {
+        "ref": "28734",
+        "led": 0,
+        "age_days": null
+      }
+    ]
+  },
+  "quickwins": [
+    {
+      "rank": 1,
+      "stage_id": "modif_audit",
+      "urgence": "urgent",
+      "n": 8,
+      "led": 720,
+      "effort": "< 1h par dossier",
+      "action": "Corriger les audits et envoyer à Total Energies immédiatement.",
+      "blocage_old": 0,
+      "top5_led": 588,
+      "top": [
+        {
+          "ref": "",
+          "led": 348,
+          "age_days": null
+        },
+        {
+          "ref": "29875",
+          "led": 78,
+          "age_days": null
+        },
+        {
+          "ref": "34770",
+          "led": 60,
+          "age_days": null
+        },
+        {
+          "ref": "28171",
+          "led": 54,
+          "age_days": null
+        },
+        {
+          "ref": "35100",
+          "led": 48,
+          "age_days": null
+        },
+        {
+          "ref": "34484",
+          "led": 48,
+          "age_days": null
+        },
+        {
+          "ref": "34505",
+          "led": 48,
+          "age_days": null
+        },
+        {
+          "ref": "34734",
+          "led": 36,
+          "age_days": null
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "stage_id": "attente_signature",
+      "urgence": "relance",
+      "n": 154,
+      "led": 9430,
+      "effort": "Appel/email par dossier",
+      "action": "Rappeler les clients en commençant par les dossiers les plus anciens.",
+      "blocage_old": 0,
+      "top5_led": 1062,
+      "top": [
+        {
+          "ref": "",
+          "led": 270,
+          "age_days": null
+        },
+        {
+          "ref": "",
+          "led": 240,
+          "age_days": null
+        },
+        {
+          "ref": "24219",
+          "led": 228,
+          "age_days": null
+        },
+        {
+          "ref": "32536",
+          "led": 162,
+          "age_days": null
+        },
+        {
+          "ref": "26214",
+          "led": 162,
+          "age_days": null
+        },
+        {
+          "ref": "28538",
+          "led": 162,
+          "age_days": null
+        },
+        {
+          "ref": "24417",
+          "led": 150,
+          "age_days": null
+        },
+        {
+          "ref": "21742",
+          "led": 150,
+          "age_days": null
+        },
+        {
+          "ref": "30516",
+          "led": 138,
+          "age_days": null
+        },
+        {
+          "ref": "32114",
+          "led": 138,
+          "age_days": null
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "stage_id": "attente_audit",
+      "urgence": "action",
+      "n": 391,
+      "led": 20456,
+      "effort": "~30 min par audit",
+      "action": "Traiter en priorité les plus gros dossiers (plus de LED = plus d'impact).",
+      "blocage_old": 0,
+      "top5_led": 1064,
+      "top": [
+        {
+          "ref": "31048",
+          "led": 282,
+          "age_days": null
+        },
+        {
+          "ref": "",
+          "led": 216,
+          "age_days": null
+        },
+        {
+          "ref": "",
+          "led": 198,
+          "age_days": null
+        },
+        {
+          "ref": "35772",
+          "led": 188,
+          "age_days": null
+        },
+        {
+          "ref": "33082",
+          "led": 180,
+          "age_days": null
+        },
+        {
+          "ref": "33253",
+          "led": 180,
+          "age_days": null
+        },
+        {
+          "ref": "26719",
+          "led": 180,
+          "age_days": null
+        },
+        {
+          "ref": "34774",
+          "led": 162,
+          "age_days": null
+        },
+        {
+          "ref": "",
+          "led": 156,
+          "age_days": null
+        },
+        {
+          "ref": "",
+          "led": 156,
+          "age_days": null
+        }
+      ]
+    }
+  ],
+  "brief": {
+    "date": "2026-06-04",
+    "statut": "URGENT",
+    "headline": "553 dossiers actionnables · 30 606 LED à débloquer",
+    "urgences": [
+      "8 modif_audit bloquants → 720 LED libérées en < 1h par dossier"
+    ],
+    "top_action": "Corriger les audits et envoyer à Total Energies immédiatement.",
+    "objectif_jour": 750,
+    "taux_pose_pct": 72,
+    "pipeline_bilan": "premier_run"
+  },
+  "dossiers_source": "betool"
 }
