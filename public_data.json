@@ -3437,5 +3437,19 @@
         "age_days": null
       }
     ]
+  },
+  "delta": {
+    "ref_date": "2026-06-04",
+    "kind": "intraday",
+    "taux_pose": 1,
+    "led_signees": 0,
+    "deposees_n": 20,
+    "deposees_led": 1152,
+    "led_actif": -1308,
+    "action_led": -382,
+    "modif_audit": 3,
+    "confirmes_led": 0,
+    "confirmes_n": 0,
+    "cur_sig": "233504|73|76006|30224|1763|95354|182|158583|5440"
   }
 }

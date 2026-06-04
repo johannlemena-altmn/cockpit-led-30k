@@ -16,6 +16,7 @@
         --line:#2a3a50;--soft:#1e2d42;--navy:#4a7fc1;--blue:#5a9fd4;}
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
 body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
      background:var(--bg);color:var(--ink);line-height:1.45;min-height:100dvh}
 
@@ -96,12 +97,69 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 .kpi-mini.warn .v{color:var(--amber)}
 .kpi-mini.danger .v{color:var(--red)}
 
-/* ── DELTA BAND ──────────────────────────── */
-.delta-band{background:var(--soft);border:1px solid var(--line);border-radius:10px;
-            padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;
-            gap:16px;align-items:center;flex-wrap:wrap}
-.delta-chip{font-weight:700}
-.delta-pos{color:var(--green)}.delta-neg{color:var(--red)}.delta-0{color:var(--muted)}
+/* ── DELTA CARD (depuis la dernière maj) ──── */
+.delta-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+            padding:13px 14px 11px;margin-bottom:12px;
+            animation:slide-in .35s ease forwards;scroll-margin-top:60px}
+.delta-card.up   {border-left:4px solid var(--green)}
+.delta-card.down {border-left:4px solid var(--red)}
+.delta-card.flat {border-left:4px solid var(--muted)}
+.delta-head{display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:11px;gap:10px}
+.delta-h-left{display:flex;flex-direction:column}
+.delta-h-title{font-size:13px;font-weight:800}
+.delta-h-sub{font-size:10.5px;color:var(--muted);margin-top:1px}
+.delta-verdict{font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:999px;
+               white-space:nowrap;flex-shrink:0}
+.delta-verdict.up  {background:#e8f5e9;color:#1f7a33}
+.delta-verdict.down{background:#fdecea;color:#a31515}
+.delta-verdict.flat{background:var(--soft);color:var(--muted)}
+@media(prefers-color-scheme:dark){
+  .delta-verdict.up{background:#0c2418;color:#66bb6a}
+  .delta-verdict.down{background:#2a0a0a;color:#ef5350}
+}
+.delta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.dstat{background:var(--soft);border:1px solid var(--line);border-radius:10px;
+       padding:9px 11px;display:flex;flex-direction:column;gap:1px}
+.dstat-top{display:flex;align-items:baseline;gap:5px}
+.dstat-val{font-size:18px;font-weight:800;line-height:1}
+.dstat-arr{font-size:13px;font-weight:800}
+.dstat-lbl{font-size:10px;color:var(--muted);line-height:1.25}
+.dstat.good .dstat-val,.dstat.good .dstat-arr{color:var(--green)}
+.dstat.bad  .dstat-val,.dstat.bad  .dstat-arr{color:var(--red)}
+.dstat.neutral .dstat-val{color:var(--ink)}.dstat.neutral .dstat-arr{color:var(--muted)}
+.delta-empty{font-size:11.5px;color:var(--muted);line-height:1.5}
+
+/* ── QUICK-NAV STICKY ─────────────────────── */
+.qnav{position:sticky;top:0;z-index:40;display:flex;gap:7px;
+      padding:9px 14px;margin:0 -14px 12px;overflow-x:auto;
+      background:var(--bg);
+      background:color-mix(in srgb,var(--bg) 88%,transparent);
+      backdrop-filter:saturate(140%) blur(10px);
+      -webkit-backdrop-filter:saturate(140%) blur(10px);
+      border-bottom:1px solid var(--line);scrollbar-width:none}
+.qnav::-webkit-scrollbar{display:none}
+.qnav a{flex:0 0 auto;font-size:12px;font-weight:600;text-decoration:none;
+        color:var(--muted);padding:7px 13px;border-radius:999px;
+        border:1px solid var(--line);background:var(--card);white-space:nowrap;
+        transition:all .15s;display:flex;align-items:center;gap:5px}
+.qnav a.active{background:var(--navy);color:#fff;border-color:transparent;
+        box-shadow:0 2px 8px rgba(31,58,95,.28)}
+.qnav a .qn-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── LÉGENDE PRIOS ────────────────────────── */
+.qw-legend{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.qw-leg{font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:999px;
+        display:flex;align-items:center;gap:5px;border:1px solid var(--line);
+        background:var(--card);color:var(--muted)}
+.qw-leg .lg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.qw-impact{font-size:12px;font-weight:700;color:var(--ink);background:var(--soft);
+           border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+           margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.qw-impact b{color:var(--amber)}
+
+/* offset ancrage sections */
+.sec-title{scroll-margin-top:58px}
 
 /* ── PIPELINE ENTONNOIR ──────────────────── */
 .funnel{display:flex;flex-direction:column;gap:7px}
@@ -343,6 +401,12 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 <!-- SCROLL -->
 <div class="scroll">
 
+  <!-- 🧭 NAVIGATION RAPIDE (sticky) ─────────── -->
+  <nav class="qnav" id="qnav" style="display:none"></nav>
+
+  <!-- 📊 DELTA — depuis la dernière mise à jour -->
+  <div id="deltaWrap"></div>
+
   <!-- 📋 BRIEF DU JOUR (copiable) ───────────── -->
   <button class="brief-btn" id="briefBtn" style="display:none">
     <span>📋 Copier le brief du jour</span>
@@ -362,10 +426,12 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
   <div class="sec-title first" id="qwTitle" style="display:none">
     ⚡ Actions du jour <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:.6">· touchez une carte pour voir les dossiers</span>
   </div>
+  <div class="qw-legend" id="qwLegend" style="display:none">
+    <span class="qw-leg"><span class="lg-dot" style="background:var(--red)"></span>🔴 bloquant</span>
+    <span class="qw-leg"><span class="lg-dot" style="background:var(--relance)"></span>📞 relance</span>
+    <span class="qw-leg"><span class="lg-dot" style="background:var(--amber)"></span>📋 audit</span>
+  </div>
   <div id="qwWrap"></div>
-
-  <!-- Delta J-1 -->
-  <div id="deltaWrap" style="display:none"></div>
 
   <!-- 🎯 SIMULATEUR OBJECTIF ──────────────── -->
   <div class="sec-title" id="simTitle" style="display:none">🎯 Simulateur — atteins ton objectif</div>
@@ -564,8 +630,11 @@ function applyData(d){
   var tw=el('kTauxWrap');
   if(tw) tw.className='kpi-mini '+(tp>=95?'ok':tp>=80?'warn':'danger');
 
+  /* delta « depuis la dernière mise à jour » (toujours rendu, même vide) */
+  renderDelta(d.delta, gen);
+
   /* quickwins */
-  if(qw.length) renderQW(qw, d.brief, d.delta);
+  if(qw.length) renderQW(qw, d.brief);
 
   /* simulateur objectif */
   if(qw.length) initSim(d);
@@ -578,6 +647,9 @@ function applyData(d){
 
   /* audit pipeline (Prime Evolution) */
   if(d.audit_pipeline) renderAuditPipeline(d.audit_pipeline);
+
+  /* navigation rapide (sticky) — bâtie sur les sections réellement visibles */
+  buildQNav();
 
   /* onboarding : tour guidé au 1er chargement, sinon bouton "?" */
   show('tourHelp');
@@ -595,6 +667,12 @@ var TOUR_STEPS=[
   { target:'.hdr', title:'Le KPI central : taux de pose',
     text:'C\'est le verrou du débit. Tant qu\'il est sous <b>95 %</b>, des LED signées dorment au lieu d\'être déposées.',
     act:'👉 S\'il est bas, c\'est que le pipeline traîne : les blocs ci-dessous te disent où.' },
+  { target:'#qnav', title:'Navigation rapide',
+    text:'Cette barre <b>colle en haut</b> quand tu fais défiler. Touche une pastille pour sauter direct à une section (Actions, Confirmés, Audit, Pipeline…).',
+    act:'👉 Plus besoin de scroller : la pastille active te montre où tu es.' },
+  { target:'#deltaWrap', title:'Ce qui a bougé',
+    text:'Le <b>delta</b> depuis la dernière mise à jour : déposés, taux de pose, stock, modifs. <b style="color:#2E7D32">Vert</b> = ça avance, <b style="color:#C0392B">rouge</b> = ça cale.',
+    act:'👉 Ton premier réflexe du matin : qu\'est-ce qui a progressé / reculé depuis hier ?' },
   { target:'#qwWrap', title:'Actions du jour',
     text:'Les dossiers triés par <b>priorité</b> : 🔴 modifs bloquantes, 📞 relances signature, 📋 audits à traiter.',
     act:'👉 Tape une carte pour voir la liste des dossiers + copier leurs n° (à coller dans le CRM).' },
@@ -777,8 +855,9 @@ var QW={
   action: {cls:'qw-action', flag:'📋', lbl:'AUDITS à traiter'},
 };
 
-function renderQW(qw, brief, delta){
+function renderQW(qw, brief){
   show('qwTitle');
+  var leg=el('qwLegend'); if(leg) leg.style.display='flex';
   var wrap=el('qwWrap'); if(!wrap) return;
   var html='';
 
@@ -788,6 +867,13 @@ function renderQW(qw, brief, delta){
       +'padding:11px 14px;background:var(--soft);border-left:4px solid var(--red);'
       +'border-radius:10px;margin-bottom:12px;animation:slide-in .3s ease forwards">'
       +'⚡ '+brief.headline+'</div>';
+  }
+
+  /* impact total débloquable (somme des LED en jeu) */
+  var impactTot=qw.reduce(function(s,q){return s+(q.led||0)},0);
+  if(impactTot>0){
+    html+='<div class="qw-impact">⚡ <span><b>'+fi(impactTot)+' LED</b> '
+      +'débloquables aujourd\'hui · commence par le <b>#1</b> ci-dessous</span></div>';
   }
 
   qw.forEach(function(q){
@@ -832,22 +918,115 @@ function renderQW(qw, brief, delta){
       openDrawer(card.getAttribute('data-stage'));
     });
   });
+}
 
-  /* delta J-1 */
-  if(delta && (delta.deposees_delta||delta.action_n_delta)){
-    show('deltaWrap');
-    var dw=el('deltaWrap'); if(!dw) return;
-    var dd=delta.deposees_delta, ad=delta.action_n_delta;
-    var bilan={'progression':'✅ Pipeline progresse','pipeline_reduit':'📉 Stock réduit',
-               'stable':'= Stable'}[delta.bilan]||delta.bilan;
-    dw.innerHTML='<div class="delta-band">'
-      +'<span style="font-size:11px;color:var(--muted)">Δ vs '+delta.date_ref+'</span>'
-      +(dd>0?'<span class="delta-chip delta-pos">+'+fi(dd)+' LED déposées</span>'
-        :dd<0?'<span class="delta-chip delta-neg">'+fi(dd)+' LED</span>':'')
-      +(ad<0?'<span class="delta-chip delta-pos">'+ad+' dos. en moins</span>'
-        :ad>0?'<span class="delta-chip delta-neg">+'+ad+' dos. de plus</span>':'')
-      +'<span style="font-size:11px">'+bilan+'</span>'
-      +'</div>';
+/* ── DELTA — depuis la dernière mise à jour ─── */
+function renderDelta(delta, gen){
+  var dw=el('deltaWrap'); if(!dw) return;
+  if(!delta){
+    dw.innerHTML='<div class="delta-card flat" id="sec-delta">'
+      +'<div class="delta-head"><div class="delta-h-left">'
+      +'<span class="delta-h-title">📊 Évolution</span>'
+      +'<span class="delta-h-sub">premier relevé enregistré</span></div></div>'
+      +'<div class="delta-empty">Point de référence posé. Le <b>delta</b> '
+      +'(déposés, taux de pose, stock…) s\'affichera au <b>prochain export</b>.</div></div>';
+    return;
+  }
+
+  /* libellé de la référence */
+  var refLbl = delta.kind==='intraday'
+    ? 'depuis la dernière mise à jour'
+    : 'vs '+(delta.ref_date?dateFr(delta.ref_date):'hier');
+
+  /* définition des tuiles : sens=+1 si "hausse=bon", -1 si "baisse=bon" */
+  var defs=[
+    {key:'deposees_led', sens:1,  lbl:'LED déposées',  unit:''},
+    {key:'deposees_n',   sens:1,  lbl:'dossiers dépos.',unit:''},
+    {key:'taux_pose',    sens:1,  lbl:'taux de pose',  unit:'pt'},
+    {key:'led_actif',    sens:-1, lbl:'stock actif',   unit:' LED'},
+    {key:'modif_audit',  sens:-1, lbl:'modifs audit',  unit:''},
+    {key:'confirmes_led',sens:1,  lbl:'LED confirmées',unit:''},
+  ];
+
+  /* score global → verdict */
+  var score=0;
+  ['deposees_led','taux_pose','led_actif','modif_audit'].forEach(function(k){
+    var d=delta[k]||0, s=(k==='led_actif'||k==='modif_audit')?-1:1;
+    if(d!==0) score += (d*s>0?1:-1);
+  });
+  var vClass=score>0?'up':score<0?'down':'flat';
+  var vTxt  =score>0?'✅ Ça avance':score<0?'⚠️ Ça cale':'= Stable';
+
+  var tiles=defs.map(function(t){
+    var v=delta[t.key]; if(v==null||v===0) return '';
+    var good=(v*t.sens)>0;
+    var cls=good?'good':'bad';
+    var arr=v>0?'↑':'↓';
+    var sign=v>0?'+':'';
+    return '<div class="dstat '+cls+'">'
+      +'<div class="dstat-top"><span class="dstat-val">'+sign+fi(v)+t.unit+'</span>'
+      +'<span class="dstat-arr">'+arr+'</span></div>'
+      +'<div class="dstat-lbl">'+t.lbl+'</div></div>';
+  }).filter(Boolean).join('');
+
+  if(!tiles){
+    tiles='<div class="dstat neutral"><div class="dstat-top">'
+      +'<span class="dstat-val">=</span></div>'
+      +'<div class="dstat-lbl">aucun mouvement depuis le dernier relevé</div></div>';
+  }
+
+  dw.innerHTML='<div class="delta-card '+vClass+'" id="sec-delta">'
+    +'<div class="delta-head">'
+    +'<div class="delta-h-left"><span class="delta-h-title">📊 Δ '+refLbl+'</span>'
+    +'<span class="delta-h-sub">'+(gen?dateFr(gen):'')+' · mouvement du pipeline</span></div>'
+    +'<span class="delta-verdict '+vClass+'">'+vTxt+'</span></div>'
+    +'<div class="delta-grid">'+tiles+'</div></div>';
+}
+
+/* ── NAVIGATION RAPIDE (sticky + scrollspy) ── */
+function buildQNav(){
+  var nav=el('qnav'); if(!nav) return;
+  var defs=[
+    {id:'qwTitle',    label:'⚡ Actions',   color:'var(--red)'},
+    {id:'confTitle',  label:'✅ Confirmés', color:'var(--green)'},
+    {id:'auditTitle', label:'🔍 Audit',     color:'var(--blue)'},
+    {id:'funnelTitle',label:'📊 Pipeline',  color:'var(--amber)'},
+  ];
+  var visible=defs.filter(function(d){
+    var e=el(d.id); return e && e.style.display!=='none';
+  });
+  if(!visible.length){ nav.style.display='none'; return; }
+
+  var html=visible.map(function(d){
+    return '<a href="#'+d.id+'" data-tgt="'+d.id+'">'
+      +'<span class="qn-dot" style="background:'+d.color+'"></span>'+d.label+'</a>';
+  }).join('');
+  html+='<a href="history_dashboard.html">📈 Historique</a>';
+  nav.innerHTML=html;
+  nav.style.display='flex';
+
+  /* clic → scroll doux (gère l\'offset via scroll-margin-top) */
+  nav.querySelectorAll('a[data-tgt]').forEach(function(a){
+    a.addEventListener('click',function(ev){
+      ev.preventDefault();
+      var t=el(a.getAttribute('data-tgt'));
+      if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  /* scrollspy : surligne la section courante */
+  if('IntersectionObserver' in window){
+    var links={};
+    nav.querySelectorAll('a[data-tgt]').forEach(function(a){links[a.getAttribute('data-tgt')]=a;});
+    var seen={};
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ seen[en.target.id]=en.isIntersecting; });
+      var act=visible.map(function(v){return v.id}).filter(function(id){return seen[id]})[0];
+      Object.keys(links).forEach(function(id){
+        links[id].classList.toggle('active', id===act);
+      });
+    },{rootMargin:'-56px 0px -72% 0px',threshold:0});
+    visible.forEach(function(v){var e=el(v.id); if(e) io.observe(e);});
   }
 }
 
@@ -1148,9 +1327,14 @@ function buildBrief(){
   L.push('📊 Pipeline : '+(p.total_actif||0)+' dossiers actifs · '+fi(p.led_actif||0)+' LED');
   L.push('✅ Déposé : '+fi(dep.n||0)+' dossiers · '+fi(dep.led||0)+' LED ('+(p.pct_depose||0)+'%)');
   L.push('🎯 Taux de pose : '+(d.taux_pose_pct||0)+'% (cible ≥95%, écart '+(95-(d.taux_pose_pct||0))+'pt)');
-  if(dl && (dl.deposees_delta||dl.action_n_delta)){
-    var dd=dl.deposees_delta;
-    L.push('📈 Δ vs '+dl.date_ref+' : '+(dd>0?'+':'')+fi(dd)+' LED déposées');
+  if(dl){
+    var refTxt=dl.kind==='intraday'?'depuis la dernière maj':'vs '+(dl.ref_date?dateFr(dl.ref_date):'hier');
+    var parts=[];
+    if(dl.deposees_led) parts.push((dl.deposees_led>0?'+':'')+fi(dl.deposees_led)+' LED déposées');
+    if(dl.taux_pose)    parts.push((dl.taux_pose>0?'+':'')+dl.taux_pose+'pt taux pose');
+    if(dl.led_actif)    parts.push((dl.led_actif>0?'+':'')+fi(dl.led_actif)+' stock actif');
+    if(dl.modif_audit)  parts.push((dl.modif_audit>0?'+':'')+dl.modif_audit+' modifs audit');
+    if(parts.length) L.push('📈 Δ '+refTxt+' : '+parts.join(' · '));
   }
   L.push('');
   L.push('⚡ ACTIONS DU JOUR :');
