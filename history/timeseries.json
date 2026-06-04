@@ -2,6 +2,114 @@
   "generated": "2026-06-04",
   "days": [
     {
+      "date": "2026-06-01",
+      "sources": [
+        "betool",
+        "audit",
+        "confirmes"
+      ],
+      "led_signees": 231840,
+      "taux_pose": 69,
+      "led_actif": 81240,
+      "action_led": 33420,
+      "pct_depose": 52,
+      "pipeline": {
+        "en_cours": 921,
+        "attente_audit": 418,
+        "attente_signature": 171,
+        "modif_audit": 14,
+        "depose": 1695
+      },
+      "pipeline_led": {
+        "en_cours": 49800,
+        "attente_audit": 22640,
+        "attente_signature": 10560,
+        "modif_audit": 1080,
+        "depose": 90120
+      },
+      "audit": {
+        "modif_a_faire": 201,
+        "etude_prête": 2370,
+        "etude_en_cours": 128,
+        "etude_a_realiser": 42,
+        "annulation": 23
+      },
+      "confirmes_led": 156920,
+      "confirmes_n": 5391
+    },
+    {
+      "date": "2026-06-02",
+      "sources": [
+        "betool",
+        "audit",
+        "confirmes"
+      ],
+      "led_signees": 232180,
+      "taux_pose": 70,
+      "led_actif": 79560,
+      "action_led": 32100,
+      "pct_depose": 53,
+      "pipeline": {
+        "en_cours": 908,
+        "attente_audit": 401,
+        "attente_signature": 163,
+        "modif_audit": 11,
+        "depose": 1718
+      },
+      "pipeline_led": {
+        "en_cours": 48140,
+        "attente_audit": 21340,
+        "attente_signature": 9960,
+        "modif_audit": 860,
+        "depose": 91880
+      },
+      "audit": {
+        "modif_a_faire": 193,
+        "etude_prête": 2386,
+        "etude_en_cours": 120,
+        "etude_a_realiser": 40,
+        "annulation": 25
+      },
+      "confirmes_led": 157680,
+      "confirmes_n": 5412
+    },
+    {
+      "date": "2026-06-03",
+      "sources": [
+        "betool",
+        "audit",
+        "confirmes"
+      ],
+      "led_signees": 232840,
+      "taux_pose": 71,
+      "led_actif": 78540,
+      "action_led": 31280,
+      "pct_depose": 54,
+      "pipeline": {
+        "en_cours": 898,
+        "attente_audit": 396,
+        "attente_signature": 158,
+        "modif_audit": 9,
+        "depose": 1731
+      },
+      "pipeline_led": {
+        "en_cours": 47420,
+        "attente_audit": 20940,
+        "attente_signature": 9690,
+        "modif_audit": 780,
+        "depose": 92840
+      },
+      "audit": {
+        "modif_a_faire": 187,
+        "etude_prête": 2396,
+        "etude_en_cours": 116,
+        "etude_a_realiser": 39,
+        "annulation": 26
+      },
+      "confirmes_led": 158120,
+      "confirmes_n": 5428
+    },
+    {
       "date": "2026-06-04",
       "sources": [
         "betool",

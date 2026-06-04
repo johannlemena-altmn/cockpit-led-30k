@@ -17,66 +17,105 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
      background:var(--bg);color:var(--ink);line-height:1.45;min-height:100dvh}
+
+/* ── HEADER ── */
 .hdr{background:linear-gradient(145deg,#1F3A5F,#2b5899);color:#fff;
      padding:max(env(safe-area-inset-top),16px) 16px 16px}
 .hdr-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.7}
 .hdr h1{font-size:20px;font-weight:700;margin-top:2px}
 .hdr-date{font-size:11px;opacity:.78;margin-top:3px}
 .hdr-nav{margin-top:10px}
-.hdr-nav a{font-size:11px;color:#ffd24a;text-decoration:none;font-weight:600}
+.hdr-nav a{font-size:12px;color:#ffd24a;text-decoration:none;font-weight:600;
+           display:inline-flex;align-items:center;gap:5px;
+           padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12)}
+
+/* ── SCROLL ── */
 .scroll{padding:14px 14px calc(env(safe-area-inset-bottom)+40px);max-width:560px;margin:0 auto}
+
+/* ── SECTION TITLES ── */
 .sec-title{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;
-           letter-spacing:.14em;margin:20px 0 10px}
+           letter-spacing:.14em;margin:22px 0 10px}
 .sec-title.first{margin-top:4px}
+
+/* ── CARDS ── */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
       padding:14px 16px;margin-bottom:10px}
 
-/* toggle granularité */
+/* ── GRANULARITY TOGGLE ── */
 .gran{display:flex;gap:6px;background:var(--soft);border:1px solid var(--line);
-      border-radius:12px;padding:4px;margin-bottom:12px}
+      border-radius:12px;padding:4px;margin-bottom:14px}
 .gran button{flex:1;border:none;background:none;font-family:inherit;font-size:12.5px;
-      font-weight:600;color:var(--muted);padding:8px;border-radius:9px;cursor:pointer}
-.gran button.active{background:var(--navy);color:#fff}
+      font-weight:600;color:var(--muted);padding:8px;border-radius:9px;cursor:pointer;transition:all .2s}
+.gran button.active{background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(31,58,95,.3)}
 
-/* KPI delta cards */
-.kgrid{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.kbox{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);
-      border-radius:var(--r);padding:12px 14px}
-.kbox .v{font-size:22px;font-weight:800;color:var(--navy)}
-.kbox .l{font-size:10.5px;color:var(--muted);margin-top:2px}
-.kbox .d{font-size:11.5px;font-weight:700;margin-top:5px}
-.d.pos{color:var(--green)}.d.neg{color:var(--red)}.d.zero{color:var(--muted)}
+/* ── SUMMARY CARD ── */
+.summary-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.summary-icon{font-size:32px;flex-shrink:0}
+.summary-body{flex:1}
+.summary-title{font-size:14px;font-weight:700}
+.summary-sub{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.5}
+.summary-trend{font-size:18px;font-weight:800;padding:8px 12px;border-radius:10px;text-align:center;flex-shrink:0}
+.trend-up{background:#e8f5e9;color:#2E7D32}
+.trend-down{background:#fdecea;color:#C0392B}
+.trend-flat{background:var(--soft);color:var(--muted)}
+@media(prefers-color-scheme:dark){
+  .trend-up{background:#0c2418;color:#66bb6a}
+  .trend-down{background:#2a0a0a;color:#ef5350}
+}
 
-/* chart bars (par période) */
-.chart{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+/* ── KPI DELTA CARDS ── */
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.kbox{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.kbox .k-label{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:6px}
+.kbox .k-val{font-size:22px;font-weight:800;color:var(--navy);line-height:1.1}
+.kbox .k-delta{font-size:12px;font-weight:700;margin-top:5px;display:flex;align-items:center;gap:4px}
+.k-delta .arr{font-size:14px}
+.d-pos{color:var(--green)}.d-neg{color:var(--red)}.d-zero{color:var(--muted)}
+
+/* ── TAUX POSE CHART ── */
+.chart{display:flex;flex-direction:column;gap:10px;margin-top:4px}
 .crow{display:flex;align-items:center;gap:9px}
-.clbl{font-size:10.5px;color:var(--muted);width:60px;text-align:right;flex-shrink:0}
-.ctrack{flex:1;background:var(--soft);border-radius:6px;height:26px;overflow:hidden;position:relative}
+.clbl{font-size:10.5px;color:var(--muted);width:64px;text-align:right;flex-shrink:0;line-height:1.2}
+.ctrack{flex:1;background:var(--soft);border-radius:6px;height:28px;overflow:hidden;position:relative}
 .cbar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;
-      font-size:11px;font-weight:700;color:#fff;white-space:nowrap;width:0;
+      font-size:11.5px;font-weight:700;color:#fff;white-space:nowrap;width:0;
       transition:width .8s cubic-bezier(.4,0,.2,1)}
-.cdelta{font-size:10.5px;font-weight:700;width:52px;flex-shrink:0;text-align:right}
+.cdelta{font-size:11px;font-weight:700;width:48px;flex-shrink:0;text-align:right}
+.ctarget-line{position:absolute;right:0;top:0;bottom:0;width:2px;
+  background:rgba(39,174,96,.5);z-index:1}
+.cbar-ref{position:absolute;top:0;bottom:0;width:2px;background:rgba(39,174,96,.6)}
+.chart-legend{display:flex;gap:12px;margin-top:8px;font-size:10.5px;color:var(--muted)}
+.chart-legend span{display:flex;align-items:center;gap:4px}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* évolution pipeline (multi-stage) */
-.stage-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
+/* ── STAGE EVOLUTION ── */
+.stage-row{display:flex;align-items:center;gap:8px;padding:10px 0;
+           border-top:1px solid var(--line)}
 .stage-row:first-child{border-top:none}
-.stage-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.stage-name{font-size:12.5px;font-weight:600;flex:1}
-.stage-spark{display:flex;align-items:flex-end;gap:2px;height:26px}
-.spark-b{width:6px;background:var(--blue);border-radius:2px 2px 0 0;min-height:2px;opacity:.55}
+.stage-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.stage-name{font-size:12.5px;font-weight:600;flex:1;line-height:1.2}
+.stage-spark{display:flex;align-items:flex-end;gap:2px;height:28px}
+.spark-b{width:7px;background:var(--blue);border-radius:2px 2px 0 0;min-height:2px;
+          opacity:.45;transition:height .6s ease}
 .spark-b.last{opacity:1}
-.stage-val{font-size:14px;font-weight:700;width:42px;text-align:right}
-.stage-d{font-size:11px;font-weight:700;width:46px;text-align:right}
+.stage-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0;min-width:56px}
+.stage-val{font-size:15px;font-weight:800}
+.stage-d{font-size:11px;font-weight:700}
 
-/* micro : top prios */
-.daysel{width:100%;padding:11px 12px;border-radius:11px;border:1px solid var(--line);
-        background:var(--card);color:var(--ink);font-size:14px;font-family:inherit;margin-bottom:10px}
-.psort{display:flex;gap:7px;margin-bottom:10px}
+/* ── MICRO : TOP PRIOS ── */
+.micro-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.daysel{flex:1;padding:10px 12px;border-radius:11px;border:1px solid var(--line);
+        background:var(--card);color:var(--ink);font-size:14px;font-family:inherit}
+.psort{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
 .psort button{font-size:11.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
-        background:var(--card);color:var(--muted);cursor:pointer;font-family:inherit}
+        background:var(--card);color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s}
 .psort button.active{background:var(--navy);color:#fff;border-color:transparent}
 .prow{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;
-      background:var(--card);border:1px solid var(--line);margin-bottom:6px}
+      background:var(--card);border:1px solid var(--line);margin-bottom:6px;
+      transition:transform .1s}
+.prow:active{transform:scale(.99)}
 .prank{font-size:11px;font-weight:700;color:var(--muted);width:22px;text-align:center;flex-shrink:0}
 .pref{flex:1;font-size:13.5px;font-weight:600;font-family:ui-monospace,Menlo,monospace}
 .pref .int{font-weight:600;color:var(--amber);font-family:inherit;font-size:11.5px}
@@ -91,42 +130,81 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
 }
 .pvol{font-size:14px;font-weight:700;color:var(--navy);text-align:right;white-space:nowrap}
 .pvol-l{font-size:9px;color:var(--muted)}
-.page{font-size:11px;color:var(--muted);font-style:italic;padding:8px 4px}
+.prow-age{font-size:10px;padding:2px 7px;border-radius:999px;background:var(--soft);
+  color:var(--muted);flex-shrink:0;white-space:nowrap}
+.prow-age.old{background:#fdecea;color:#7a1a1a;font-weight:600}
+@media(prefers-color-scheme:dark){.prow-age.old{background:#2a0a0a;color:#ff8a80}}
+.page-info{font-size:11px;color:var(--muted);font-style:italic;padding:8px 4px;text-align:center}
 .empty{text-align:center;color:var(--muted);font-size:13px;padding:30px 10px}
-.foot{text-align:center;font-size:10.5px;color:var(--muted);margin-top:22px}
+
+/* ── BACK BUTTON (bottom nav) ── */
+.bottom-nav{display:flex;margin-top:24px;margin-bottom:6px}
+.back-btn{flex:1;display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,#1F3A5F 0%,#2E6FB7 100%);
+  border-radius:16px;padding:14px 18px;text-decoration:none;color:#fff;
+  box-shadow:0 4px 16px rgba(46,111,183,.3)}
+.back-btn-icon{font-size:24px;flex-shrink:0}
+.back-btn-body{flex:1}
+.back-btn-title{font-size:14px;font-weight:700}
+.back-btn-sub{font-size:11px;opacity:.75;margin-top:1px}
+
+.foot{text-align:center;font-size:10.5px;color:var(--muted);margin-top:16px}
 </style>
 </head>
 <body>
+
 <div class="hdr">
   <div class="hdr-tag">Énergie Responsable · BAT-EQ-127</div>
-  <h1>📈 Historique · évolution</h1>
+  <h1>📈 Évolution &amp; historique</h1>
   <div class="hdr-date" id="hdrRange">Chargement…</div>
-  <div class="hdr-nav"><a href="demo_dashboard.html">← Retour au cockpit du jour</a></div>
+  <div class="hdr-nav">
+    <a href="demo_dashboard.html">← Cockpit du jour</a>
+  </div>
 </div>
 
 <div class="scroll">
-  <div class="gran" id="gran">
+
+  <!-- granularité -->
+  <div class="gran" id="gran" style="margin-top:14px">
     <button data-g="day" class="active">Jour</button>
     <button data-g="week">Semaine</button>
     <button data-g="month">Mois</button>
   </div>
 
-  <!-- MACRO : KPI + deltas -->
-  <div class="sec-title first">Vue macro · ce qui a changé</div>
+  <!-- RÉSUMÉ TENDANCE ── -->
+  <div class="summary-card" id="summaryCard" style="display:none">
+    <div class="summary-icon" id="summaryIcon">📊</div>
+    <div class="summary-body">
+      <div class="summary-title" id="summaryTitle">—</div>
+      <div class="summary-sub" id="summarySub">—</div>
+    </div>
+    <div class="summary-trend" id="summaryTrend">—</div>
+  </div>
+
+  <!-- KPI MACRO -->
+  <div class="sec-title first">KPIs clés · dernière période</div>
   <div class="kgrid" id="kpiGrid"></div>
 
-  <!-- LED déposées / taux pose dans le temps -->
-  <div class="sec-title">LED déposées (taux de pose) par période</div>
-  <div class="card"><div class="chart" id="poseChart"></div>
-    <div class="page" id="poseNote"></div></div>
+  <!-- TAUX DE POSE -->
+  <div class="sec-title">Taux de pose par période <span style="font-weight:400;letter-spacing:0;text-transform:none;opacity:.6">(cible ≥ 95%)</span></div>
+  <div class="card">
+    <div class="chart" id="poseChart"></div>
+    <div class="chart-legend">
+      <span><span class="leg-dot" style="background:#27ae60"></span>≥ 95% ✓</span>
+      <span><span class="leg-dot" style="background:#E08600"></span>80–94%</span>
+      <span><span class="leg-dot" style="background:#C0392B"></span>&lt; 80%</span>
+    </div>
+  </div>
 
-  <!-- Évolution pipeline par statut -->
+  <!-- ÉVOLUTION PIPELINE -->
   <div class="sec-title">Évolution du pipeline par statut</div>
   <div class="card" id="stageCard"></div>
 
-  <!-- MICRO : top prios du jour -->
-  <div class="sec-title">Vue micro · top prios d'une journée</div>
-  <select class="daysel" id="daySel"></select>
+  <!-- MICRO : TOP PRIOS DU JOUR -->
+  <div class="sec-title">Top prios · vue journée</div>
+  <div class="micro-header">
+    <select class="daysel" id="daySel"></select>
+  </div>
   <div class="psort" id="pSort">
     <button data-s="prio" class="active">Priorité</button>
     <button data-s="vol">Volume</button>
@@ -134,169 +212,285 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
   </div>
   <div id="prioList"></div>
 
-  <div class="foot" id="foot">Cockpit LED 30k · historique anonymisé (zéro PII)</div>
+  <!-- RETOUR COCKPIT -->
+  <div class="bottom-nav">
+    <a href="demo_dashboard.html" class="back-btn">
+      <div class="back-btn-icon">🏠</div>
+      <div class="back-btn-body">
+        <div class="back-btn-title">Retour au cockpit du jour</div>
+        <div class="back-btn-sub">actions, quickwins, brief, simulateur</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="foot">Cockpit LED 30k · historique anonymisé (zéro PII)</div>
 </div>
 
 <script>
 (function(){
+'use strict';
 var $=function(id){return document.getElementById(id)};
-var fi=function(n){return (n==null?0:n).toLocaleString('fr-FR')};
-var STAGE_COLORS={modif_audit:'#C0392B',modif_a_faire:'#C0392B',attente_signature:'#E08600',
-  attente_audit:'#2E6FB7',etude_prête:'#5a9fd4',attente_doc:'#2E6FB7',en_cours:'#7f8fa6',depose:'#27ae60'};
-var STAGE_NAMES={modif_audit:'🔴 Modif audit',modif_a_faire:'🔴 Modif (étude)',
-  attente_signature:'📞 Signature',attente_audit:'📋 Audit',etude_prête:'✅ Étude prête',
-  en_cours:'Installation',depose:'Déposé'};
-var STATE={days:[],gran:'day',sort:'prio'};
+var fi=function(n){return(n==null?0:Math.round(n)).toLocaleString('fr-FR')};
 
-/* ── périodes (jour / semaine ISO / mois) ── */
-function isoWeek(d){var t=new Date(d);t.setHours(0,0,0,0);
+var STAGE_COLORS={
+  modif_audit:'#C0392B',modif_a_faire:'#C0392B',
+  attente_signature:'#E08600',
+  attente_audit:'#2E6FB7',etude_prête:'#5a9fd4',
+  en_cours:'#7f8fa6',depose:'#27ae60'
+};
+var STAGE_NAMES={
+  modif_audit:'🔴 Modif audit (CRM)',
+  modif_a_faire:'🔴 Modif audit (étude)',
+  attente_signature:'📞 Attente signature',
+  attente_audit:'📋 Attente audit',
+  etude_prête:'✅ Étude prête',
+  en_cours:'🔧 En cours installation',
+  depose:'📥 Déposé'
+};
+/* hausse de ces stages = mauvais (stock bloquant) */
+var STAGE_INVERT={modif_audit:true,modif_a_faire:true,attente_signature:true,attente_audit:true};
+
+var STATE={days:[],gran:'day',sort:'prio',curDay:null};
+
+/* ── ISO semaine ── */
+function isoWeek(d){
+  var t=new Date(d); t.setHours(0,0,0,0);
   t.setDate(t.getDate()+3-((t.getDay()+6)%7));
   var w1=new Date(t.getFullYear(),0,4);
-  return t.getFullYear()+'-S'+String(1+Math.round(((t-w1)/86400000-3+((w1.getDay()+6)%7))/7)).padStart(2,'0');}
+  return t.getFullYear()+'-S'+String(1+Math.round(((t-w1)/86400000-3+((w1.getDay()+6)%7))/7)).padStart(2,'0');
+}
 function periodKey(dateStr,g){
   if(g==='day') return dateStr;
   var d=new Date(dateStr+'T00:00:00');
   if(g==='week') return isoWeek(d);
-  return dateStr.slice(0,7); // YYYY-MM
+  return dateStr.slice(0,7);
 }
+var MONTHS=['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc'];
+var DAYS=['dim','lun','mar','mer','jeu','ven','sam'];
 function periodLabel(key,g){
-  if(g==='day'){var p=key.split('-');return p[2]+'/'+p[1];}
+  if(g==='day'){
+    var p=key.split('-');
+    var d=new Date(key+'T00:00:00');
+    return DAYS[d.getDay()]+' '+p[2]+'/'+p[1];
+  }
   if(g==='week') return key.replace('-S','·S');
-  var m=['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc'];
-  var pp=key.split('-');return m[+pp[1]-1]+' '+pp[0].slice(2);
+  var pp=key.split('-');return MONTHS[+pp[1]-1]+' '+pp[0].slice(2);
 }
-/* regroupe : pour des métriques de STOCK, on prend la DERNIÈRE valeur de la période */
 function buildPeriods(g){
   var buckets={};
   STATE.days.forEach(function(day){
     var k=periodKey(day.date,g);
-    buckets[k]=day; // les jours sont triés croissants → garde le dernier
+    buckets[k]=day; // sorted asc → keep last
   });
   return Object.keys(buckets).sort().map(function(k){
     return {key:k,label:periodLabel(k,g),day:buckets[k]};
   });
 }
 
-/* ── delta helper ── */
+/* ── delta helpers ── */
 function deltaHtml(cur,prev,suffix,invert){
-  if(prev==null) return '<span class="d zero">—</span>';
+  if(prev==null) return '<span class="d-zero">—</span>';
   var dv=cur-prev;
-  var good = invert? dv<0 : dv>0;
-  var cls = dv===0?'zero':(good?'pos':'neg');
-  var sign = dv>0?'+':'';
-  return '<span class="d '+cls+'">'+sign+fi(dv)+(suffix||'')+'</span>';
+  var good=invert?(dv<0):(dv>0);
+  var cls=dv===0?'d-zero':(good?'d-pos':'d-neg');
+  var arr=dv===0?'→':(good?'↑':'↓');
+  var sign=dv>0?'+':'';
+  return '<span class="k-delta '+cls+'"><span class="arr">'+arr+'</span>'+sign+fi(dv)+(suffix||'')+'</span>';
+}
+function deltaVal(cur,prev,invert){
+  if(prev==null) return {cls:'d-zero',arr:'—',txt:''};
+  var dv=cur-prev;
+  var good=invert?(dv<0):(dv>0);
+  return {
+    cls:dv===0?'d-zero':(good?'d-pos':'d-neg'),
+    arr:dv===0?'→':(dv>0?'↑':'↓'),
+    txt:(dv>0?'+':'')+fi(dv)
+  };
 }
 
-/* ── KPI macro ── */
+/* ── SUMMARY CARD ── */
+function renderSummary(periods){
+  var card=$('summaryCard'); if(!card) return;
+  if(periods.length<2){card.style.display='none';return;}
+  card.style.display='flex';
+  var last=periods[periods.length-1].day, prev=periods[periods.length-2].day;
+  var dpPose=last.taux_pose-prev.taux_pose;
+  var dpModif=(last.pipeline&&last.pipeline.modif_audit||0)+(last.audit&&last.audit.modif_a_faire||0);
+  var ppModif=(prev.pipeline&&prev.pipeline.modif_audit||0)+(prev.audit&&prev.audit.modif_a_faire||0);
+  var dModif=dpModif-ppModif;
+  var improving=dpPose>0||dModif<0;
+  var declining=dpPose<0&&dModif>0;
+  var icon, title, sub, trendCls, trendTxt;
+  if(improving && dpPose>0){
+    icon='📈'; title='Pipeline en progression';
+    sub='Taux de pose : '+(dpPose>0?'+':'')+dpPose+'pt vs période précédente.';
+    trendCls='trend-up'; trendTxt='+'+(dpPose>0?dpPose:Math.abs(dpPose))+'pt';
+  } else if(declining){
+    icon='📉'; title='Blocages en hausse';
+    sub='Taux de pose en baisse de '+Math.abs(dpPose)+'pt — '+(dModif>0?'+'+dModif+' modifs à traiter':'');
+    trendCls='trend-down'; trendTxt=dpPose+'pt';
+  } else {
+    icon='📊'; title='Situation stable';
+    sub='Taux de pose inchangé · '+(dpModif<0?'les modifs reculent':'surveiller les modifs bloquantes');
+    trendCls='trend-flat'; trendTxt='=';
+  }
+  $('summaryIcon').textContent=icon;
+  $('summaryTitle').textContent=title;
+  $('summarySub').textContent=sub;
+  $('summaryTrend').className='summary-trend '+trendCls;
+  $('summaryTrend').textContent=trendTxt;
+}
+
+/* ── KPI MACRO ── */
 function renderKpis(periods){
   var last=periods[periods.length-1], prev=periods[periods.length-2];
   var L=last?last.day:null, P=prev?prev.day:null;
   if(!L){return;}
   var cards=[
-    {l:'LED signées (cumul)',v:fi(L.led_signees),d:deltaHtml(L.led_signees,P&&P.led_signees,'',false)},
-    {l:'Taux de pose',v:L.taux_pose+'%',d:deltaHtml(L.taux_pose,P&&P.taux_pose,'pt',false)},
-    {l:'LED en pipeline actif',v:fi(L.led_actif),d:deltaHtml(L.led_actif,P&&P.led_actif,'',true)},
-    {l:'Confirmées CEE',v:fi(L.confirmes_led),d:deltaHtml(L.confirmes_led,P&&P.confirmes_led,'',false)},
+    {l:'LED signées',       v:fi(L.led_signees),      dv:deltaHtml(L.led_signees,P&&P.led_signees,'',false)},
+    {l:'Taux de pose',      v:L.taux_pose+'%',         dv:deltaHtml(L.taux_pose,P&&P.taux_pose,'pt',false)},
+    {l:'LED actif pipeline',v:fi(L.led_actif),         dv:deltaHtml(L.led_actif,P&&P.led_actif,'',true)},
+    {l:'Confirmées CEE',    v:fi(L.confirmes_led),     dv:deltaHtml(L.confirmes_led,P&&P.confirmes_led,'',false)},
   ];
   $('kpiGrid').innerHTML=cards.map(function(c){
-    return '<div class="kbox"><div class="v">'+c.v+'</div><div class="l">'+c.l+'</div>'+c.d+'</div>';
+    return '<div class="kbox"><div class="k-label">'+c.l+'</div>'
+      +'<div class="k-val">'+c.v+'</div>'+c.dv+'</div>';
   }).join('');
 }
 
-/* ── chart taux de pose / led déposées ── */
+/* ── TAUX DE POSE CHART ── */
 function renderPoseChart(periods){
   var rows=periods.slice(-8);
   var max=Math.max.apply(null,rows.map(function(r){return r.day.taux_pose||0}).concat([95]));
+  var pct95=Math.round(95/max*100);
   var html='';
   rows.forEach(function(r,i){
     var v=r.day.taux_pose||0, prev=i>0?rows[i-1].day.taux_pose:null;
     var c=v>=95?'#27ae60':v>=80?'#E08600':'#C0392B';
-    html+='<div class="crow"><div class="clbl">'+r.label+'</div>'
-      +'<div class="ctrack"><div class="cbar" style="background:'+c+'" data-w="'+Math.round(v/max*100)+'">'+v+'%</div></div>'
-      +'<div class="cdelta '+(prev==null?'':(v>=prev?'d pos':'d neg'))+'">'
-      +(prev==null?'':((v-prev>=0?'+':'')+(v-prev)+'pt'))+'</div></div>';
+    var isLast=(i===rows.length-1);
+    var dv=prev!=null?v-prev:null;
+    var dvTxt=dv===null?'—':(dv>0?'+':'')+dv+'pt';
+    var dvCls=dv===null?'d-zero':dv>0?'d-pos':dv<0?'d-neg':'d-zero';
+    html+='<div class="crow">'
+      +'<div class="clbl" style="'+(isLast?'font-weight:700;color:var(--ink)':'')+'">'+r.label+'</div>'
+      +'<div class="ctrack">'
+      +'<div class="cbar" style="background:'+c+(isLast?';box-shadow:inset 0 1px 0 rgba(255,255,255,.25)':'')+'" data-w="'+Math.round(v/max*100)+'">'+v+'%</div>'
+      +'<div class="cbar-ref" style="left:'+pct95+'%"></div>'
+      +'</div>'
+      +'<div class="cdelta '+dvCls+'">'+dvTxt+'</div>'
+      +'</div>';
   });
   $('poseChart').innerHTML=html;
-  $('poseNote').textContent='Cible ≥95 % · '+rows.length+' période(s) · stock à la fin de chaque période';
-  setTimeout(function(){document.querySelectorAll('#poseChart .cbar').forEach(function(b){
-    b.style.width=Math.max(b.getAttribute('data-w'),6)+'%';});},80);
+  setTimeout(function(){
+    document.querySelectorAll('#poseChart .cbar').forEach(function(b){
+      b.style.width=Math.max(+b.getAttribute('data-w'),6)+'%';
+    });
+  },80);
 }
 
-/* ── évolution pipeline par statut (sparkline + delta) ── */
+/* ── PIPELINE STAGES ── */
 function renderStages(periods){
-  var stages=['modif_audit','attente_signature','attente_audit','modif_a_faire','etude_prête'];
+  var stages=['modif_audit','modif_a_faire','attente_signature','attente_audit','etude_prête'];
   var rows=periods.slice(-10);
-  // ne garde que les stages présents dans la donnée
   var present=stages.filter(function(s){
-    return rows.some(function(r){return (r.day.pipeline&&r.day.pipeline[s]!=null)||(r.day.audit&&r.day.audit[s]!=null)});
+    return rows.some(function(r){
+      return (r.day.pipeline&&r.day.pipeline[s]!=null)||(r.day.audit&&r.day.audit[s]!=null);
+    });
   });
-  if(!present.length){$('stageCard').innerHTML='<div class="empty">Pas encore de données pipeline.</div>';return;}
+  if(!present.length){
+    $('stageCard').innerHTML='<div class="empty">Pas encore de données pipeline.</div>';return;
+  }
   var html='';
   present.forEach(function(s){
     var series=rows.map(function(r){
       return (r.day.pipeline&&r.day.pipeline[s]!=null)?r.day.pipeline[s]
-            :(r.day.audit&&r.day.audit[s]!=null)?r.day.audit[s]:0;});
+            :(r.day.audit&&r.day.audit[s]!=null)?r.day.audit[s]:0;
+    });
     var max=Math.max.apply(null,series.concat([1]));
     var cur=series[series.length-1], prev=series.length>1?series[series.length-2]:null;
+    var dv=deltaVal(cur,prev,!!STAGE_INVERT[s]);
+    var color=STAGE_COLORS[s]||'#2E6FB7';
     var spark=series.map(function(v,i){
-      return '<div class="spark-b'+(i===series.length-1?' last':'')+'" style="height:'
-        +Math.max(Math.round(v/max*24),2)+'px;background:'+(STAGE_COLORS[s]||'#2E6FB7')+'"></div>';}).join('');
-    var dd=prev==null?'':( (cur-prev>0?'+':'')+(cur-prev) );
-    var ddcls=prev==null?'zero':(cur-prev===0?'zero':(cur-prev>0?'neg':'pos')); // hausse stock = mauvais
+      var h=Math.max(Math.round(v/max*24),2);
+      return '<div class="spark-b'+(i===series.length-1?' last':'')+
+        '" style="height:'+h+'px;background:'+color+'"></div>';
+    }).join('');
     html+='<div class="stage-row">'
-      +'<div class="stage-dot" style="background:'+(STAGE_COLORS[s]||'#2E6FB7')+'"></div>'
+      +'<div class="stage-dot" style="background:'+color+'"></div>'
       +'<div class="stage-name">'+(STAGE_NAMES[s]||s)+'</div>'
       +'<div class="stage-spark">'+spark+'</div>'
-      +'<div class="stage-val">'+fi(cur)+'</div>'
-      +'<div class="stage-d d '+ddcls+'">'+dd+'</div>'
+      +'<div class="stage-right">'
+      +'<div class="stage-val" style="color:'+color+'">'+fi(cur)+'</div>'
+      +(prev!=null?'<div class="stage-d '+dv.cls+'">'+dv.arr+' '+dv.txt+'</div>':'')
+      +'</div>'
       +'</div>';
   });
   $('stageCard').innerHTML=html;
 }
 
-/* ── micro : top prios d'un jour ── */
+/* ── MICRO : SÉLECTEUR DE JOUR ── */
 function fillDaySelector(){
   var sel=$('daySel');
   var dates=STATE.days.map(function(d){return d.date}).slice().reverse();
+  var today=dates[0];
   sel.innerHTML=dates.map(function(d){
-    var p=d.split('-');return '<option value="'+d+'">'+p[2]+'/'+p[1]+'/'+p[0]+'</option>';}).join('');
+    var p=d.split('-'), wd=DAYS[new Date(d+'T00:00:00').getDay()];
+    var isLatest=(d===today);
+    return '<option value="'+d+'">'+(isLatest?'★ ':'')
+      +wd+' '+p[2]+'/'+p[1]+'/'+p[0].slice(2)+(isLatest?' — dernier':'')+'</option>';
+  }).join('');
   sel.onchange=function(){loadDayPrios(sel.value)};
   if(dates.length) loadDayPrios(dates[0]);
 }
 function loadDayPrios(dateStr){
+  $('prioList').innerHTML='<div class="empty" style="padding:16px 0">Chargement…</div>';
   fetch('history/'+dateStr+'.json?v='+Date.now())
     .then(function(r){if(!r.ok)throw 0;return r.json()})
     .then(function(s){STATE.curDay=s;renderPrios()})
-    .catch(function(){$('prioList').innerHTML='<div class="empty">Snapshot indisponible pour ce jour.</div>';});
+    .catch(function(){
+      $('prioList').innerHTML='<div class="empty">Snapshot indisponible pour ce jour.</div>';
+    });
 }
 function renderPrios(){
   var s=STATE.curDay; if(!s){return;}
   var list=(s.top_prios||[]).slice();
-  if(STATE.sort==='vol') list.sort(function(a,b){return (b.led||b.cellules||0)-(a.led||a.cellules||0)});
-  else if(STATE.sort==='age') list.sort(function(a,b){return (b.age_days||0)-(a.age_days||0)});
-  else list.sort(function(a,b){return (b.prio||0)-(a.prio||0)||((b.led||b.cellules||0)-(a.led||a.cellules||0))});
+  if(STATE.sort==='vol')
+    list.sort(function(a,b){return (b.led||b.cellules||0)-(a.led||a.cellules||0)});
+  else if(STATE.sort==='age')
+    list.sort(function(a,b){return (b.age_days||0)-(a.age_days||0)});
+  else
+    list.sort(function(a,b){
+      return (b.prio||0)-(a.prio||0)||((b.led||b.cellules||0)-(a.led||a.cellules||0));
+    });
   list=list.slice(0,20);
   if(!list.length){$('prioList').innerHTML='<div class="empty">Aucune prio ce jour.</div>';return;}
   $('prioList').innerHTML=list.map(function(p,i){
     var vol=p.led?fi(p.led):fi(p.cellules||0);
-    var vlbl=p.led?'LED':'cellules';
+    var vlbl=p.led?'LED':'cell.';
     var refHtml=p.internal?'<span class="int">'+p.ref+'</span>':p.ref;
-    var stageShort=(STAGE_NAMES[p.stage]||p.stage).replace(/^[^\sA-Za-z]+\s/,'');
-    return '<div class="prow"><div class="prank">'+(i+1)+'</div>'
+    var stageShort=(STAGE_NAMES[p.stage]||p.stage).replace(/^[🔴📞📋✅🔧📥]+\s*/,'');
+    var ageTxt=p.age_days!=null?p.age_days+'j':'';
+    var ageCls=p.age_days!=null&&p.age_days>7?' old':'';
+    return '<div class="prow">'
+      +'<div class="prank">'+(i+1)+'</div>'
       +'<div class="pref">'+refHtml+'</div>'
       +'<span class="pchip '+p.stage+'">'+stageShort+'</span>'
-      +'<div><div class="pvol">'+vol+'</div><div class="pvol-l">'+vlbl
-      +(p.age_days!=null?' · '+p.age_days+'j':'')+'</div></div></div>';
+      +(ageTxt?'<span class="prow-age'+ageCls+'">'+ageTxt+'</span>':'')
+      +'<div><div class="pvol">'+vol+'</div><div class="pvol-l">'+vlbl+'</div></div>'
+      +'</div>';
   }).join('');
+  $('prioList').insertAdjacentHTML('afterend',
+    '<div class="page-info">'+list.length+' prios · '+s.date
+    +' · sources: '+(s.sources||[]).join(', ')+'</div>');
 }
 
-/* ── render all ── */
+/* ── RENDER ALL ── */
 function renderAll(){
   var periods=buildPeriods(STATE.gran);
-  renderKpis(periods); renderPoseChart(periods); renderStages(periods);
+  renderSummary(periods); renderKpis(periods); renderPoseChart(periods); renderStages(periods);
 }
 
-/* ── controls ── */
+/* ── CONTROLS ── */
 $('gran').addEventListener('click',function(e){
   var b=e.target.closest('button'); if(!b)return;
   STATE.gran=b.getAttribute('data-g');
@@ -310,14 +504,16 @@ $('pSort').addEventListener('click',function(e){
   renderPrios();
 });
 
-/* ── boot ── */
+/* ── BOOT ── */
 fetch('history/timeseries.json?v='+Date.now())
   .then(function(r){if(!r.ok)throw 0;return r.json()})
   .then(function(ts){
     STATE.days=(ts.days||[]).sort(function(a,b){return a.date<b.date?-1:1});
     if(!STATE.days.length){$('hdrRange').textContent='Aucun historique encore';return;}
-    var f=STATE.days[0].date, l=STATE.days[STATE.days.length-1].date;
-    $('hdrRange').textContent=STATE.days.length+' jour(s) archivé(s) · '+f+' → '+l;
+    var f=STATE.days[0].date.split('-'), l=STATE.days[STATE.days.length-1].date.split('-');
+    var fLabel=DAYS[new Date(STATE.days[0].date+'T00:00:00').getDay()]+' '+f[2]+'/'+f[1]+'/'+f[0].slice(2);
+    var lLabel=DAYS[new Date(STATE.days[STATE.days.length-1].date+'T00:00:00').getDay()]+' '+l[2]+'/'+l[1]+'/'+l[0].slice(2);
+    $('hdrRange').textContent=STATE.days.length+' jour(s) · '+fLabel+' → '+lLabel;
     renderAll(); fillDaySelector();
   })
   .catch(function(){

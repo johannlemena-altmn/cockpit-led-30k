@@ -299,6 +299,18 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
   background:linear-gradient(135deg,#1F3A5F,#2E6FB7);color:#fff;font-size:20px;font-weight:700;
   box-shadow:0 4px 16px rgba(46,111,183,.4);display:flex;align-items:center;justify-content:center}
 .tour-help:active{transform:scale(.92)}
+
+/* ── HISTORY NAV BUTTON ──────────────── */
+.hist-nav-btn{display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#0f2742 0%,#1a3d6b 100%);
+  border-radius:16px;padding:14px 18px;text-decoration:none;color:#fff;
+  margin-bottom:10px;border:1px solid rgba(94,155,212,.3);
+  box-shadow:0 4px 16px rgba(15,39,66,.35);transition:transform .15s,box-shadow .15s}
+.hist-nav-btn:active{transform:scale(.98);box-shadow:0 2px 8px rgba(15,39,66,.2)}
+.hist-nav-icon{font-size:28px;flex-shrink:0}
+.hist-nav-body{display:flex;flex-direction:column}
+.hist-nav-title{font-size:15px;font-weight:700;color:#ffd24a}
+.hist-nav-sub{font-size:11.5px;opacity:.8;margin-top:1px}
 </style>
 </head>
 <body>
@@ -418,36 +430,14 @@ body{font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-ser
   <div class="sec-title" id="pipeTitle" style="display:none">Détail par étape (BETOOL)</div>
   <div id="pipeWrap"></div>
 
-  <!-- ⑤  SPRINT ───────────────────────────── -->
-  <div class="sec-title">Sprint — état d'avancement</div>
-  <div class="checklist">
-    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
-      <div class="ci-title">Diagnostic & données réelles</div>
-      <div class="ci-sub">233 504 LED signées · frein identifié : pose 72% + traitement</div>
-    </div></div>
-    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
-      <div class="ci-title">S0 — Feed enrichi BETOOL + Pixel CRM</div>
-      <div class="ci-sub">taux pose réel 72% · 553 dossiers en action · pipeline live</div>
-    </div></div>
-    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
-      <div class="ci-title">S1 — ETL Postgres + 8 vues Metabase</div>
-      <div class="ci-sub">infra/etl.py + betool_lead · v_betool_pipeline / action / kpi</div>
-    </div></div>
-    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
-      <div class="ci-title">S2 — Refresh auto + snapshots J-1</div>
-      <div class="ci-sub">infra/refresh.sh · cron */20 · snapshots/ pour delta</div>
-    </div></div>
-    <div class="ci done"><div class="ci-icon">✅</div><div class="ci-body">
-      <div class="ci-title">S3 — Brief quotidien + questions NL</div>
-      <div class="ci-sub">daily_brief.py · ask_pipeline.py -i · contexte quickwins</div>
-    </div></div>
-  </div>
-
-  <div style="text-align:center;margin:18px 0 6px">
-    <a href="history_dashboard.html" style="display:inline-block;font-size:13px;font-weight:600;
-       color:var(--blue);text-decoration:none;padding:10px 18px;border:1px solid var(--line);
-       border-radius:999px;background:var(--card)">📈 Voir l'évolution (jour / semaine / mois) →</a>
-  </div>
+  <!-- Navigation vers l'historique -->
+  <a href="history_dashboard.html" class="hist-nav-btn" id="histNavBtn">
+    <span class="hist-nav-icon">📈</span>
+    <span class="hist-nav-body">
+      <span class="hist-nav-title">Évolution · historique</span>
+      <span class="hist-nav-sub">tendances jour / semaine / mois →</span>
+    </span>
+  </a>
 
   <div class="foot">
     Cockpit LED 30k · Énergie Responsable · données agrégées anonymisées<br>
