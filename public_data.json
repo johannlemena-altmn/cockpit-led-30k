@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-03",
+  "generated": "2026-06-04",
   "demo_mode": false,
   "led_signees": 233504,
   "nb_dossiers": 6613,
@@ -9,5 +9,65 @@
   "led_max": 459,
   "objectif_mensuel": 30000,
   "taux_pose_pct": 67,
-  "mois": []
+  "mois": [],
+  "pipeline": {
+    "generated": "2026-06-04",
+    "total_actif": 1442,
+    "led_actif": 77314,
+    "action_n": 553,
+    "action_led": 30606,
+    "pct_depose": 55,
+    "etapes": [
+      {
+        "id": "en_cours",
+        "label": "Installation en cours",
+        "short": "En cours",
+        "urgence": "normal",
+        "conseil": "Attendre fin d'installation avant action.",
+        "n": 889,
+        "led": 46708,
+        "age_moy": null
+      },
+      {
+        "id": "attente_audit",
+        "label": "Attente doc & audit",
+        "short": "Audit ⚡",
+        "urgence": "action",
+        "conseil": "Contrôler audits → envoyer au client → commenter auditeurs.",
+        "n": 391,
+        "led": 20456,
+        "age_moy": null
+      },
+      {
+        "id": "attente_signature",
+        "label": "Attente signature",
+        "short": "Signature ⏳",
+        "urgence": "relance",
+        "conseil": "Rappeler le client pour signature du dossier.",
+        "n": 154,
+        "led": 9430,
+        "age_moy": null
+      },
+      {
+        "id": "modif_audit",
+        "label": "Modif audit avant dépôt",
+        "short": "Modif 🔴",
+        "urgence": "urgent",
+        "conseil": "Corriger les audits → envoyer à Total Energies.",
+        "n": 8,
+        "led": 720,
+        "age_moy": null
+      },
+      {
+        "id": "depose",
+        "label": "Déposé ✅",
+        "short": "Déposé",
+        "urgence": "ok",
+        "conseil": "En attente validation + paiement Total Energies.",
+        "n": 1743,
+        "led": 94202,
+        "age_moy": null
+      }
+    ]
+  }
 }

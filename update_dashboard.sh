@@ -3,8 +3,10 @@
 # puis pousse le résultat sur GitHub pour mettre à jour le dashboard live.
 #
 # Usage :
-#   ./update_dashboard.sh              → via pixel_api.py (API Pixel directe)
-#   ./update_dashboard.sh data/mon.csv → via export CSV Pixel
+#   ./update_dashboard.sh                          → via pixel_api.py (API Pixel directe)
+#   ./update_dashboard.sh data/mon.csv             → via export CSV Pixel
+#   ./update_dashboard.sh --betool data/betool.xlsx → pipeline BETOOL seulement
+#   ./update_dashboard.sh data/mon.csv --betool data/betool.xlsx → les deux
 #
 # Prérequis : fichier .env dans ce dossier avec :
 #   PIXEL_BASE_URL=https://crm.pixel-crm.fr
@@ -36,8 +38,22 @@ if ! "$PYTHON" -c "import pandas" 2>/dev/null; then
   "$PYTHON" -m pip install pandas openpyxl --quiet
 fi
 
+# ── Arguments ────────────────────────────────────────────────────────────────
+CSV_ARG=""
+BETOOL_ARG=""
+ARGS=("$@")
+i=0
+while [ $i -lt ${#ARGS[@]} ]; do
+  if [ "${ARGS[$i]}" = "--betool" ]; then
+    i=$((i+1))
+    BETOOL_ARG="${ARGS[$i]:-}"
+  elif [ -z "$CSV_ARG" ] && [ "${ARGS[$i]:0:1}" != "-" ]; then
+    CSV_ARG="${ARGS[$i]}"
+  fi
+  i=$((i+1))
+done
+
 # ── Source de données ─────────────────────────────────────────────────────────
-CSV_ARG="${1:-}"
 
 if [ -n "$CSV_ARG" ]; then
   # Mode CSV : copier dans data/ et lancer daily_summary.py
@@ -55,6 +71,16 @@ else
     exit 1
   fi
   "$PYTHON" pixel_api.py
+fi
+
+# ── BETOOL pipeline (optionnel) ───────────────────────────────────────────────
+if [ -n "$BETOOL_ARG" ]; then
+  if [ ! -f "$BETOOL_ARG" ]; then
+    echo "[ERREUR] Fichier BETOOL introuvable : $BETOOL_ARG"
+    exit 1
+  fi
+  echo "Pipeline BETOOL : $BETOOL_ARG"
+  "$PYTHON" betool_summary.py "$BETOOL_ARG"
 fi
 
 # ── Vérifier que public_data.json existe ─────────────────────────────────────

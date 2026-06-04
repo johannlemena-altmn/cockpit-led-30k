@@ -206,6 +206,67 @@ body {
   .check-item.active { background: #2a1e00; border-color: #6b4e00; }
 }
 
+/* ── Pipeline BETOOL ─────────────────────────────────── */
+.pipe-action-card {
+  background: linear-gradient(135deg, #7a1a1a 0%, #b02020 100%);
+  color: #fff;
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.pipe-action-card .pac-label {
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase; opacity: .8; margin-bottom: 4px;
+}
+.pipe-action-card .pac-val { font-size: 26px; font-weight: 700; color: #ffd24a; }
+.pipe-action-card .pac-sub { font-size: 12px; opacity: .85; margin-top: 2px; }
+.pipe-stage {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 11px 14px;
+  margin-bottom: 8px;
+}
+.pipe-stage.urgence-action  { border-left: 3px solid var(--amber); }
+.pipe-stage.urgence-relance { border-left: 3px solid #e07000; }
+.pipe-stage.urgence-urgent  { border-left: 3px solid var(--red); border-left-width: 4px; }
+.pipe-stage.urgence-ok      { border-left: 3px solid var(--green); }
+.pipe-stage.urgence-normal  { border-left: 3px solid var(--blue); }
+.pipe-stage-head {
+  display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;
+}
+.pipe-stage-name { font-size: 13px; font-weight: 600; }
+.pipe-stage-count {
+  font-size: 18px; font-weight: 700; color: var(--navy); white-space: nowrap; margin-left: 8px;
+}
+.pipe-stage-led { font-size: 11px; color: var(--muted); }
+.pipe-bar-track {
+  height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin-top: 4px;
+}
+.pipe-bar-fill { height: 100%; border-radius: 999px; }
+.pipe-conseil { font-size: 11px; color: var(--muted); margin-top: 5px; font-style: italic; }
+.pipe-depose-wrap {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  margin-top: 6px;
+}
+.pipe-depose-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.pipe-depose-bar-track {
+  height: 10px; background: var(--line); border-radius: 999px; overflow: hidden;
+}
+.pipe-depose-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #27ae60, #2ecc71);
+}
+.pipe-depose-vals {
+  display: flex; justify-content: space-between; font-size: 11px; margin-top: 5px;
+}
+@media (prefers-color-scheme: dark) {
+  .pipe-stage-count { color: var(--blue); }
+}
+
 /* FOOTER */
 .foot {
   text-align: center;
@@ -384,6 +445,10 @@ body {
     <div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Quasi 100% secteur Entrepôts · cohérent BAT-EQ-127</div>
   </div>
 
+  <!-- PIPELINE BETOOL -->
+  <div class="sec-title" id="pipelineTitle" style="display:none">Pipeline BETOOL — Chaîne active</div>
+  <div id="pipelineWrap" style="display:none"></div>
+
   <!-- BACKLOG SPRINT -->
   <div class="sec-title">Sprint — état des actions</div>
   <div class="checklist">
@@ -515,6 +580,68 @@ body {
     }
 
     injectBadge(!!d.demo_mode);
+    if (d.pipeline) renderPipeline(d.pipeline);
+  }
+
+  /* ── Pipeline BETOOL ─────────────────────────────────── */
+  var URGENCE_COLORS = {
+    urgent:  '#C0392B',
+    action:  '#E08600',
+    relance: '#e07000',
+    ok:      '#2E7D32',
+    normal:  '#2E6FB7'
+  };
+
+  function renderPipeline(p) {
+    var wrap  = document.getElementById('pipelineWrap');
+    var title = document.getElementById('pipelineTitle');
+    if (!wrap || !p.etapes) return;
+    title.style.display = '';
+    wrap.style.display  = '';
+
+    var maxN   = Math.max.apply(null, p.etapes.map(function(e){ return e.n; }));
+    var html   = '';
+
+    /* Carte "À traiter maintenant" */
+    html += '<div class="pipe-action-card">'
+          + '<div class="pac-label">⚡ À traiter maintenant</div>'
+          + '<div class="pac-val">' + fmtInt(p.action_n) + ' dossiers</div>'
+          + '<div class="pac-sub">' + fmtInt(p.action_led) + ' LED · audit + signature + modifs</div>'
+          + '</div>';
+
+    /* Étapes hors "déposé" */
+    p.etapes.forEach(function(e) {
+      if (e.id === 'depose') return;
+      var pct   = maxN > 0 ? Math.round(e.n / maxN * 100) : 0;
+      var color = URGENCE_COLORS[e.urgence] || '#2E6FB7';
+      html += '<div class="pipe-stage urgence-' + e.urgence + '">'
+            + '<div class="pipe-stage-head">'
+            + '<div class="pipe-stage-name">' + e.label + '</div>'
+            + '<div class="pipe-stage-count">' + fmtInt(e.n) + '</div>'
+            + '</div>'
+            + '<div class="pipe-stage-led">' + fmtInt(e.led) + ' LED</div>'
+            + '<div class="pipe-bar-track">'
+            + '<div class="pipe-bar-fill" style="width:' + pct + '%;background:' + color + ';"></div>'
+            + '</div>'
+            + '<div class="pipe-conseil">' + e.conseil + '</div>'
+            + '</div>';
+    });
+
+    /* Barre de progression dépôt */
+    var dep   = p.etapes[p.etapes.length - 1];
+    var pctDep = p.pct_depose || 0;
+    html += '<div class="pipe-depose-wrap">'
+          + '<div class="pipe-depose-label">Progression dépôt Total Energies</div>'
+          + '<div class="pipe-depose-bar-track">'
+          + '<div class="pipe-depose-bar-fill" style="width:' + pctDep + '%;"></div>'
+          + '</div>'
+          + '<div class="pipe-depose-vals">'
+          + '<span>✅ Déposé : ' + fmtInt(dep.n) + ' dossiers · ' + fmtInt(dep.led) + ' LED</span>'
+          + '<span>' + pctDep + '%</span>'
+          + '</div>'
+          + '</div>';
+
+    wrap.innerHTML = html;
   }
 
   /* ── Fetch ───────────────────────────────────────────── */
