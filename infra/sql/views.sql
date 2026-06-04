@@ -1,6 +1,6 @@
--- Vues Metabase — Cockpit LED (à exécuter dans la base ledcockpit après le 1er ETL)
--- Robustes avec le seul export "eq 127 pour liste". Les vues statut/pose/responsable
--- s'activent automatiquement dès que le feed enrichi (statut, dépôt, pose) est branché.
+-- Vues Metabase — Cockpit LED (appliquées automatiquement par etl.py)
+-- Robustes avec l'export "eq 127 pour liste". Les vues statut/pose/responsable
+-- s'activent dès que le feed enrichi est présent dans la table dossier.
 
 -- KPI globaux
 CREATE OR REPLACE VIEW v_kpi AS
@@ -34,19 +34,63 @@ SELECT CASE
        COUNT(*) AS nb_dossiers
 FROM dossier WHERE signe AND led>0 GROUP BY 1;
 
+-- Funnel par statut Pixel (nécessite colonne statut dans dossier)
+CREATE OR REPLACE VIEW v_funnel_statut AS
+SELECT COALESCE(statut,'(vide)') AS statut,
+       COUNT(*) nb, SUM(led) led
+FROM dossier WHERE signe GROUP BY 1 ORDER BY led DESC;
+
+-- Funnel par catégorie de statut
+CREATE OR REPLACE VIEW v_funnel_categorie AS
+SELECT COALESCE(categorie_statut,'(vide)') AS categorie_statut,
+       COUNT(*) nb, SUM(led) led
+FROM dossier WHERE signe GROUP BY 1;
+
+-- Par responsable (administrateur Pixel)
+CREATE OR REPLACE VIEW v_par_responsable AS
+SELECT COALESCE(administrateur,'(non affecté)') AS resp,
+       COUNT(*) nb,
+       SUM(led) FILTER (WHERE NOT depose) AS led_en_cours
+FROM dossier WHERE signe GROUP BY 1 ORDER BY led_en_cours DESC NULLS LAST;
+
+-- Taux de pose (depuis dates Pixel)
+CREATE OR REPLACE VIEW v_pose AS
+SELECT COUNT(*) FILTER (WHERE pose_terminee)       AS poses_finies,
+       COUNT(*) FILTER (WHERE NOT pose_terminee)   AS poses_en_attente,
+       ROUND(100.0 * COUNT(*) FILTER (WHERE pose_terminee)
+             / NULLIF(COUNT(*),0), 1)              AS taux_pose_pct
+FROM dossier WHERE signe AND NOT depose AND pose_terminee IS NOT NULL;
+
 -- ============================================================
--- AVANCÉ — nécessite le feed enrichi (statut / catégorie / pose / responsable).
--- Décommenter une fois ces colonnes présentes dans la table dossier.
+-- BETOOL — pipeline (actif si la table betool_lead existe)
 -- ============================================================
--- CREATE OR REPLACE VIEW v_funnel_statut AS
---   SELECT statut, COUNT(*) nb, SUM(led) led FROM dossier WHERE signe GROUP BY 1 ORDER BY led DESC;
--- CREATE OR REPLACE VIEW v_funnel_categorie AS
---   SELECT categorie_statut, COUNT(*) nb, SUM(led) led FROM dossier WHERE signe GROUP BY 1;
--- CREATE OR REPLACE VIEW v_par_responsable AS
---   SELECT COALESCE(administrateur,'(non affecté)') resp, COUNT(*) nb,
---          SUM(led) FILTER (WHERE NOT depose) led_en_cours FROM dossier WHERE signe GROUP BY 1;
--- CREATE OR REPLACE VIEW v_pose AS
---   SELECT COUNT(*) FILTER (WHERE pose_terminee) poses_finies,
---          COUNT(*) FILTER (WHERE NOT pose_terminee) poses_en_attente,
---          ROUND(100.0*COUNT(*) FILTER (WHERE pose_terminee)/NULLIF(COUNT(*),0),1) taux_pose_pct
---   FROM dossier WHERE signe AND NOT depose;
+
+-- Pipeline BETOOL par stage
+CREATE OR REPLACE VIEW v_betool_pipeline AS
+SELECT
+  stage_id,
+  COUNT(*)                          AS nb_dossiers,
+  COALESCE(SUM(led),0)              AS led_total,
+  ROUND(AVG(age_days)::numeric,0)   AS age_moy_jours
+FROM betool_lead
+GROUP BY stage_id;
+
+-- Zone d'action immédiate (tout sauf en_cours et depose)
+CREATE OR REPLACE VIEW v_betool_action AS
+SELECT
+  COUNT(*)             AS nb_action,
+  COALESCE(SUM(led),0) AS led_action,
+  ROUND(AVG(age_days)::numeric,0) AS age_moy_jours
+FROM betool_lead
+WHERE stage_id IN ('attente_audit','attente_signature','modif_audit');
+
+-- KPI BETOOL global (taux de pose depuis pipeline)
+CREATE OR REPLACE VIEW v_betool_kpi AS
+SELECT
+  COUNT(*) AS total_pipeline,
+  COUNT(*) FILTER (WHERE stage_id = 'depose')    AS nb_depose,
+  COALESCE(SUM(led) FILTER (WHERE stage_id = 'depose'),0) AS led_depose,
+  COALESCE(SUM(led),0) AS led_total,
+  ROUND(100.0 * COUNT(*) FILTER (WHERE stage_id != 'en_cours')
+        / NULLIF(COUNT(*),0), 0)                 AS taux_pose_pct
+FROM betool_lead

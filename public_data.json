@@ -8,7 +8,7 @@
   "led_med": 30,
   "led_max": 459,
   "objectif_mensuel": 30000,
-  "taux_pose_pct": 67,
+  "taux_pose_pct": 72,
   "mois": [],
   "pipeline": {
     "generated": "2026-06-04",
@@ -17,6 +17,7 @@
     "action_n": 553,
     "action_led": 30606,
     "pct_depose": 55,
+    "taux_pose_pct": 72,
     "etapes": [
       {
         "id": "en_cours",

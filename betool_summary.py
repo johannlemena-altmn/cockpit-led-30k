@@ -158,14 +158,21 @@ def compute_pipeline(records: list[dict]) -> dict:
     total_led   = depose["led"] + total_actif_led
     pct_depose  = round(depose["led"] / total_led * 100) if total_led else 0
 
+    # Taux de pose : dossiers "posés" (hors en_cours) sur total actif + déposés
+    posed_n     = sum(acc[i]["n"] for i in action_ids)   # attente_audit + attente_signature + modif_audit
+    depose_n    = depose["n"]
+    denom_pose  = total_actif_n + depose_n
+    taux_pose_pct = round((posed_n + depose_n) / denom_pose * 100) if denom_pose else 0
+
     return {
-        "generated":    today.strftime("%Y-%m-%d"),
-        "total_actif":  total_actif_n,
-        "led_actif":    total_actif_led,
-        "action_n":     action_n,
-        "action_led":   action_led,
-        "pct_depose":   pct_depose,
-        "etapes":       etapes,
+        "generated":      today.strftime("%Y-%m-%d"),
+        "total_actif":    total_actif_n,
+        "led_actif":      total_actif_led,
+        "action_n":       action_n,
+        "action_led":     action_led,
+        "pct_depose":     pct_depose,
+        "taux_pose_pct":  taux_pose_pct,
+        "etapes":         etapes,
     }
 
 
@@ -182,8 +189,9 @@ def update_public_json(pipeline: dict, output_path: str = "public_data.json"):
             except json.JSONDecodeError:
                 pass
 
-    data["pipeline"] = pipeline
-    data["generated"] = date.today().strftime("%Y-%m-%d")
+    data["pipeline"]       = pipeline
+    data["taux_pose_pct"]  = pipeline["taux_pose_pct"]
+    data["generated"]      = date.today().strftime("%Y-%m-%d")
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
