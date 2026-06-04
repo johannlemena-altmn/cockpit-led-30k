@@ -157,13 +157,18 @@ def main():
         if col in raw: agg[col]=(col,"max")
     agg["signe"]=("signe","max"); agg["depose"]=("depose","max"); agg["nb_lignes"]=("num_dossier","size")
     dossier = g.agg(**agg)
-    # pose terminée = au moins une date de fin de pose / travaux
+    # pose terminée = au moins une date de fin de pose / travaux (boolean, omis si absent)
     fin = None
     for c in ["date_fin_pose","date_fin_travaux"]:
         if c in dossier: fin = dossier[c] if fin is None else fin.fillna(dossier[c])
-    dossier["pose_terminee"] = fin.notna() if fin is not None else None
+    if fin is not None:
+        dossier["pose_terminee"] = fin.notna()
 
     eng = create_engine(PG_URL)
+    # DROP CASCADE pour libérer les vues dépendantes avant rechargement
+    with eng.begin() as cx:
+        cx.execute(text("DROP TABLE IF EXISTS ligne_chantier CASCADE"))
+        cx.execute(text("DROP TABLE IF EXISTS dossier CASCADE"))
     with eng.begin() as cx:
         raw.to_sql("ligne_chantier", cx, if_exists="replace", index=False)
         dossier.to_sql("dossier", cx, if_exists="replace", index=False)
@@ -181,18 +186,22 @@ def main():
         else:
             print("  (aucune ligne BETOOL reconnue)")
 
-    # Appliquer les vues SQL automatiquement
+    # Appliquer les vues SQL — psycopg2 direct pour gérer les DO $$ blocks
     SQL_VIEWS = os.path.join(os.path.dirname(__file__), "sql", "views.sql")
     if os.path.exists(SQL_VIEWS):
         with open(SQL_VIEWS, encoding="utf-8") as f:
             sql = f.read()
-        with eng.begin() as cx:
-            for stmt in [s.strip() for s in sql.split(";") if s.strip() and not s.strip().startswith("--")]:
-                try:
-                    cx.execute(text(stmt))
-                except Exception as e:
-                    print(f"  (vue ignorée) {e}")
-        print("Vues SQL appliquées.")
+        raw_conn = eng.raw_connection()
+        try:
+            with raw_conn.cursor() as cur:
+                cur.execute(sql)
+            raw_conn.commit()
+            print("Vues SQL appliquées.")
+        except Exception as e:
+            raw_conn.rollback()
+            print(f"  (erreur vues SQL) {e}")
+        finally:
+            raw_conn.close()
 
     nb_signes = int(dossier["signe"].sum())
     led_signees = int(dossier.loc[dossier["signe"], "led"].sum()) if "led" in dossier else "?"
