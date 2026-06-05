@@ -1,14 +1,14 @@
 {
-  "generated": "2026-06-04",
-  "demo_mode": false,
-  "led_signees": 233504,
-  "nb_dossiers": 6613,
-  "prime_total": 15503049,
+  "generated": "2026-06-05",
+  "demo_mode": true,
+  "led_signees": 196177,
+  "nb_dossiers": 5280,
+  "prime_total": 13000000,
   "led_moy": 37,
   "led_med": 30,
   "led_max": 459,
   "objectif_mensuel": 30000,
-  "taux_pose_pct": 73,
+  "taux_pose_pct": 68,
   "mois": [],
   "pipeline": {
     "generated": "2026-06-04",
@@ -2829,6 +2829,7 @@
       }
     ]
   },
+  "dossiers_source": "betool",
   "quickwins": [
     {
       "rank": 1,
@@ -2990,19 +2991,6 @@
       ]
     }
   ],
-  "brief": {
-    "date": "2026-06-04",
-    "statut": "URGENT",
-    "headline": "553 dossiers actionnables · 30 606 LED à débloquer",
-    "urgences": [
-      "8 modif_audit bloquants → 720 LED libérées en < 1h par dossier"
-    ],
-    "top_action": "Corriger les audits et envoyer à Total Energies immédiatement.",
-    "objectif_jour": 750,
-    "taux_pose_pct": 72,
-    "pipeline_bilan": "premier_run"
-  },
-  "dossiers_source": "betool",
   "confirmes": {
     "generated": "2026-06-04",
     "n": 5440,
@@ -3437,6 +3425,18 @@
         "age_days": null
       }
     ]
+  },
+  "brief": {
+    "date": "2026-06-04",
+    "statut": "URGENT",
+    "headline": "553 dossiers actionnables · 30 606 LED à débloquer",
+    "urgences": [
+      "8 modif_audit bloquants → 720 LED libérées en < 1h par dossier"
+    ],
+    "top_action": "Corriger les audits et envoyer à Total Energies immédiatement.",
+    "objectif_jour": 750,
+    "taux_pose_pct": 72,
+    "pipeline_bilan": "premier_run"
   },
   "delta": {
     "ref_date": "2026-06-04",
