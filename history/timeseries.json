@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-21",
+  "generated": "2026-07-22",
   "days": [
     {
       "date": "2026-06-04",
@@ -1191,6 +1191,42 @@
     },
     {
       "date": "2026-07-21",
+      "sources": [
+        "betool",
+        "audit",
+        "confirmes"
+      ],
+      "led_signees": 196177,
+      "taux_pose": 68,
+      "led_actif": 76006,
+      "action_led": 30224,
+      "pct_depose": 56,
+      "pipeline": {
+        "en_cours": 870,
+        "attente_audit": 389,
+        "attente_signature": 157,
+        "modif_audit": 4,
+        "depose": 1763
+      },
+      "pipeline_led": {
+        "en_cours": 45782,
+        "attente_audit": 20284,
+        "attente_signature": 9466,
+        "modif_audit": 474,
+        "depose": 95354
+      },
+      "audit": {
+        "modif_a_faire": 182,
+        "etude_prête": 2405,
+        "etude_en_cours": 117,
+        "etude_a_realiser": 36,
+        "annulation": 26
+      },
+      "confirmes_led": 158583,
+      "confirmes_n": 5440
+    },
+    {
+      "date": "2026-07-22",
       "sources": [
         "betool",
         "audit",
