@@ -1,0 +1,424 @@
+{
+  "date": "2026-08-27",
+  "sources": [
+    "betool",
+    "audit",
+    "confirmes"
+  ],
+  "kpis": {
+    "led_signees": 196177,
+    "nb_dossiers": 5280,
+    "prime_total": 13000000,
+    "taux_pose": 68
+  },
+  "pipeline": {
+    "total_actif": 1420,
+    "led_actif": 76006,
+    "action_led": 30224,
+    "pct_depose": 56,
+    "etapes": {
+      "en_cours": {
+        "n": 870,
+        "vol": 45782
+      },
+      "attente_audit": {
+        "n": 389,
+        "vol": 20284
+      },
+      "attente_signature": {
+        "n": 157,
+        "vol": 9466
+      },
+      "modif_audit": {
+        "n": 4,
+        "vol": 474
+      },
+      "depose": {
+        "n": 1763,
+        "vol": 95354
+      }
+    }
+  },
+  "audit": {
+    "total": 2766,
+    "cellules_total": 6395,
+    "etapes": {
+      "modif_a_faire": {
+        "n": 182,
+        "vol": 491
+      },
+      "etude_prête": {
+        "n": 2405,
+        "vol": 5434
+      },
+      "etude_en_cours": {
+        "n": 117,
+        "vol": 312
+      },
+      "etude_a_realiser": {
+        "n": 36,
+        "vol": 113
+      },
+      "annulation": {
+        "n": 26,
+        "vol": 45
+      }
+    }
+  },
+  "confirmes": {
+    "n": 5440,
+    "led": 158583,
+    "prime": 11399872
+  },
+  "autres_secteurs": {
+    "n": 1040,
+    "led": 7714,
+    "en_attente_photos": 936
+  },
+  "top_prios": [
+    {
+      "source": "betool",
+      "stage": "modif_audit",
+      "stage_label": "Modif audit (avant dépôt)",
+      "ref": "#1 · interne",
+      "internal": true,
+      "led": 348,
+      "cellules": null,
+      "age_days": null,
+      "prio": 100
+    },
+    {
+      "source": "betool",
+      "stage": "modif_audit",
+      "stage_label": "Modif audit (avant dépôt)",
+      "ref": "34505",
+      "internal": false,
+      "led": 48,
+      "cellules": null,
+      "age_days": null,
+      "prio": 100
+    },
+    {
+      "source": "betool",
+      "stage": "modif_audit",
+      "stage_label": "Modif audit (avant dépôt)",
+      "ref": "35763",
+      "internal": false,
+      "led": 42,
+      "cellules": null,
+      "age_days": null,
+      "prio": 100
+    },
+    {
+      "source": "betool",
+      "stage": "modif_audit",
+      "stage_label": "Modif audit (avant dépôt)",
+      "ref": "33017",
+      "internal": false,
+      "led": 36,
+      "cellules": null,
+      "age_days": null,
+      "prio": 100
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-14557",
+      "internal": false,
+      "led": 0,
+      "cellules": 7,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12748",
+      "internal": false,
+      "led": 0,
+      "cellules": 7,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12737",
+      "internal": false,
+      "led": 0,
+      "cellules": 7,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12545",
+      "internal": false,
+      "led": 0,
+      "cellules": 7,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-6823",
+      "internal": false,
+      "led": 0,
+      "cellules": 7,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-521",
+      "internal": false,
+      "led": 0,
+      "cellules": 7,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12553",
+      "internal": false,
+      "led": 0,
+      "cellules": 6,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12467",
+      "internal": false,
+      "led": 0,
+      "cellules": 6,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-11641",
+      "internal": false,
+      "led": 0,
+      "cellules": 6,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-11288",
+      "internal": false,
+      "led": 0,
+      "cellules": 6,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-13340",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-13261",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-13009",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12853",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-11991",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-11270",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-11061",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-10371",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-10271",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-1657",
+      "internal": false,
+      "led": 0,
+      "cellules": 5,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-14379",
+      "internal": false,
+      "led": 0,
+      "cellules": 4,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-13350",
+      "internal": false,
+      "led": 0,
+      "cellules": 4,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12989",
+      "internal": false,
+      "led": 0,
+      "cellules": 4,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12920",
+      "internal": false,
+      "led": 0,
+      "cellules": 4,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12826",
+      "internal": false,
+      "led": 0,
+      "cellules": 4,
+      "age_days": null,
+      "prio": 95
+    },
+    {
+      "source": "audit",
+      "stage": "modif_a_faire",
+      "stage_label": "Modif audit (étude)",
+      "ref": "LE-12520",
+      "internal": false,
+      "led": 0,
+      "cellules": 4,
+      "age_days": null,
+      "prio": 95
+    }
+  ],
+  "delta": {
+    "ref_date": "2026-06-04",
+    "kind": "jminus",
+    "taux_pose": -5,
+    "led_signees": -37327,
+    "deposees_n": 0,
+    "deposees_led": 0,
+    "led_actif": 0,
+    "action_led": 0,
+    "modif_audit": 0,
+    "confirmes_led": 0,
+    "confirmes_n": 0,
+    "cur_sig": "196177|68|76006|30224|1763|95354|182|158583|5440"
+  }
+}
